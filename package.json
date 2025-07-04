@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "openai": "4.19.0",
-    "vite": "latest"
+    "vite": "^5.2.0"
   },
   "devDependencies": {}
 }
