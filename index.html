@@ -172,26 +172,34 @@
 							active: loadingStep === 'fetching', 
 							completed: loadingStep === 'analyzing' || loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">📊</div>
+							<div class="progress-step-icon">
+								<img src="images/cloudflare.svg" alt="Cloudflare" class="progress-icon">
+							</div>
 							<div class="progress-step-text">Fetching Stock Data</div>
 						</div>
 						<div class="progress-step" :class="{ 
 							active: loadingStep === 'analyzing', 
 							completed: loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">🤖</div>
+							<div class="progress-step-icon">
+								<img src="images/OpenAI_light_dark/OpenAI_light.svg" alt="OpenAI" class="progress-icon">
+							</div>
 							<div class="progress-step-text">AI Analysis</div>
 						</div>
 						<div class="progress-step" :class="{ 
 							active: loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">📝</div>
+							<div class="progress-step-icon">
+								<img src="images/chartjs.svg" alt="Chart.js" class="progress-icon">
+							</div>
 							<div class="progress-step-text">Generating Report</div>
 						</div>
 					</div>
 					
 					<div class="loading-spinner">
-						<div class="spinner"></div>
+						<div class="spinner">
+							<img src="images/vue.svg" alt="Vue.js" class="vue-icon">
+						</div>
 					</div>
 					
 					<div id="api-message">
