@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const { createApp } = Vue
 
-    createApp({
+    const app = createApp({
         data() {
             return {
                 currentView: 'input',
@@ -30,6 +30,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedPersonality: 'dodgy-dave', // Default to Dodgy Dave
                 dayRange: 3, // configurable day range (3-30 days)
                 rawStockData: null, // Store raw API data for charts
+                // Integrated Confetti System
+                confettiSystem: {
+                    isDrawing: false,
+                    animationIsOk: true,
+                    imageKeys: [],
+                    explosionKeys: [],
+                    imageMap: {},
+                    explosionMap: {},
+                    lastDistance: 0,
+                    startX: 0,
+                    startY: 0,
+                    currentLine: null,
+                    startImage: null,
+                    circle: null,
+                    wiggle: null,
+                    clamper: null,
+                    xSetter: null,
+                    ySetter: null
+                },
                 personalities: {
                     'dodgy-dave': {
                         name: 'Dodgy Dave',
@@ -75,15 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.tickerInput = ''
                     this.resetErrorLabel()
                     console.log('Current tickers:', this.tickersArr)
-                } else {
+    } else {
                     this.showError()
                 }
             },
             
             showError() {
-                const label = document.getElementsByTagName('label')[0]
-                label.style.color = 'red'
-                label.textContent = 'You must add at least one ticker. A ticker is a 3 letter or more code for a stock. E.g TSLA for Tesla.'
+        const label = document.getElementsByTagName('label')[0]
+        label.style.color = 'red'
+        label.textContent = 'You must add at least one ticker. A ticker is a 3 letter or more code for a stock. E.g TSLA for Tesla.'
             },
             
             resetErrorLabel() {
@@ -101,6 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('=== FETCH STOCK DATA CALLED ===')
                 console.log('Current view before:', this.currentView)
                 console.log('Fetching stock data for:', this.tickersArr)
+                
+                // Trigger simple confetti animation for Vue.js area
+                if (window.triggerSimpleConfetti) {
+                    window.triggerSimpleConfetti()
+                }
                 
                 this.currentView = 'loading'
                 this.loadingStep = 'fetching'
@@ -123,15 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         this.loadingMessage = `Fetching ${ticker} data (${index + 1} of ${this.tickersArr.length})`
                         console.log('Updated loading message:', this.loadingMessage)
                         
-                        const response = await fetch(url)
+            const response = await fetch(url)
 
-                        if (!response.ok) {
-                            const errMsg = await response.text()
-                            throw new Error('Worker error: ' + errMsg)
-                        }
+            if (!response.ok) {
+                const errMsg = await response.text()
+                throw new Error('Worker error: ' + errMsg)
+            }
                         
-                        return response.text()
-                    }))
+            return response.text()
+        }))
                     
                     console.log('Stock data received:', stockData)
                     
@@ -147,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await new Promise(resolve => setTimeout(resolve, 800))
                     
                     this.fetchReport(stockData.join(''))
-                } catch (err) {
+    } catch (err) {
                     console.error('Error fetching stock data:', err)
                     this.loadingMessage = 'Error fetching stock data. Please try again.'
                     // Show error for 3 seconds then go back to input
@@ -166,31 +190,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 const personality = this.personalities[this.selectedPersonality]
                 console.log('Using personality:', personality.name)
                 
-                const messages = [
-                    {
-                        role: 'system',
+    const messages = [
+        {
+            role: 'system',
                         content: personality.systemPrompt
-                    },
-                    {
-                        role: 'user',
+        },
+        {
+            role: 'user',
                         content: `${stockData}
-                        ###
+            ###
                         ${personality.examples}
-                        ###
-                        `
-                    }
-                ]
-                
-                try {
-                    const url = 'https://openai-api-worker.jasani-rohan.workers.dev'
-                    
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(messages)
-                    })
+            ###
+            `
+        }
+    ]
+    
+    try {
+        const url = 'https://openai-api-worker.jasani-rohan.workers.dev'
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(messages)
+        })
                     
                     const responseData = await response.json()
                     console.log('AI response received:', responseData)
@@ -371,12 +395,540 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (error) {
                     console.error('Error opening test page:', error)
                 }
+            },
+            
+            // Integrated Confetti System Methods
+            initConfettiSystem() {
+                console.log('🎉 Initializing integrated confetti system...')
+                
+                // Check if GSAP is available
+                if (typeof gsap === 'undefined') {
+                    console.warn('GSAP not loaded, skipping confetti initialization')
+                    return
+                }
+                
+                // Register plugins
+                try {
+                    gsap.registerPlugin(Observer, CustomEase, CustomWiggle, Physics2DPlugin, ScrollTrigger)
+                    console.log('✅ GSAP plugins registered successfully')
+                } catch (error) {
+                    console.error('❌ Error registering GSAP plugins:', error)
+                    return
+                }
+                
+                // Check for reduced motion preference
+                this.confettiSystem.animationIsOk = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                
+                // Build image maps
+                this.buildImageMaps()
+                
+                // Create CustomWiggle and clamper
+                this.confettiSystem.wiggle = CustomWiggle.create('myWiggle', { wiggles: 6, type: 'uniform' })
+                this.confettiSystem.clamper = gsap.utils.clamp(1, 100)
+                
+                // Wait for DOM elements to be available, then set up GSAP setters
+                this.$nextTick(() => {
+                    const cursorElement = document.querySelector('.confetti-cursor')
+                    if (cursorElement) {
+                        this.confettiSystem.xSetter = gsap.quickSetter('.confetti-cursor', 'x', 'px')
+                        this.confettiSystem.ySetter = gsap.quickSetter('.confetti-cursor', 'y', 'px')
+                        console.log('✅ GSAP setters initialized')
+                    } else {
+                        console.error('❌ Confetti cursor element not found')
+                    }
+                })
+                
+                // Initialize mouse events
+                this.initMouseEvents()
+                
+                // Initialize Observer for drag interactions
+                this.initObserver()
+                
+                console.log('✅ Integrated confetti system ready!')
+            },
+            
+            buildImageMaps() {
+                // Build image maps for confetti pieces
+                const preloadImages = document.querySelectorAll('.image-preload img[data-key]')
+                const explosionImages = document.querySelectorAll('.explosion-preload img[data-key]')
+                
+                preloadImages.forEach(img => {
+                    const key = img.dataset.key
+                    if (key) {
+                        this.confettiSystem.imageMap[key] = img
+                        this.confettiSystem.imageKeys.push(key)
+                    }
+                })
+                
+                explosionImages.forEach(img => {
+                    const key = img.dataset.key
+                    if (key) {
+                        this.confettiSystem.explosionMap[key] = img
+                        this.confettiSystem.explosionKeys.push(key)
+                    }
+                })
+                
+                console.log('🎯 Image maps built:', {
+                    imageKeys: this.confettiSystem.imageKeys.length,
+                    explosionKeys: this.confettiSystem.explosionKeys.length
+                })
+            },
+            
+            initMouseEvents() {
+                if (!this.confettiSystem.animationIsOk || ScrollTrigger.isTouch === 1) {
+                    console.log('⚠️ Skipping mouse events (reduced motion or touch device)')
+                    return
+                }
+                
+                // Set confetti cursor as default for entire body
+                document.body.style.cursor = 'none'
+                gsap.set('.confetti-cursor', { opacity: 1 })
+                
+                // Bind methods to preserve 'this' context
+                const boundMouseEnter = this.onMouseEnter.bind(this)
+                const boundMouseLeave = this.onMouseLeave.bind(this)
+                const boundMouseMove = this.onMouseMove.bind(this)
+                
+                // Add mouse event listeners to the main app
+                document.addEventListener('mouseenter', boundMouseEnter)
+                document.addEventListener('mouseleave', boundMouseLeave)
+                document.addEventListener('mousemove', boundMouseMove)
+                
+                // Store bound functions for cleanup
+                this.confettiSystem.boundMouseEnter = boundMouseEnter
+                this.confettiSystem.boundMouseLeave = boundMouseLeave
+                this.confettiSystem.boundMouseMove = boundMouseMove
+                
+                // Add hover events to interactive elements to show normal cursor
+                this.addInteractiveElementEvents()
+                
+                console.log('✅ Mouse events initialized')
+            },
+            
+            addInteractiveElementEvents() {
+                // Define selectors for interactive elements that should show normal cursor
+                const interactiveSelectors = [
+                    'button',
+                    'input',
+                    'select',
+                    'textarea',
+                    'a',
+                    '.personality-card',
+                    '.personality-selection',          // Entire personality selection area
+                    '.day-range-selection',           // Entire day range selection area
+                    '.day-range-slider',              // Entire slider container
+                    '.slider',
+                    '.generate-report-btn',
+                    '.add-ticker-btn',
+                    'label[for]',
+                    '.ticker'
+                ]
+                
+                interactiveSelectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector)
+                    elements.forEach(element => {
+                        element.addEventListener('mouseenter', () => {
+                            gsap.set('.confetti-cursor', { opacity: 0 })
+                            document.body.style.cursor = 'pointer'
+                        })
+                        element.addEventListener('mouseleave', () => {
+                            gsap.set('.confetti-cursor', { opacity: 1 })
+                            document.body.style.cursor = 'none'
+                        })
+                    })
+                })
+                
+                console.log('✅ Interactive element events added')
+            },
+            
+            initObserver() {
+                if (!this.confettiSystem.animationIsOk) {
+                    console.log('⚠️ Skipping Observer (animation not allowed)')
+                    return
+                }
+                
+                const targetElement = document.body
+                
+                if (ScrollTrigger.isTouch === 1) {
+                    console.log('📱 Setting up touch Observer')
+                    Observer.create({
+                        target: targetElement,
+                        type: 'touch',
+                        onPress: (e) => {
+                            const elementUnderMouse = document.elementFromPoint(e.x, e.y)
+                            if (!this.isInteractiveElement(elementUnderMouse)) {
+                                this.clearTextSelection()
+                                this.createExplosion(e.x, e.y, 400)
+                            }
+                        }
+                    })
+                } else {
+                    console.log('🖱️ Setting up pointer Observer')
+                    Observer.create({
+                        target: document.body,
+                        type: 'pointer',
+                        preventDefault: false,
+                        onPress: (e) => {
+                            console.log('🖱️ Observer onPress:', { x: e.x, y: e.y })
+                            // Check if we're clicking on an interactive element
+                            const elementUnderMouse = document.elementFromPoint(e.x, e.y)
+                            if (this.isInteractiveElement(elementUnderMouse)) {
+                                console.log('⚠️ Press ignored (interactive element)')
+                                return false // Don't start drawing
+                            }
+                            console.log('✅ Starting drawing')
+                            this.startDrawing(e)
+                            return true
+                        },
+                        onDrag: (e) => {
+                            if (this.confettiSystem.isDrawing) {
+                                this.updateDrawing(e)
+                            }
+                        },
+                        onDragEnd: (e) => {
+                            if (this.confettiSystem.isDrawing) {
+                                console.log('🖱️ Observer onDragEnd')
+                                this.clearDrawing(e)
+                            }
+                        },
+                        onRelease: (e) => {
+                            if (this.confettiSystem.isDrawing) {
+                                console.log('🖱️ Observer onRelease')
+                                this.clearDrawing(e)
+                            }
+                        }
+                    })
+                }
+                
+                console.log('✅ Observer initialized')
+            },
+            
+            onMouseEnter(e) {
+                // Show confetti cursor when entering the page
+                gsap.set('.confetti-cursor', { opacity: 1 })
+                if (this.confettiSystem.xSetter && this.confettiSystem.ySetter) {
+                    this.confettiSystem.xSetter(e.clientX)
+                    this.confettiSystem.ySetter(e.clientY)
+                }
+            },
+            
+            onMouseLeave(e) {
+                // Hide confetti cursor when leaving the page
+                gsap.set('.confetti-cursor', { opacity: 0 })
+                document.body.style.cursor = 'default'
+            },
+            
+            onMouseMove(e) {
+                // Always update confetti cursor position
+                if (this.confettiSystem.xSetter && this.confettiSystem.ySetter) {
+                    this.confettiSystem.xSetter(e.clientX)
+                    this.confettiSystem.ySetter(e.clientY)
+                }
+                
+                // Debug occasionally to avoid spam
+                if (Math.random() < 0.001) {
+                    console.log('🖱️ Mouse move:', { x: e.clientX, y: e.clientY })
+                }
+            },
+            
+            isInteractiveElement(element) {
+                if (!element) return false
+                
+                // Check if element or its parents are interactive
+                const interactiveSelectors = [
+                    'button',
+                    'input',
+                    'select',
+                    'textarea',
+                    'a',
+                    'label',
+                    '.personality-card',
+                    '.personality-selection',          // Entire personality selection area
+                    '.personality-grid',
+                    '.personality-avatar',
+                    '.personality-info',
+                    '.personality-image',
+                    '.slider',
+                    '.day-range-selection',           // Entire day range selection area  
+                    '.day-range-slider',              // Entire slider container
+                    '.generate-report-btn',
+                    '.add-ticker-btn',
+                    '.ticker',
+                    '.form-input-control',
+                    '.action-panel'
+                ]
+                
+                // Check the element itself and its parents
+                let currentElement = element
+                while (currentElement && currentElement !== document.body) {
+                    for (const selector of interactiveSelectors) {
+                        if (currentElement.matches && currentElement.matches(selector)) {
+                            return true
+                        }
+                    }
+                    currentElement = currentElement.parentElement
+                }
+                
+                return false
+            },
+            
+            clearTextSelection() {
+                // Clear any text selection on the page
+                if (window.getSelection) {
+                    const selection = window.getSelection()
+                    if (selection.rangeCount > 0) {
+                        selection.removeAllRanges()
+                        console.log('🔄 Text selection cleared')
+                    }
+                } else if (document.selection) {
+                    // For older IE browsers
+                    document.selection.empty()
+                    console.log('🔄 Text selection cleared (IE)')
+                }
+            },
+            
+            startDrawing(e) {
+                this.confettiSystem.isDrawing = true
+                this.confettiSystem.startX = e.x
+                this.confettiSystem.startY = e.y + window.scrollY
+                
+                // Clear any text selection when starting confetti interaction
+                this.clearTextSelection()
+                
+                const canvas = document.querySelector('.confetti-canvas')
+                if (!canvas) return
+                
+                // Create line (exactly like original)
+                this.confettiSystem.currentLine = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+                this.confettiSystem.currentLine.setAttribute('x1', this.confettiSystem.startX)
+                this.confettiSystem.currentLine.setAttribute('y1', this.confettiSystem.startY)
+                this.confettiSystem.currentLine.setAttribute('x2', this.confettiSystem.startX)
+                this.confettiSystem.currentLine.setAttribute('y2', this.confettiSystem.startY)
+                this.confettiSystem.currentLine.setAttribute('stroke', '#fffce1')
+                this.confettiSystem.currentLine.setAttribute('stroke-width', '2')
+                this.confettiSystem.currentLine.setAttribute('stroke-dasharray', '4')
+                
+                // Create circle (the growing object - use random confetti piece)
+                const circleRandomKey = gsap.utils.random(this.confettiSystem.imageKeys)
+                const circleOriginal = this.confettiSystem.imageMap[circleRandomKey]
+                if (circleOriginal) {
+                    this.confettiSystem.circle = document.createElementNS('http://www.w3.org/2000/svg', 'image')
+                    this.confettiSystem.circle.setAttribute('x', this.confettiSystem.startX - 25)
+                    this.confettiSystem.circle.setAttribute('y', this.confettiSystem.startY - 25)
+                    this.confettiSystem.circle.setAttribute('width', '50')
+                    this.confettiSystem.circle.setAttribute('height', '50')
+                    this.confettiSystem.circle.setAttributeNS('http://www.w3.org/1999/xlink', 'href', circleOriginal.src)
+                }
+                
+                // Create image at start point
+                const imageRandomKey = gsap.utils.random(this.confettiSystem.imageKeys)
+                const imageOriginal = this.confettiSystem.imageMap[imageRandomKey]
+                if (imageOriginal) {
+                    this.confettiSystem.startImage = document.createElementNS('http://www.w3.org/2000/svg', 'image')
+                    this.confettiSystem.startImage.setAttribute('x', this.confettiSystem.startX - 25)
+                    this.confettiSystem.startImage.setAttribute('y', this.confettiSystem.startY - 25)
+                    this.confettiSystem.startImage.setAttribute('width', '50')
+                    this.confettiSystem.startImage.setAttribute('height', '50')
+                    this.confettiSystem.startImage.setAttributeNS('http://www.w3.org/1999/xlink', 'href', imageOriginal.src)
+                    canvas.appendChild(this.confettiSystem.startImage)
+                }
+                
+                // Add elements to canvas
+                canvas.appendChild(this.confettiSystem.currentLine)
+                canvas.appendChild(this.confettiSystem.circle)
+                
+                // Update cursor state
+                gsap.set('.confetti-cursor .cursor-drag', { opacity: 1 })
+                gsap.set('.confetti-cursor .cursor-handle', { opacity: 1 })
+                gsap.set('.confetti-cursor .cursor-pink-pucker', { opacity: 1 })
+                gsap.set('.confetti-cursor .cursor-rock', { opacity: 0 })
+                
+                // Prevent text selection during drag
+                document.body.classList.add('confetti-dragging')
+                
+                console.log('🎨 Drawing started with circle and image')
+            },
+            
+            updateDrawing(e) {
+                if (!this.confettiSystem.currentLine || !this.confettiSystem.startImage) return
+                
+                let cursorX = e.x
+                let cursorY = e.y + window.scrollY
+                
+                let dx = cursorX - this.confettiSystem.startX
+                let dy = cursorY - this.confettiSystem.startY
+                let distance = Math.sqrt(dx * dx + dy * dy)
+                
+                // Calculate shrink for line (like original)
+                let shrink = (distance - 30) / distance
+                let x2 = this.confettiSystem.startX + dx * shrink
+                let y2 = this.confettiSystem.startY + dy * shrink
+                
+                if (distance < 30) {
+                    x2 = this.confettiSystem.startX
+                    y2 = this.confettiSystem.startY
+                }
+                
+                // Calculate angle for rotation
+                let angle = Math.atan2(dy, dx) * (180 / Math.PI)
+                
+                // Update line
+                gsap.to(this.confettiSystem.currentLine, {
+                    attr: { x2, y2 },
+                    duration: 0.1,
+                    ease: 'none'
+                })
+                
+                // Scale both image and circle based on distance (like original)
+                let raw = distance / 100
+                let eased = Math.pow(raw, 0.5)
+                let clamped = this.confettiSystem.clamper(eased)
+                
+                gsap.set([this.confettiSystem.startImage, this.confettiSystem.circle], {
+                    scale: clamped,
+                    rotation: `${angle + -45}_short`,
+                    transformOrigin: 'center center'
+                })
+                
+                // Move & rotate hand cursor
+                gsap.to('.confetti-cursor', {
+                    rotation: `${angle + -90}_short`,
+                    duration: 0.1,
+                    ease: 'none'
+                })
+                
+                this.confettiSystem.lastDistance = distance
+            },
+            
+            clearDrawing(e) {
+                if (!this.confettiSystem.isDrawing) return
+                
+                // Create explosion at start position
+                this.createExplosion(this.confettiSystem.startX, this.confettiSystem.startY, this.confettiSystem.lastDistance)
+                
+                // Update cursor state
+                gsap.set('.confetti-cursor .cursor-drag', { opacity: 0 })
+                gsap.set('.confetti-cursor .cursor-handle', { opacity: 0 })
+                gsap.set('.confetti-cursor .cursor-pink-pucker', { opacity: 0 })
+                gsap.set('.confetti-cursor .cursor-rock', { opacity: 1 })
+                
+                // Remove text selection prevention
+                document.body.classList.remove('confetti-dragging')
+                
+                // Animate cursor rock with wiggle
+                gsap.to('.confetti-cursor .cursor-rock', {
+                    duration: 0.4,
+                    rotation: '+=30',
+                    ease: this.confettiSystem.wiggle,
+                    onComplete: () => {
+                        gsap.set('.confetti-cursor .cursor-rock', { opacity: 0 })
+                        gsap.set('.confetti-cursor', { rotation: 0, overwrite: 'auto' })
+                        gsap.set('.confetti-cursor .cursor-drag', { opacity: 1 })
+                    }
+                })
+                
+                this.confettiSystem.isDrawing = false
+                
+                // Clear all SVG elements
+                const canvas = document.querySelector('.confetti-canvas')
+                if (canvas) {
+                    canvas.innerHTML = ''
+                }
+                
+                // Reset references
+                this.confettiSystem.currentLine = null
+                this.confettiSystem.startImage = null
+                this.confettiSystem.circle = null
+            },
+            
+
+
+            createExplosion(x, y, distance = 100) {
+                console.log('🎆 Creating explosion:', { x, y, distance, explosionKeys: this.confettiSystem.explosionKeys.length })
+                
+                if (this.confettiSystem.explosionKeys.length === 0) {
+                    console.warn('❌ No explosion images available')
+                    console.log('Available explosion map:', this.confettiSystem.explosionMap)
+                    return
+                }
+                
+                const count = Math.round(gsap.utils.clamp(3, 100, distance / 20))
+                const explosion = gsap.timeline()
+                const speed = gsap.utils.mapRange(0, 500, 0.3, 1.5, distance)
+                const sizeRange = gsap.utils.mapRange(0, 500, 20, 60, distance)
+                
+                for (let i = 0; i < count; i++) {
+                    const randomKey = gsap.utils.random(this.confettiSystem.explosionKeys)
+                    const original = this.confettiSystem.explosionMap[randomKey]
+                    if (!original) continue
+                    
+                    const img = original.cloneNode(true)
+                    img.className = 'confetti-piece'
+                    img.style.position = 'fixed'
+                    img.style.pointerEvents = 'none'
+                    img.style.height = `${gsap.utils.random(20, sizeRange)}px`
+                    img.style.left = `${x}px`
+                    img.style.top = `${y}px`
+                    img.style.zIndex = 9999
+                    
+                    document.body.appendChild(img)
+                    
+                    const angle = Math.random() * Math.PI * 2
+                    const velocity = gsap.utils.random(500, 1500) * speed
+                    
+                    explosion
+                        .to(img, {
+                            physics2D: {
+                                angle: angle * (180 / Math.PI),
+                                velocity: velocity,
+                                gravity: 3000
+                            },
+                            rotation: gsap.utils.random(-180, 180),
+                            duration: 1 + Math.random()
+                        }, 0)
+                        .to(img, {
+                            opacity: 0,
+                            duration: 0.2,
+                            ease: 'power1.out',
+                            onComplete: () => img.remove()
+                        }, 1)
+                }
+                
+                return explosion
+            },
+            
+            // Test function for confetti
+            testConfetti() {
+                console.log('🧪 Testing integrated confetti system')
+                console.log('Confetti system state:', this.confettiSystem)
+                this.createExplosion(100, 100, 500)
+            },
+            
+            // Force show cursor for testing
+            testCursor() {
+                console.log('🧪 Testing confetti cursor')
+                gsap.set('.confetti-cursor', { opacity: 1, x: 200, y: 200 })
+                document.body.style.cursor = 'none'
+            },
+            
+            // Test explosion without safe zone check
+            testExplosionDirect() {
+                console.log('🧪 Testing direct explosion')
+                this.createExplosion(window.innerWidth / 2, window.innerHeight / 2, 400)
             }
         },
         mounted() {
             console.log('Vue app mounted successfully')
+            
+            // Initialize integrated confetti system
+            this.$nextTick(() => {
+                this.initConfettiSystem()
+            })
         }
     }).mount('#app')
+    
+    // Make Vue app globally accessible for testing
+    window.vueApp = app
 })
 
 // Fallback functionality

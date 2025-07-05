@@ -5,6 +5,14 @@ html, body {
     background-color: #f6f6f6;
 }
 
+/* Prevent text selection during confetti drag */
+.confetti-dragging {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -310,10 +318,15 @@ input[type="text"] {
     padding: 0 .35em;
     cursor: pointer;
     border: 2px solid;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.1), 4px 4px 0 rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    transform: translateY(0);
 }
 
 .add-ticker-btn:hover {
     background-color: #d2d2d2;
+    transform: translateY(-1px);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.15), 5px 5px 0 rgba(0,0,0,0.1);
 }
 
 .add-ticker-svg {
@@ -331,10 +344,15 @@ input[type="text"] {
     font-weight: 500;
     letter-spacing: .09em;
     font-size: 105%;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.1), 6px 6px 0 rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    transform: translateY(0);
 }
 
 .generate-report-btn:hover {
     background-color: #3ee080;
+    transform: translateY(-2px);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.15), 8px 8px 0 rgba(0,0,0,0.1);
 }
 
 .generate-report-btn:disabled {
@@ -372,6 +390,162 @@ footer {
 
 .output-panel p::-moz-scrollbar {
     display: none;
+}
+
+/* Confetti Animation Styles */
+.pricing-hero {
+    align-items: center;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Safe zone for Vue.js app - no confetti interactions here */
+.vue-safe-zone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-width: 90vw;
+    height: 90vh;
+    z-index: 10;
+    pointer-events: none;
+    background: transparent;
+}
+
+/* Make sure Vue app content stays above confetti */
+#app {
+    position: relative;
+    z-index: 15;
+    pointer-events: auto;
+}
+
+/* Optional: Visual indicator for safe zone (can be removed in production) */
+.debug-safe-zone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-width: 90vw;
+    height: 90vh;
+    border: 2px dashed rgba(255, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 5;
+    display: none; /* Hidden by default */
+}
+
+.pricing-hero__content {
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.pricing-hero__flair {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pricing-hero__hand {
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    width: 30px;
+    z-index: 4;
+}
+
+.pricing-hero__hand small {
+    left: -60%;
+    position: absolute;
+    top: 20px;
+    width: 200%;
+    font-size: 10px;
+    color: #666;
+}
+
+.pricing-hero__drag,
+.pricing-hero__rock {
+    position: absolute;
+    z-index: 4;
+}
+
+.pricing-hero__rock, .pricing-hero__drag {
+    max-width: 141%;
+    opacity: 0;
+    right: 1px;
+    top: -22px;
+    width: 131%;
+}
+
+.pricing-hero__drag {
+    opacity: 1;
+}
+
+.pricing-hero__handle {
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: -40px;
+    width: 100%;
+}
+
+.pricing-hero__canvas {
+    z-index: 2;
+}
+
+.pricing-hero__canvas,
+.pricing-hero__proxy {
+    bottom: 0;
+    height: 100vh;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100vw;
+}
+
+.pricing-hero__proxy {
+    z-index: 3;
+    pointer-events: auto;
+}
+
+/* Create exclusion zones where confetti proxy doesn't work */
+.pricing-hero__proxy::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    max-width: 90vw;
+    height: 90vh;
+    pointer-events: none;
+    z-index: 20;
+}
+
+.explosion-img {
+    will-change: transform;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 
 /* Responsive adjustments */
@@ -703,4 +877,129 @@ footer {
     .personality-info {
         max-width: 100px;
     }
+}
+
+/* Integrated Confetti System Styles */
+.confetti-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+}
+
+.confetti-cursor img {
+    position: absolute;
+}
+
+.confetti-cursor .cursor-drag,
+.confetti-cursor .cursor-rock {
+    max-width: 141%;
+    opacity: 0;
+    right: 1px;
+    top: -15px;
+    width: 131%;
+}
+
+.confetti-cursor .cursor-drag {
+    opacity: 1;
+}
+
+.confetti-cursor .cursor-rock {
+    opacity: 0;
+}
+
+.confetti-cursor .cursor-handle {
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: -27px;
+    width: 100%;
+}
+
+.confetti-cursor .cursor-pink-pucker {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #ff1493;
+    border-radius: 50%;
+    top: 6px;
+    left: 6px;
+    opacity: 0;
+    z-index: -1;
+}
+
+/* Prevent text selection during confetti dragging */
+body.confetti-dragging {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+body.confetti-dragging * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9998;
+    pointer-events: none;
+}
+
+.confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform;
+}
+
+.confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9997;
+}
+
+.confetti-proxy {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9996;
+    pointer-events: none;
+}
+
+.explosion-img {
+    will-change: transform;
+}
+
+/* Hide preload images */
+.image-preload,
+.explosion-preload {
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Ensure images don't interfere with layout */
+img {
+    max-width: 100%;
 }
