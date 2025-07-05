@@ -153,13 +153,7 @@
             font-style: italic;
         }
 
-        .chart-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1.5em;
-        }
+
 
         .report-content-wrapper {
             position: relative;
@@ -233,55 +227,7 @@
             border-radius: 50%;
         }
 
-        .day-btn {
-            background: #46ff90;
-            color: #000;
-            border: 2px solid #000;
-            padding: 8px 12px;
-            font-size: 18px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 2px 2px 0 #000;
-            border-radius: 4px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
 
-        .day-btn:hover {
-            background: #2dd665;
-            transform: translateY(-1px);
-            box-shadow: 3px 3px 0 #000;
-        }
-
-        .day-btn:active {
-            transform: translateY(0);
-            box-shadow: 1px 1px 0 #000;
-        }
-
-        .day-btn:disabled {
-            background: #ccc;
-            color: #666;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: 1px 1px 0 #999;
-        }
-
-        .day-counter {
-            background: #f8f9fa;
-            border: 2px solid #000;
-            padding: 8px 16px;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 2px 2px 0 #000;
-            border-radius: 4px;
-            min-width: 80px;
-        }
         
         .individual-chart-container {
             background: white;
@@ -291,10 +237,76 @@
             padding: 1.5em;
         }
         
-        .chart-header {
+        .individual-chart-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 1.5em;
+        }
+        
+        .individual-day-btn {
+            background: linear-gradient(135deg, #46ff90, #2dd665);
+            color: #000;
+            border: 2px solid #000;
+            padding: 8px 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 2px 2px 0 #000;
+            transition: all 0.1s ease;
+            font-family: 'Poppins', sans-serif;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .individual-day-btn:hover {
+            background: #2dd665;
+            transform: translateY(-1px);
+            box-shadow: 3px 3px 0 #000;
+        }
+        
+        .individual-day-btn:active {
+            transform: translateY(0);
+            box-shadow: 1px 1px 0 #000;
+        }
+        
+        .individual-day-btn:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 1px 1px 0 #999;
+        }
+        
+        .individual-day-counter {
+            background: #f8f9fa;
+            border: 2px solid #000;
+            padding: 8px 16px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 2px 2px 0 #000;
+            border-radius: 4px;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .fund-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .chart-header {
+            margin-bottom: 1em;
             border-bottom: 2px solid #000;
-            padding-bottom: 1em;
+            padding-bottom: 0.5em;
         }
         
         .chart-ticker-title {
@@ -426,6 +438,440 @@
                 margin-bottom: 1em;
             }
         }
+        
+        /* Print Dialog Styles */
+        .print-dialog-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .print-dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 3px solid #000;
+            border-radius: 12px;
+            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.3);
+            padding: 0;
+            width: 500px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .print-dialog-header {
+            background: #f8f9fa;
+            border-bottom: 2px solid #000;
+            border-radius: 8px 8px 0 0;
+            padding: 1.5em 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .print-dialog-close {
+            background: #ff4444;
+            color: white;
+            border: 2px solid #000;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0 #000;
+            transition: all 0.2s ease;
+        }
+        
+        .print-dialog-close:hover {
+            background: #cc0000;
+            transform: translateY(-1px);
+            box-shadow: 3px 3px 0 #000;
+        }
+        
+        .print-dialog-close:active {
+            transform: translateY(0);
+            box-shadow: 1px 1px 0 #000;
+        }
+        
+        .print-dialog h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .print-options {
+            margin-bottom: 1.5em;
+            padding: 1.5em 2em;
+        }
+        
+        .print-option {
+            margin-bottom: 1em;
+            padding: 1em;
+            border: 2px solid #000;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .print-option label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .stock-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8em;
+            margin-top: 0.8em;
+        }
+        
+        .stock-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.8em;
+            padding: 0.8em;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .stock-checkbox:hover {
+            background: #f0f8ff;
+            transform: translateY(-1px);
+            box-shadow: 2px 2px 0 #000;
+        }
+        
+        .stock-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #46ff90;
+            cursor: pointer;
+        }
+        
+        .stock-checkbox label {
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .print-actions {
+            display: flex;
+            gap: 1.5em;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 2em 1.5em 2em;
+        }
+        
+        .print-btn {
+            padding: 1em 2em;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 3px 3px 0 #000;
+        }
+        
+        .print-btn-primary {
+            background: #46ff90;
+            color: #000;
+        }
+        
+        .print-btn-primary:hover {
+            background: #2dd665;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 #000;
+        }
+        
+        .print-btn-secondary {
+            background: #fff;
+            color: #000;
+        }
+        
+        .print-btn-secondary:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 #000;
+        }
+        
+        .print-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1em;
+            margin-top: 1em;
+        }
+        
+        .print-option-card {
+            background: #fff;
+            border: 3px solid #000;
+            border-radius: 8px;
+            padding: 1.2em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .print-option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
+        }
+        
+        .print-option-card.active {
+            background: #f0fff0;
+            border-color: #46ff90;
+            transform: translateY(-1px);
+        }
+        
+        .print-option-card.active::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: #46ff90;
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+            z-index: 10;
+        }
+        
+        .print-option-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #000;
+            margin-bottom: 0.5em;
+            line-height: 1.2;
+        }
+        
+        .print-option-subtitle {
+            font-size: 11px;
+            color: #666;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+        
+        .print-option-card.active .print-option-subtitle {
+            color: #333;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to { 
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        /* Print-specific styles */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0.15in;
+            }
+            
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-content,
+            .print-content * {
+                visibility: visible;
+            }
+            
+            .print-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white;
+                padding: 0;
+                margin: 0;
+                font-size: 10px;
+                line-height: 1.3;
+                box-sizing: border-box;
+            }
+            
+            .print-chart-page,
+            .print-analysis-page {
+                page-break-before: always;
+                page-break-inside: avoid;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding: 0.4em;
+                box-sizing: border-box;
+            }
+            
+            .print-chart-page:first-child,
+            .print-analysis-page:first-child {
+                page-break-before: avoid;
+            }
+            
+            .print-page-header {
+                text-align: center;
+                margin-bottom: 0.5em;
+                padding-bottom: 0.2em;
+                border-bottom: 1px solid #000;
+                page-break-after: avoid;
+                flex-shrink: 0;
+            }
+            
+            .print-title {
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+            
+            .print-subtitle {
+                font-size: 9px;
+                margin: 0.1em 0 0 0;
+                color: #333;
+                font-family: 'Poppins', sans-serif;
+            }
+            
+            .print-day-highlight {
+                background: #000;
+                color: #fff;
+                padding: 0.2em 0.4em;
+                border-radius: 3px;
+                font-weight: bold;
+                display: inline-block;
+                margin: 0.2em 0;
+            }
+            
+            .print-chart-container {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 0.3em;
+                border: 1px solid #000;
+                border-radius: 6px;
+                position: relative;
+                min-height: 620px;
+                margin-bottom: 0.5em;
+                aspect-ratio: 1.3;
+            }
+            
+            .print-chart-ticker-overlay {
+                position: absolute;
+                top: 15px;
+                left: -4px;
+                background: linear-gradient(135deg, #46ff90, #2dd665);
+                color: #000;
+                padding: 0.3em 0.6em;
+                border: 1px solid #000;
+                border-radius: 6px;
+                font-size: 16px;
+                font-weight: 900;
+                font-family: 'Poppins', sans-serif;
+                box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+                z-index: 10;
+            }
+            
+            .print-chart-title {
+                font-size: 14px;
+                font-weight: bold;
+                margin: 0.3em 0;
+                text-align: center;
+                font-family: 'Poppins', sans-serif;
+            }
+            
+            .print-chart-canvas {
+                width: 100% !important;
+                height: 570px !important;
+                max-width: 100% !important;
+                max-height: 570px !important;
+                border: 1px solid #ccc;
+                display: block;
+                object-fit: contain;
+                margin: 0 auto;
+            }
+            
+            .print-chart-metrics {
+                margin-top: 0.3em;
+                padding: 0.4em;
+                background: #f8f9fa;
+                border: 1px solid #000;
+                border-radius: 4px;
+                font-size: 9px;
+                line-height: 1.2;
+                text-align: center;
+            }
+            
+            .print-analysis-page {
+                padding: 1.5em;
+            }
+            
+            .print-analysis-content {
+                flex-grow: 1;
+                padding: 1em;
+                border: 1px solid #000;
+                border-radius: 6px;
+                background: #f8f9fa;
+                font-size: 11px;
+                line-height: 1.5;
+                overflow: hidden;
+                text-align: justify;
+            }
+            
+            .print-page-footer {
+                margin-top: 0.5em;
+                padding: 0.3em;
+                border-top: 1px solid #000;
+                text-align: center;
+                font-size: 7px;
+                color: #666;
+                page-break-inside: avoid;
+                flex-shrink: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -449,15 +895,8 @@
                 <div v-if="hasChartData" class="charts-section">
                     <div class="chart-container">
                         <div class="chart-ticker-display">{{ tickers }}</div>
-                        <div class="chart-controls">
-                            <button class="day-btn" id="removeDayBtn">➖</button>
-                            <span class="day-counter">
-                                <span id="currentDayCount">{{ dayRange }}</span> days
-                            </span>
-                            <button class="day-btn" id="addDayBtn">➕</button>
-                        </div>
                         <div id="chartsContainer"></div>
-                        <div class="chart-note">📅 Note: Charts show actual trading days only (excludes weekends & holidays)</div>
+                        <div class="chart-note">Note: Charts show actual trading days only (excludes weekends & holidays)</div>
                     </div>
                 </div>
                 
@@ -479,16 +918,63 @@
                 ← Back to Home
             </button>
             <button class="back-button secondary-btn" @click="printReport">
-                🖨️ Print Report
+                Custom Print
             </button>
             <button class="back-button secondary-btn" @click="shareReport">
-                📤 Share Report
+                Share Report
             </button>
         </div>
         
         <div class="disclaimer">
             © This is not real financial advice! Always correct 15% of the time!
         </div>
+    </div>
+    
+    <!-- Print Dialog -->
+    <div id="printDialog" class="print-dialog-overlay">
+        <div class="print-dialog">
+            <div class="print-dialog-header">
+                <h3>Customize Your Report</h3>
+                <button class="print-dialog-close" onclick="closePrintDialog()">×</button>
+            </div>
+            
+            <div class="print-options">
+                <div class="print-option">
+                    <label>Select Stocks to Include:</label>
+                    <div id="stockCheckboxes" class="stock-checkboxes">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="print-option">
+                    <label>Print Options:</label>
+                    <div class="print-options-grid">
+                        <div class="print-option-card" id="includeAnalysisCard" onclick="togglePrintOption('includeAnalysis')">
+                            <div class="print-option-title">Include AI Analysis</div>
+                            <div class="print-option-subtitle">AI personality insights and market predictions</div>
+                        </div>
+                        <div class="print-option-card active" id="includeMetadataCard" onclick="togglePrintOption('includeMetadata')">
+                            <div class="print-option-title">Include Report Metadata</div>
+                            <div class="print-option-subtitle">Analysis period, generation date, price ranges, volume data, and key metrics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="print-actions">
+                <button class="print-btn print-btn-primary" onclick="generateCustomPrint()">
+                    Generate PDF
+                </button>
+                <button class="print-btn print-btn-secondary" onclick="previewPrint()">
+                    Preview PDF
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden print content container -->
+    <div id="printContent" class="print-content" style="display: none;">
+        <!-- Dynamically generated print content -->
     </div>
 
     <script>
@@ -602,7 +1088,7 @@
                     window.location.href = 'index.html';
                 },
                 printReport() {
-                    window.print();
+                    openPrintDialog();
                 },
                 shareReport() {
                     if (navigator.share) {
@@ -673,7 +1159,7 @@
                             // Add error message to HTML
                             const errorHtml = `
                                 <div class="chart-error">
-                                    <h3>📊 ${tickerNames[index]} - Data Parse Error</h3>
+                                    <h3>${tickerNames[index]} - Data Parse Error</h3>
                                     <p>Unable to parse chart data for this ticker.</p>
                                     <p><strong>Parse Error:</strong> ${parseError.message}</p>
                                 </div>
@@ -688,7 +1174,7 @@
                         console.error('❌ No results data for ticker:', ticker);
                         const errorHtml = `
                             <div class="chart-error">
-                                <h3>📊 ${ticker} - No Data Available</h3>
+                                <h3>${ticker} - No Data Available</h3>
                                 <p>No stock data found for the selected date range.</p>
                             </div>
                         `;
@@ -715,13 +1201,23 @@
                     const totalDataPoints = allChartData.length;
                     const displayedDataPoints = chartData.length;
                     const chartHtml = `
-                        <div class="individual-chart-container">
+                        <div class="individual-chart-container" data-ticker="${ticker}" data-index="${index}">
                             <div class="chart-header">
-                                <h3 class="chart-ticker-title">📈 ${ticker} Stock Performance</h3>
+                                <h3 class="chart-ticker-title">
+                                    <img src="images/fund-svgrepo-com.svg" class="fund-icon" alt="Fund">
+                                    ${ticker} Stock Performance
+                                </h3>
                                 <div class="chart-info">
-                                    ${displayedDataPoints < 3 ? '<span class="data-note">⚠️ Limited data due to weekends/holidays</span>' : ''}
-                                    ${displayedDataPoints > 30 ? '<span class="data-note">📈 High/Low lines hidden for clarity (30+ days)</span>' : ''}
+                                    ${displayedDataPoints < 3 ? '<span class="data-note">Limited data due to weekends/holidays</span>' : ''}
+                                    ${displayedDataPoints > 30 ? '<span class="data-note">High/Low lines hidden for clarity (30+ days)</span>' : ''}
                                 </div>
+                            </div>
+                            <div class="individual-chart-controls">
+                                <button class="individual-day-btn" id="removeDay-${index}">➖</button>
+                                <span class="individual-day-counter">
+                                    <span id="currentDayCount-${index}">${currentDayRange}</span> days
+                                </span>
+                                <button class="individual-day-btn" id="addDay-${index}">➕</button>
                             </div>
                             <div class="chart-canvas-wrapper">
                                 <canvas id="${canvasId}" class="chart-canvas"></canvas>
@@ -732,12 +1228,17 @@
                     // Add to HTML collection
                     allChartsHtml += chartHtml;
                     
+                    // Initialize individual day range for this chart
+                    individualDayRanges[index] = currentDayRange;
+                    
                     // Store valid chart configuration for later creation
                     validChartConfigs.push({
                         canvasId: canvasId,
                         ticker: ticker,
                         chartData: chartData,
-                        showHighLow: chartData.length <= 30
+                        allChartData: allChartData,
+                        showHighLow: chartData.length <= 30,
+                        index: index
                     });
                     
                 } catch (error) {
@@ -745,7 +1246,7 @@
                     // Add error message to HTML
                     const errorHtml = `
                         <div class="chart-error">
-                            <h3>📊 ${tickerNames[index]} - Error Loading Chart</h3>
+                            <h3>${tickerNames[index]} - Error Loading Chart</h3>
                             <p>Technical error: ${error.message}</p>
                         </div>
                     `;
@@ -760,14 +1261,18 @@
             requestAnimationFrame(() => {
                 validChartConfigs.forEach(config => {
                     try {
+                        // Use individual day range for this chart
+                        const chartDayRange = individualDayRanges[config.index] || currentDayRange;
+                        const chartData = config.allChartData.slice(-chartDayRange);
+                        
                         const ctx = document.getElementById(config.canvasId).getContext('2d');
                         const chart = new Chart(ctx, {
                             type: 'line',
                             data: {
-                                labels: config.chartData.map(d => d.x),
+                                labels: chartData.map(d => d.x),
                                 datasets: [{
                                     label: `💰 ${config.ticker} Close Price`,
-                                    data: config.chartData.map(d => d.c),
+                                    data: chartData.map(d => d.c),
                                     borderColor: '#000',
                                     backgroundColor: 'rgba(70, 255, 144, 0.3)',
                                     borderWidth: 4,
@@ -781,9 +1286,9 @@
                                     pointHoverBorderWidth: 4,
                                     pointHoverBackgroundColor: '#46ff90',
                                     pointHoverBorderColor: '#000'
-                                }, ...(config.showHighLow ? [{
+                                }, ...(chartData.length <= 30 ? [{
                                     label: `${config.ticker} High`,
-                                    data: config.chartData.map(d => d.h),
+                                    data: chartData.map(d => d.h),
                                     borderColor: '#ff4757',
                                     backgroundColor: 'rgba(255, 71, 87, 0.1)',
                                     borderWidth: 3,
@@ -797,7 +1302,7 @@
                                     borderDash: [8, 4]
                                 }, {
                                     label: `${config.ticker} Low`,
-                                    data: config.chartData.map(d => d.l),
+                                    data: chartData.map(d => d.l),
                                     borderColor: '#3742fa',
                                     backgroundColor: 'rgba(55, 66, 250, 0.1)',
                                     borderWidth: 3,
@@ -943,7 +1448,7 @@
                                             },
                                             afterBody: function(context) {
                                                 const dataIndex = context[0].dataIndex;
-                                                const volume = config.chartData[dataIndex]?.v || 0;
+                                                const volume = chartData[dataIndex]?.v || 0;
                                                 return volume > 0 ? ['', '📦 Volume: ' + volume.toLocaleString()] : [];
                                             }
                                         }
@@ -971,7 +1476,89 @@
                         console.error(`❌ Error creating chart for ${config.ticker}:`, error);
                     }
                 });
+                
+                // Add event listeners for individual chart controls
+                validChartConfigs.forEach(config => {
+                    const index = config.index;
+                    const addBtn = document.getElementById(`addDay-${index}`);
+                    const removeBtn = document.getElementById(`removeDay-${index}`);
+                    const dayCountSpan = document.getElementById(`currentDayCount-${index}`);
+                    
+                    if (addBtn) {
+                        addBtn.addEventListener('click', function() {
+                            if (individualDayRanges[index] < 30) {
+                                individualDayRanges[index]++;
+                                updateIndividualChart(index, config);
+                                updateIndividualButtons(index);
+                            }
+                        });
+                    }
+                    
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', function() {
+                            if (individualDayRanges[index] > 1) {
+                                individualDayRanges[index]--;
+                                updateIndividualChart(index, config);
+                                updateIndividualButtons(index);
+                            }
+                        });
+                    }
+                    
+                    // Initialize button states
+                    updateIndividualButtons(index);
+                });
             });
+        }
+        
+        // Helper functions for individual chart controls
+        function updateIndividualChart(index, config) {
+            const chartDayRange = individualDayRanges[index];
+            const chartData = config.allChartData.slice(-chartDayRange);
+            
+            // Find the chart by canvas ID
+            const chart = window.stockCharts.find(c => c.canvas.id === config.canvasId);
+            if (chart) {
+                chart.data.labels = chartData.map(d => d.x);
+                chart.data.datasets[0].data = chartData.map(d => d.c);
+                
+                // Update high/low lines if they exist
+                if (chart.data.datasets.length > 1) {
+                    chart.data.datasets[1].data = chartData.map(d => d.h);
+                    chart.data.datasets[2].data = chartData.map(d => d.l);
+                }
+                
+                // Hide high/low lines if more than 30 days
+                if (chartData.length > 30) {
+                    chart.data.datasets.forEach((dataset, i) => {
+                        if (i > 0) dataset.hidden = true;
+                    });
+                } else {
+                    chart.data.datasets.forEach((dataset, i) => {
+                        if (i > 0) dataset.hidden = false;
+                    });
+                }
+                
+                chart.update('none');
+            }
+            
+            // Update day counter
+            const dayCountSpan = document.getElementById(`currentDayCount-${index}`);
+            if (dayCountSpan) {
+                dayCountSpan.textContent = chartDayRange;
+            }
+        }
+        
+        function updateIndividualButtons(index) {
+            const addBtn = document.getElementById(`addDay-${index}`);
+            const removeBtn = document.getElementById(`removeDay-${index}`);
+            const dayRange = individualDayRanges[index];
+            
+            if (addBtn) {
+                addBtn.disabled = dayRange >= 30;
+            }
+            if (removeBtn) {
+                removeBtn.disabled = dayRange <= 1;
+            }
         }
 
 
@@ -979,63 +1566,350 @@
         let currentDayRange = 3; // Default value, will be updated from Vue
         let allStockData = []; // Pre-loaded stock data
         let allTickerNames = [];
+        let individualDayRanges = {}; // Store individual day ranges for each chart
         
-        // Add day range button functionality
+        // Individual chart controls are handled within createStockCharts function
         document.addEventListener('DOMContentLoaded', function() {
-            const addDayBtn = document.getElementById('addDayBtn');
-            const removeDayBtn = document.getElementById('removeDayBtn');
-            const currentDayCount = document.getElementById('currentDayCount');
-
-            if (addDayBtn) {
-                addDayBtn.addEventListener('click', function() {
-                    if (currentDayRange < 30) { // Max 30 days
-                        currentDayRange++;
-                        updateDayCounter();
-                        rerenderChartsWithNewDayRange();
-                    }
-                });
-            }
-
-            if (removeDayBtn) {
-                removeDayBtn.addEventListener('click', function() {
-                    if (currentDayRange > 1) { // Min 1 day
-                        currentDayRange--;
-                        updateDayCounter();
-                        rerenderChartsWithNewDayRange();
-                    }
-                });
-            }
-
-            function updateDayCounter() {
-                if (currentDayCount) {
-                    currentDayCount.textContent = currentDayRange;
-                }
-                
-                // NOTE: Do NOT update the purple day display box - it should remain static
-                // showing the original report analysis period
-                
-                // Update button states
-                if (removeDayBtn) {
-                    removeDayBtn.disabled = currentDayRange <= 1;
-                }
-                if (addDayBtn) {
-                    addDayBtn.disabled = currentDayRange >= 30;
-                }
-            }
-
-            function rerenderChartsWithNewDayRange() {
-                if (allStockData.length > 0 && allTickerNames.length > 0) {
-                    createStockCharts(allStockData, allTickerNames);
-                }
-            }
-
-            // Initialize button states and day counter
             // Set initial day range from Vue data if available
             const vueApp = document.querySelector('#reportApp');
             if (vueApp && vueApp.__vueParentComponent && vueApp.__vueParentComponent.ctx.dayRange) {
                 currentDayRange = vueApp.__vueParentComponent.ctx.dayRange;
             }
-            updateDayCounter();
+        });
+
+        // Custom Print Dialog Functions
+        function openPrintDialog() {
+            const dialog = document.getElementById('printDialog');
+            const stockCheckboxes = document.getElementById('stockCheckboxes');
+            
+            // Populate stock checkboxes
+            const tickerNames = allTickerNames.length > 0 ? allTickerNames : 
+                (document.querySelector('#reportApp').__vueParentComponent?.ctx.tickers?.split(', ') || []);
+            
+            stockCheckboxes.innerHTML = '';
+            tickerNames.forEach((ticker, index) => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'stock-checkbox';
+                checkboxDiv.innerHTML = `
+                    <input type="checkbox" id="stock-${index}" value="${ticker}" checked>
+                    <label for="stock-${index}">${ticker}</label>
+                `;
+                
+                // Add click handler to the entire div for better UX
+                checkboxDiv.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                });
+                
+                stockCheckboxes.appendChild(checkboxDiv);
+            });
+            
+            dialog.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closePrintDialog() {
+            const dialog = document.getElementById('printDialog');
+            dialog.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function togglePrintOption(optionId) {
+            const card = document.getElementById(optionId + 'Card');
+            card.classList.toggle('active');
+        }
+
+        function generateCustomPrint() {
+            const selectedStocks = [];
+            const stockCheckboxes = document.querySelectorAll('#stockCheckboxes input[type="checkbox"]:checked');
+            stockCheckboxes.forEach(checkbox => {
+                selectedStocks.push(checkbox.value);
+            });
+
+            if (selectedStocks.length === 0) {
+                alert('Please select at least one stock to include in the report.');
+                return;
+            }
+
+            const includeAnalysis = document.getElementById('includeAnalysisCard').classList.contains('active');
+            const includeMetadata = document.getElementById('includeMetadataCard').classList.contains('active');
+            const includeChartData = includeMetadata; // Always include chart data when metadata is included
+
+            generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData);
+            closePrintDialog();
+            
+            // Wait a moment for content generation, then print
+            setTimeout(() => {
+                window.print();
+                
+                // Hide print content after printing
+                setTimeout(() => {
+                    document.getElementById('printContent').style.display = 'none';
+                }, 1000);
+            }, 500);
+        }
+
+        function generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData) {
+            const printContent = document.getElementById('printContent');
+            const vueApp = document.querySelector('#reportApp').__vueParentComponent?.ctx;
+            
+            let html = '';
+
+            // Generate each stock chart as a separate page
+            selectedStocks.forEach((ticker, index) => {
+                const stockData = allStockData[allTickerNames.indexOf(ticker)];
+                const chartCanvas = document.querySelector(`canvas[id*="${ticker.replace(/[^a-zA-Z0-9]/g, '')}"]`);
+                
+                // Each chart gets its own page with header
+                html += `
+                    <div class="print-chart-page">
+                        <div class="print-page-header">
+                            <h1 class="print-title">Stock Analysis Report</h1>
+                            <p class="print-subtitle">Generated by Dodgy Dave's Stock Predictions</p>
+                            ${includeMetadata ? `
+                                <p class="print-subtitle">
+                                    Analysis Period: <span class="print-day-highlight">${vueApp?.dayRange || 3} DAYS</span> | 
+                                    Generated: ${new Date().toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                    })}
+                                </p>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="print-chart-container">
+                            <div class="print-chart-ticker-overlay">${ticker}</div>
+                            <h3 class="print-chart-title">${ticker} - Stock Performance Analysis</h3>
+                `;
+                
+                if (chartCanvas) {
+                    // Create a temporary canvas with proper dimensions (more square)
+                    const tempCanvas = document.createElement('canvas');
+                    const tempCtx = tempCanvas.getContext('2d');
+                    
+                    // Set proper dimensions for print (more square-like for better layout)
+                    const printWidth = 800;  // Optimized width for square layout
+                    const printHeight = 670; // Slightly increased height to match container
+                    tempCanvas.width = printWidth;
+                    tempCanvas.height = printHeight;
+                    
+                    // Draw the original chart to the temp canvas with proper scaling
+                    tempCtx.drawImage(chartCanvas, 0, 0, printWidth, printHeight);
+                    
+                    // Convert to image for printing
+                    const chartImage = tempCanvas.toDataURL('image/png', 0.9);
+                    html += `
+                        <img src="${chartImage}" alt="${ticker} Chart" class="print-chart-canvas">
+                    `;
+                }
+                
+                if (includeChartData && stockData) {
+                    try {
+                        let parsedData;
+                        const jsonMatch = stockData.match(/```json\s*([\s\S]*?)\s*```/);
+                        if (jsonMatch) {
+                            parsedData = JSON.parse(jsonMatch[1]);
+                        } else {
+                            parsedData = JSON.parse(stockData);
+                        }
+                        
+                        if (parsedData.results && parsedData.results.length > 0) {
+                            const recent = parsedData.results[parsedData.results.length - 1];
+                            const oldest = parsedData.results[0];
+                            const priceChange = ((recent.c - oldest.c) / oldest.c * 100).toFixed(2);
+                            const changeDirection = priceChange >= 0 ? '↑' : '↓';
+                            
+                            html += `
+                                <div class="print-chart-metrics">
+                                    <strong>Key Metrics for ${ticker}:</strong><br>
+                                    Latest Close: $${recent.c.toFixed(2)} | 
+                                    Period Change: ${changeDirection} ${Math.abs(priceChange)}% | 
+                                    High: $${recent.h.toFixed(2)} | 
+                                    Low: $${recent.l.toFixed(2)}
+                                </div>
+                            `;
+                        }
+                    } catch (error) {
+                        console.warn('Could not parse stock data for metrics:', error);
+                    }
+                }
+                
+                html += `
+                        </div>
+                        
+                        <div class="print-page-footer">
+                            <p>© Dodgy Dave's Stock Predictions | This is not real financial advice! Always correct 15% of the time!</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Add AI analysis as a separate page if requested
+            if (includeAnalysis && vueApp?.reportData) {
+                const cleanText = vueApp.reportData.replace(/<[^>]*>/g, '').trim();
+                const truncatedText = cleanText.length > 1200 ? cleanText.slice(0, 1200) + '...' : cleanText;
+                
+                html += `
+                    <div class="print-analysis-page">
+                        <div class="print-page-header">
+                            <h1 class="print-title">AI Analysis & Market Insights</h1>
+                            <p class="print-subtitle">Generated by Dodgy Dave's Stock Predictions</p>
+                            ${includeMetadata ? `
+                                <p class="print-subtitle">
+                                    Analysis Period: <span class="print-day-highlight">${vueApp?.dayRange || 3} DAYS</span> | 
+                                    Generated: ${new Date().toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                    })}
+                                </p>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="print-analysis-content">
+                            ${truncatedText}
+                        </div>
+                        
+                        <div class="print-page-footer">
+                            <p>© Dodgy Dave's Stock Predictions | This is not real financial advice! Always correct 15% of the time!</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            printContent.innerHTML = html;
+            printContent.style.display = 'block';
+        }
+        
+        function previewPrint() {
+            const selectedStocks = [];
+            const stockCheckboxes = document.querySelectorAll('#stockCheckboxes input[type="checkbox"]:checked');
+            stockCheckboxes.forEach(checkbox => {
+                selectedStocks.push(checkbox.value);
+            });
+
+            if (selectedStocks.length === 0) {
+                alert('Please select at least one stock to preview.');
+                return;
+            }
+
+            const includeAnalysis = document.getElementById('includeAnalysisCard').classList.contains('active');
+            const includeMetadata = document.getElementById('includeMetadataCard').classList.contains('active');
+            const includeChartData = includeMetadata; // Always include chart data when metadata is included
+
+            generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData);
+            
+            // Open preview in a new window
+            const printWindow = window.open('', 'PrintPreview', 'width=800,height=600,scrollbars=yes');
+            const printContent = document.getElementById('printContent');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print Preview - Stock Report</title>
+                    <style>
+                        body {
+                            font-family: 'Poppins', sans-serif;
+                            margin: 20px;
+                            background: #f5f5f5;
+                        }
+                        .preview-container {
+                            background: white;
+                            padding: 20px;
+                            border: 1px solid #ccc;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        .preview-header {
+                            background: #000;
+                            color: white;
+                            padding: 10px;
+                            margin: -20px -20px 20px -20px;
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        .preview-actions {
+                            position: fixed;
+                            bottom: 20px;
+                            right: 20px;
+                            display: flex;
+                            gap: 10px;
+                        }
+                        .preview-btn {
+                            padding: 10px 20px;
+                            border: 2px solid #000;
+                            border-radius: 5px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            box-shadow: 2px 2px 0 #000;
+                        }
+                        .preview-btn-print {
+                            background: #46ff90;
+                            color: #000;
+                        }
+                        .preview-btn-close {
+                            background: #ff4444;
+                            color: white;
+                        }
+                        ${document.querySelector('style').innerText}
+                    </style>
+                </head>
+                <body>
+                    <div class="preview-container">
+                        <div class="preview-header">Print Preview</div>
+                        ${printContent.innerHTML}
+                    </div>
+                    <div class="preview-actions">
+                        <button class="preview-btn preview-btn-print" onclick="window.print()">Print</button>
+                        <button class="preview-btn preview-btn-close" onclick="window.close()">Close</button>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            
+            // Hide print content after preview
+            setTimeout(() => {
+                document.getElementById('printContent').style.display = 'none';
+            }, 500);
+        }
+
+        // Close dialog when clicking outside
+        document.addEventListener('click', function(event) {
+            const dialog = document.getElementById('printDialog');
+            const dialogContent = document.querySelector('.print-dialog');
+            
+            if (event.target === dialog && !dialogContent.contains(event.target)) {
+                closePrintDialog();
+            }
+        });
+
+        // Close dialog with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closePrintDialog();
+            }
+        });
+
+        // Handle print events for cleanup
+        window.addEventListener('beforeprint', function() {
+            console.log('🖨️ Preparing print content...');
+        });
+
+        window.addEventListener('afterprint', function() {
+            console.log('🖨️ Print dialog closed');
+            // Ensure print content is hidden after printing
+            setTimeout(() => {
+                const printContent = document.getElementById('printContent');
+                if (printContent) {
+                    printContent.style.display = 'none';
+                }
+            }, 500);
         });
 
     </script>
