@@ -1,19 +1,21 @@
 import {defineConfig} from "vite"
 
-export default defineConfig({
-	plugins: [
-		
-	],
-	base: process.env.NODE_ENV === 'production' ? '/stock-predictions-ai/' : '/',
-	build: {
-		outDir: 'dist',
-		assetsDir: 'assets',
-		sourcemap: false,
-		minify: 'terser',
-		rollupOptions: {
-			output: {
-				manualChunks: undefined,
+export default defineConfig(({ command, mode }) => {
+	const isProduction = mode === 'production'
+	
+	return {
+		plugins: [],
+		base: isProduction ? '/stock-predictions-ai/' : '/',
+		build: {
+			outDir: 'dist',
+			assetsDir: 'assets',
+			sourcemap: false,
+			minify: true,
+			rollupOptions: {
+				output: {
+					manualChunks: undefined,
+				},
 			},
 		},
-	},
+	}
 })
