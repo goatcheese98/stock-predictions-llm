@@ -19,7 +19,7 @@ This guide will help you deploy your Stock Predictions AI app to GitHub Pages us
 
 ### 2. Repository Name Configuration
 
-The current Vite configuration assumes your repository is named `stock-predictions-ai`. If your repository has a different name, update the `base` path in `vite.config.js`:
+The current Vite configuration is set for the repository `stock-predictions-llm`. If your repository has a different name, update the `base` path in `vite.config.js`:
 
 ```javascript
 base: process.env.NODE_ENV === 'production' ? '/YOUR-REPO-NAME/' : '/',
@@ -34,7 +34,7 @@ Once you've completed the setup:
 1. Commit all your changes
 2. Push to the `main` branch
 3. The GitHub Action will automatically trigger
-4. Your app will be available at: `https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/`
+4. Your app will be available at: `https://goatcheese98.github.io/stock-predictions-llm/`
 
 ## GitHub Actions Workflow
 
