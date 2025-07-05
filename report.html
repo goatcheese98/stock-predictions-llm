@@ -1075,7 +1075,7 @@
                         // Create charts if we have raw data
                         if (this.hasChartData) {
                             this.$nextTick(() => {
-                                setTimeout(() => createStockCharts(rawStockData, tickers.split(', ')), 100);
+                                setTimeout(() => createStockCharts(rawStockData, tickers.split(', '), this.dayRange), 100);
                             });
                         }
                     } else {
@@ -1110,8 +1110,11 @@
         }).mount('#reportApp');
         
         // Enhanced Chart creation functionality
-        function createStockCharts(stockDataArray, tickerNames) {
-            console.log('🎨 Creating enhanced charts for:', tickerNames, 'with', currentDayRange, 'days');
+        function createStockCharts(stockDataArray, tickerNames, dayRange) {
+            // Use the passed dayRange parameter (from Vue app) or fallback to current value
+            const selectedDayRange = dayRange || currentDayRange;
+            
+            console.log('🎨 Creating enhanced charts for:', tickerNames, 'with', selectedDayRange, 'days');
             
             const chartsContainer = document.getElementById('chartsContainer');
             if (!chartsContainer) {
@@ -1123,11 +1126,8 @@
             allStockData = stockDataArray;
             allTickerNames = tickerNames;
             
-            // Update global current day range from Vue data
-            const vueApp = document.querySelector('#reportApp').__vueParentComponent;
-            if (vueApp && vueApp.ctx.dayRange) {
-                currentDayRange = vueApp.ctx.dayRange;
-            }
+            // Update global current day range with the selected value
+            currentDayRange = selectedDayRange;
             
             // Clear existing charts
             chartsContainer.innerHTML = '';
@@ -1193,8 +1193,8 @@
                     })).sort((a, b) => a.x - b.x); // Sort by date
                     
                     // Filter data to show only the requested number of trading days
-                    // We want the most recent N trading days based on currentDayRange
-                    const chartData = allChartData.slice(-currentDayRange);
+                    // We want the most recent N trading days based on selectedDayRange
+                    const chartData = allChartData.slice(-selectedDayRange);
                     
                     // Create individual chart container with cartoonish styling
                     const canvasId = `chart-${ticker.replace(/[^a-zA-Z0-9]/g, '')}-${index}`;
@@ -1215,7 +1215,7 @@
                             <div class="individual-chart-controls">
                                 <button class="individual-day-btn" id="removeDay-${index}">➖</button>
                                 <span class="individual-day-counter">
-                                    <span id="currentDayCount-${index}">${currentDayRange}</span> days
+                                    <span id="currentDayCount-${index}">${selectedDayRange}</span> days
                                 </span>
                                 <button class="individual-day-btn" id="addDay-${index}">➕</button>
                             </div>
@@ -1229,7 +1229,7 @@
                     allChartsHtml += chartHtml;
                     
                     // Initialize individual day range for this chart
-                    individualDayRanges[index] = currentDayRange;
+                    individualDayRanges[index] = selectedDayRange;
                     
                     // Store valid chart configuration for later creation
                     validChartConfigs.push({
@@ -1262,7 +1262,7 @@
                 validChartConfigs.forEach(config => {
                     try {
                         // Use individual day range for this chart
-                        const chartDayRange = individualDayRanges[config.index] || currentDayRange;
+                        const chartDayRange = individualDayRanges[config.index] || selectedDayRange;
                         const chartData = config.allChartData.slice(-chartDayRange);
                         
                         const ctx = document.getElementById(config.canvasId).getContext('2d');
