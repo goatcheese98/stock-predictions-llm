@@ -76,11 +76,35 @@
 						</div>
 					</form>
 					<p class="ticker-choice-display">
-						<span v-if="tickersArr.length === 0">Your tickers will appear here...</span>
+						<span v-if="tickersArr.length === 0" id="ticker-placeholder">Your tickers will appear here...</span>
 						<span v-for="ticker in tickersArr" :key="ticker" class="ticker">{{ ticker }}</span>
 					</p>
 					
-					<!-- Personality Selection -->
+					<!-- Day Range Selection -->
+					<div class="day-range-selection">
+						<label>Analysis Period: {{ dayRange }} days 📅</label>
+						<div class="day-range-slider">
+							<input 
+								type="range" 
+								v-model="dayRange" 
+								min="3" 
+								max="30" 
+								step="1"
+								class="slider"
+								id="dayRangeSlider"
+							>
+							<div class="slider-labels">
+								<span>3 days</span>
+								<span>30 days</span>
+							</div>
+						</div>
+					</div>
+					
+					<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0" @click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
+						Generate Report
+					</button>
+					
+					<!-- Personality Selection - Moved below Generate Report -->
 					<div class="personality-selection">
 						<label>Choose Your Analyst 👇</label>
 						<div class="personality-grid">
@@ -133,30 +157,6 @@
 							</div>
 						</div>
 					</div>
-					
-					<!-- Day Range Selection -->
-					<div class="day-range-selection">
-						<label>Analysis Period: {{ dayRange }} days 📅</label>
-						<div class="day-range-slider">
-							<input 
-								type="range" 
-								v-model="dayRange" 
-								min="3" 
-								max="30" 
-								step="1"
-								class="slider"
-								id="dayRangeSlider"
-							>
-							<div class="slider-labels">
-								<span>3 days</span>
-								<span>30 days</span>
-							</div>
-						</div>
-					</div>
-					
-					<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0" @click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
-						Generate Report
-					</button>
 					<p class="tag-line">Always correct 15% of the time!</p>
 				</section>
 				

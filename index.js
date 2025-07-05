@@ -1041,6 +1041,97 @@ document.addEventListener('DOMContentLoaded', () => {
             testExplosionDirect() {
                 console.log('🧪 Testing direct explosion')
                 this.createExplosion(window.innerWidth / 2, window.innerHeight / 2, 400)
+            },
+            
+            // Initialize ticker placeholder animation with custom scramble text reveal
+            initTickerPlaceholderAnimation() {
+                const placeholder = document.getElementById('ticker-placeholder')
+                if (!placeholder) {
+                    console.log('⚠️ Ticker placeholder not found')
+                    return
+                }
+                
+                console.log('🎨 Initializing ticker placeholder scramble animation')
+                
+                // Store original text
+                const originalText = placeholder.textContent
+                
+                // Character sets for scrambling
+                const scrambleChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()'.split('')
+                const getRandomChar = () => scrambleChars[Math.floor(Math.random() * scrambleChars.length)]
+                
+                // Split text manually into character spans
+                const chars = originalText.split('').map((char, index) => {
+                    const span = document.createElement('span')
+                    span.textContent = char
+                    span.style.display = 'inline-block'
+                    span.classList.add('scramble-char')
+                    span.dataset.original = char
+                    span.dataset.index = index
+                    return span
+                })
+                
+                // Replace placeholder content with character spans
+                placeholder.innerHTML = ''
+                chars.forEach(char => placeholder.appendChild(char))
+                
+                // Add color pulse animation
+                gsap.to(placeholder, {
+                    color: "#46ff90",
+                    duration: 3,
+                    ease: "power2.inOut",
+                    repeat: -1,
+                    yoyo: true
+                })
+                
+                // Initially scramble all characters
+                chars.forEach(char => {
+                    if (char.dataset.original !== ' ') { // Don't scramble spaces
+                        char.textContent = getRandomChar()
+                    }
+                })
+                
+                // Start the reveal animation after 1 second delay
+                gsap.delayedCall(1, () => {
+                    console.log('🎯 Starting custom scramble text reveal')
+                    
+                    // Reveal each character with custom scramble effect
+                    chars.forEach((char, index) => {
+                        if (char.dataset.original === ' ') {
+                            // Skip spaces
+                            return
+                        }
+                        
+                        const revealDelay = index * 0.08 // Stagger the reveals
+                        
+                        // Create scramble timeline for this character
+                        const tl = gsap.timeline({ delay: revealDelay })
+                        
+                        // Scramble phase (0.3 seconds of random characters)
+                        const scrambleInterval = setInterval(() => {
+                            char.textContent = getRandomChar()
+                        }, 50)
+                        
+                        // Stop scrambling and reveal original character
+                        tl.call(() => {
+                            clearInterval(scrambleInterval)
+                            char.textContent = char.dataset.original
+                        }, [], 0.3)
+                        
+                        // Add a subtle scale effect on reveal
+                        tl.fromTo(char, {
+                            scale: 1.2,
+                            opacity: 0.7
+                        }, {
+                            scale: 1,
+                            opacity: 1,
+                            duration: 0.3,
+                            ease: "back.out(1.7)"
+                        }, 0.3)
+                    })
+                })
+                
+                console.log('✅ Ticker placeholder scramble animation initialized')
             }
         },
         mounted() {
@@ -1049,6 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Initialize integrated confetti system
             this.$nextTick(() => {
                 this.initConfettiSystem()
+                this.initTickerPlaceholderAnimation()
             })
         }
     }).mount('#app')
