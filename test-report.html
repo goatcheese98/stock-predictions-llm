@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Report - Dodgy Dave's Predictions</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 2em; 
+            background-color: #f6f6f6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2em;
+            border: 2px solid #000;
+        }
+        .tickers {
+            background: #46ff90;
+            padding: 1em;
+            margin: 1em 0;
+            border: 2px solid #000;
+        }
+        .report {
+            background: #f9f9f9;
+            padding: 1em;
+            margin: 1em 0;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 Test Report Page 📈</h1>
+        
+        <div class="tickers">
+            <strong>Tickers:</strong> <span id="tickers">Loading...</span>
+        </div>
+        
+        <div class="report">
+            <strong>Report:</strong>
+            <div id="report">Loading...</div>
+        </div>
+        
+        <div>
+            <strong>URL Parameters:</strong>
+            <pre id="urlParams"></pre>
+        </div>
+        
+        <button onclick="window.close()" style="padding: 1em; background: #46ff90; border: 2px solid #000;">
+            Close Window
+        </button>
+    </div>
+
+    <script>
+        // Debug URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const tickersParam = urlParams.get('tickers');
+        const reportParam = urlParams.get('report');
+        
+        console.log('URL Parameters:', {
+            tickers: tickersParam,
+            report: reportParam ? reportParam.substring(0, 100) + '...' : 'None'
+        });
+        
+        // Display parameters
+        document.getElementById('urlParams').textContent = JSON.stringify({
+            tickers: tickersParam,
+            reportLength: reportParam ? reportParam.length : 0
+        }, null, 2);
+        
+        // Display tickers
+        if (tickersParam) {
+            document.getElementById('tickers').textContent = tickersParam;
+        } else {
+            document.getElementById('tickers').textContent = 'No tickers found';
+        }
+        
+        // Display report
+        if (reportParam) {
+            try {
+                const decodedReport = decodeURIComponent(reportParam);
+                document.getElementById('report').innerHTML = decodedReport;
+            } catch (error) {
+                document.getElementById('report').textContent = 'Error decoding report: ' + error.message;
+            }
+        } else {
+            document.getElementById('report').textContent = 'No report found';
+        }
+    </script>
+</body>
+</html> 

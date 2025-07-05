@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Report - Dodgy Dave's Predictions</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <style>
+        .report-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2em;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 2em;
+            border-bottom: 2px solid #000;
+            padding-bottom: 1em;
+        }
+        .report-content {
+            background: white;
+            padding: 2em;
+            border: 2px solid #000;
+            border-radius: 8px;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 2em;
+            min-height: 200px;
+        }
+        .tickers-analyzed {
+            background: #46ff90;
+            padding: 1em 2em;
+            border: 2px solid #000;
+            display: inline-block;
+            margin-bottom: 2em;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 1em 2em;
+            background-color: #46ff90;
+            border: 2px solid #000;
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .back-button:hover {
+            background-color: #3ee080;
+        }
+        .disclaimer {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 2em;
+            color: #666;
+            font-style: italic;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            padding: 2em;
+            border: 2px solid red;
+            background-color: #ffe6e6;
+            margin: 2em 0;
+            border-radius: 8px;
+        }
+        .loading-message {
+            text-align: center;
+            padding: 2em;
+            font-size: 18px;
+            color: #666;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1em;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .secondary-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+        .secondary-btn:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-page">
+        <header class="report-header">
+            <img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions" style="width: 300px;">
+        </header>
+        
+        <main id="reportContent">
+            <div class="loading-message">
+                Loading your report...
+            </div>
+        </main>
+        
+        <div class="action-buttons">
+            <button class="back-button" onclick="window.location.href='index.html'">
+                ← Back to Home
+            </button>
+            <button class="back-button secondary-btn" onclick="window.print()">
+                🖨️ Print Report
+            </button>
+            <button class="back-button secondary-btn" onclick="shareReport()">
+                📤 Share Report
+            </button>
+        </div>
+        
+        <div class="disclaimer">
+            © This is not real financial advice! Always correct 15% of the time!
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const tickers = urlParams.get('tickers');
+        const reportData = urlParams.get('report');
+        
+        console.log('Report page loaded with:', {
+            tickers: tickers,
+            reportLength: reportData ? reportData.length : 0
+        });
+        
+        const reportContent = document.getElementById('reportContent');
+        
+        if (tickers && reportData) {
+            try {
+                const decodedReport = decodeURIComponent(reportData);
+                console.log('Decoded report:', decodedReport.substring(0, 100) + '...');
+                
+                reportContent.innerHTML = `
+                    <div class="tickers-analyzed">
+                        📊 Analyzed Tickers: ${tickers}
+                    </div>
+                    <div class="report-content">
+                        ${decodedReport}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error decoding report:', error);
+                reportContent.innerHTML = `
+                    <div class="error-message">
+                        Error loading report: ${error.message}<br>
+                        Please try generating a new report.
+                    </div>
+                `;
+            }
+        } else {
+            console.error('Missing parameters:', { tickers, reportData: !!reportData });
+            reportContent.innerHTML = `
+                <div class="error-message">
+                    No report data found. Please generate a report first.<br>
+                    <small>Missing: ${!tickers ? 'tickers' : ''} ${!reportData ? 'report data' : ''}</small>
+                </div>
+            `;
+        }
+        
+        // Share functionality
+        function shareReport() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Stock Report - Dodgy Dave\'s Predictions',
+                    text: 'Check out this stock analysis report!',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                // Fallback: copy URL to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('Report URL copied to clipboard!');
+                }).catch(() => {
+                    alert('URL: ' + window.location.href);
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

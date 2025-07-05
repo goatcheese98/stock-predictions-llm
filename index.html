@@ -8,42 +8,77 @@
 		<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="UTF-8">
+		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 	</head>
 
 	<body>
-		<header>
-			<img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
-		</header>
-		<main>
-			<section class="action-panel">
-				<form id="ticker-input-form">
-					<label for="ticker-input"> Add up to 3 stock tickers below to get a super accurate stock predictions report👇 </label>
-					<div class="form-input-control">
-						<input type="text" id="ticker-input" placeholder="MSFT">
-						<button class="add-ticker-btn">
-							<img src="images/add.svg" class="add-ticker-svg" alt="add"> 
-						</button>
+		<div id="app">
+			<header>
+				<img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
+			</header>
+			<main>
+				<section class="action-panel" v-show="currentView === 'input'">
+					<form id="ticker-input-form" @submit.prevent="handleSubmit">
+						<label for="ticker-input"> Add up to 3 stock tickers below to get a super accurate stock predictions report👇 </label>
+						<div class="form-input-control">
+							<input type="text" id="ticker-input" v-model="tickerInput" placeholder="MSFT">
+							<button type="submit" class="add-ticker-btn">
+								<img src="images/add.svg" class="add-ticker-svg" alt="add"> 
+							</button>
+						</div>
+					</form>
+					<p class="ticker-choice-display">
+						<span v-if="tickersArr.length === 0">Your tickers will appear here...</span>
+						<span v-for="ticker in tickersArr" :key="ticker" class="ticker">{{ ticker }}</span>
+					</p>
+					<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0" @click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
+						Generate Report
+					</button>
+					<p class="tag-line">Always correct 15% of the time!</p>
+				</section>
+				
+				<section class="loading-panel" :class="{ show: currentView === 'loading' }">
+					<div class="loading-tickers">
+						Analyzing: {{ tickersArr.join(', ') }}
 					</div>
-				</form>
-				<p class="ticker-choice-display">
-					Your tickers will appear here...
-				</p>
-				<button class="generate-report-btn" type="button" disabled>
-					Generate Report
-				</button>
-				<p class="tag-line">Always correct 15% of the time!</p>
-			</section>
-			<section class="loading-panel">
-				<img src="images/loader.svg" alt="loading">
-				<div id="api-message">Querying Stocks API...</div>
-			</section>
-			<section class="output-panel">
-				<h2>Your Report 😜</h2>
-			</section>
-		</main>
-		<footer>
-			&copy; This is not real financial advice!
-		</footer>
+					
+					<div class="progress-steps">
+						<div class="progress-step" :class="{ 
+							active: loadingStep === 'fetching', 
+							completed: loadingStep === 'analyzing' || loadingStep === 'generating' 
+						}">
+							<div class="progress-step-icon">📊</div>
+							<div class="progress-step-text">Fetching Stock Data</div>
+						</div>
+						<div class="progress-step" :class="{ 
+							active: loadingStep === 'analyzing', 
+							completed: loadingStep === 'generating' 
+						}">
+							<div class="progress-step-icon">🤖</div>
+							<div class="progress-step-text">AI Analysis</div>
+						</div>
+						<div class="progress-step" :class="{ 
+							active: loadingStep === 'generating' 
+						}">
+							<div class="progress-step-icon">📝</div>
+							<div class="progress-step-text">Generating Report</div>
+						</div>
+					</div>
+					
+					<div class="loading-spinner">
+						<div class="spinner"></div>
+					</div>
+					
+					<div id="api-message">
+						{{ loadingMessage }}<span class="loading-dots"></span>
+					</div>
+				</section>
+			</main>
+			<footer>
+				&copy; This is not real financial advice!
+			</footer>
+		</div>
+		
 		<script src="index.js" type="module"></script>
 	</body>
 </html>

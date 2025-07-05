@@ -48,13 +48,170 @@ main {
 .loading-panel {
     display: none;
     flex-direction: column;
-    justify-content: space-around;
-    height: 400px;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
     text-align: center;
+    background: linear-gradient(135deg, #f6f6f6 0%, #e9e9e9 100%);
+    border-radius: 12px;
+    margin: 2em;
+    padding: 2em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.loading-panel.show {
+    display: flex;
 }
 
 .output-panel p{
     overflow-y: scroll;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2em 0;
+    position: relative;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #46ff90;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading Message Styling */
+#api-message {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+    margin-top: 1em;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Progress Dots Animation */
+.loading-dots {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Progress Steps */
+.progress-steps {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin: 2em 0;
+    flex-wrap: wrap;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1em;
+    border-radius: 8px;
+    background: white;
+    border: 2px solid #ddd;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.progress-step.active {
+    border-color: #46ff90;
+    background: #f0fff4;
+    transform: scale(1.05);
+}
+
+.progress-step.completed {
+    border-color: #3ee080;
+    background: #e8f5e8;
+}
+
+.progress-step-icon {
+    font-size: 24px;
+    margin-bottom: 0.5em;
+}
+
+.progress-step-text {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    color: #666;
+}
+
+.progress-step.active .progress-step-text {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Ticker Display in Loading */
+.loading-tickers {
+    background: #46ff90;
+    padding: 0.5em 1em;
+    border: 2px solid #000;
+    border-radius: 6px;
+    margin: 1em 0;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 1em;
+    margin-top: 1em;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    flex: 1;
+    min-width: 140px;
+    max-width: 180px;
+    font-size: 14px;
+    padding: 0.8em 1em;
+}
+
+.secondary-btn {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+}
+
+.secondary-btn:hover {
+    background-color: #f0f0f0 !important;
 }
 
 /* text */
@@ -142,6 +299,16 @@ input[type="text"] {
     font-size: 105%;
 }
 
+.generate-report-btn:hover {
+    background-color: #3ee080;
+}
+
+.generate-report-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 /* ticker display (ensure comma separated) */
 
 .ticker {
@@ -171,4 +338,50 @@ footer {
 
 .output-panel p::-moz-scrollbar {
     display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons button {
+        width: 100%;
+        max-width: none;
+    }
+    
+    header img {
+        width: 280px;
+    }
+    
+    form {
+        width: 320px;
+    }
+    
+    .loading-panel {
+        height: 400px;
+        margin: 1em;
+        padding: 1em;
+    }
+    
+    .progress-steps {
+        flex-direction: column;
+        gap: 0.5em;
+    }
+    
+    .progress-step {
+        min-width: auto;
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+    }
+    
+    #api-message {
+        font-size: 16px;
+    }
 }
