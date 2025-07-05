@@ -101,7 +101,7 @@
         
         /* Enhanced Chart Styles */
         .charts-section {
-            margin: 2em 0;
+            margin: 3em 0;
         }
         
         .chart-container {
@@ -111,6 +111,25 @@
             padding: 1.5em;
             margin-bottom: 2em;
             box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .chart-ticker-display {
+            position: absolute;
+            top: -25px;
+            left: -25px;
+            background: linear-gradient(135deg, #46ff90, #2dd665);
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            font-size: 28px;
+            font-weight: 900;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
         }
         
         .chart-title {
@@ -135,12 +154,82 @@
         }
 
         .chart-controls {
-            text-align: center;
-            margin-bottom: 1.5em;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
+            margin-bottom: 1.5em;
+        }
+
+        .report-content-wrapper {
+            position: relative;
+            margin-top: 3em;
+        }
+
+        .day-display-box {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0 #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px;
+            height: 80px;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .day-number {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .day-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 2px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .chart-note {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 1em;
+            font-style: italic;
+        }
+
+        .personality-circle {
+            position: absolute;
+            bottom: -40px;
+            right: -40px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #9b59b6;
+            background: white;
+            box-shadow: 4px 4px 0 rgba(155, 89, 182, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .personality-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
 
         .day-btn {
@@ -247,7 +336,7 @@
         
         .chart-canvas {
             width: 100%;
-            height: 450px;
+            height: 600px;
         }
         
         .chart-error {
@@ -304,18 +393,7 @@
         
         @media (max-width: 768px) {
             .chart-canvas {
-                height: 350px;
-            }
-            
-            .chart-stats {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .stat-item {
-                min-width: auto;
-                width: 100%;
-                max-width: 300px;
+                height: 450px;
             }
             
             .chart-ticker-title {
@@ -324,6 +402,27 @@
             
             .individual-chart-container {
                 padding: 1em;
+            }
+            
+            .day-display-box {
+                font-size: 14px;
+                padding: 8px 12px;
+                min-width: 60px;
+            }
+            
+            .day-number {
+                font-size: 18px;
+            }
+            
+            .personality-circle {
+                width: 60px;
+                height: 60px;
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .chart-controls {
+                margin-bottom: 1em;
             }
         }
     </style>
@@ -344,14 +443,11 @@
             </div>
             
             <div v-else>
-                <div class="tickers-analyzed">
-                    📊 Analyzed Tickers: {{ tickers }}
-                </div>
+
                 
                 <div v-if="hasChartData" class="charts-section">
                     <div class="chart-container">
-                        <div class="chart-title">📈 Stock Price Charts ({{ dayRange }} day analysis period)</div>
-                        <div class="chart-subtitle">📅 Note: Charts show actual trading days only (excludes weekends & holidays)</div>
+                        <div class="chart-ticker-display">{{ tickers }}</div>
                         <div class="chart-controls">
                             <button class="day-btn" id="removeDayBtn">➖</button>
                             <span class="day-counter">
@@ -360,10 +456,20 @@
                             <button class="day-btn" id="addDayBtn">➕</button>
                         </div>
                         <div id="chartsContainer"></div>
+                        <div class="chart-note">📅 Note: Charts show actual trading days only (excludes weekends & holidays)</div>
                     </div>
                 </div>
                 
-                <div class="report-content" v-html="reportData"></div>
+                <div class="report-content-wrapper">
+                    <div class="day-display-box">
+                        <span class="day-number">{{ dayRange }}</span>
+                        <span class="day-label">DAY REPORT</span>
+                    </div>
+                    <div class="personality-circle">
+                        <img src="images/Dody_Dave.png" alt="Personality" class="personality-img">
+                    </div>
+                    <div class="report-content" v-html="reportData"></div>
+                </div>
             </div>
         </main>
         
@@ -593,13 +699,8 @@
                             <div class="chart-header">
                                 <h3 class="chart-ticker-title">📈 ${ticker} Stock Performance</h3>
                                 <div class="chart-info">
-                                    <span class="data-info">📊 Showing ${displayedDataPoints} of ${totalDataPoints} trading days</span>
                                     ${displayedDataPoints < 3 ? '<span class="data-note">⚠️ Limited data due to weekends/holidays</span>' : ''}
                                     ${displayedDataPoints > 30 ? '<span class="data-note">📈 High/Low lines hidden for clarity (30+ days)</span>' : ''}
-                                </div>
-                                <div class="chart-stats">
-                                    <span class="stat-item" id="stat-${canvasId}-change">📊 Change: Loading...</span>
-                                    <span class="stat-item" id="stat-${canvasId}-volume">📦 Volume: Loading...</span>
                                 </div>
                             </div>
                             <div class="chart-canvas-wrapper">
@@ -613,26 +714,7 @@
                     // Determine if we should show high/low lines (auto-disable if more than 30 days)
                     const showHighLow = chartData.length <= 30;
                     
-                    // Calculate statistics
-                    const firstPrice = chartData[0]?.c || 0;
-                    const lastPrice = chartData[chartData.length - 1]?.c || 0;
-                    const priceChange = lastPrice - firstPrice;
-                    const percentChange = ((priceChange / firstPrice) * 100).toFixed(2);
-                    const totalVolume = chartData.reduce((sum, day) => sum + day.v, 0);
-                    
-                    // Update statistics display
-                    const changeElement = document.getElementById(`stat-${canvasId}-change`);
-                    const volumeElement = document.getElementById(`stat-${canvasId}-volume`);
-                    
-                    if (changeElement) {
-                        const changeEmoji = priceChange >= 0 ? '📈' : '📉';
-                        const changeColor = priceChange >= 0 ? '#46ff90' : '#ff4757';
-                        changeElement.innerHTML = `${changeEmoji} Change: <span style="color: ${changeColor}; font-weight: bold;">${priceChange >= 0 ? '+' : ''}$${priceChange.toFixed(2)} (${percentChange}%)</span>`;
-                    }
-                    
-                    if (volumeElement) {
-                        volumeElement.innerHTML = `📦 Volume: <span style="font-weight: bold;">${totalVolume.toLocaleString()}</span>`;
-                    }
+
                     
                     // Create the enhanced chart with cartoonish styling
                     const ctx = document.getElementById(canvasId).getContext('2d');
@@ -657,7 +739,7 @@
                                 pointHoverBackgroundColor: '#46ff90',
                                 pointHoverBorderColor: '#000'
                             }, ...(showHighLow ? [{
-                                label: `📊 ${ticker} High`,
+                                label: `${ticker} High`,
                                 data: chartData.map(d => d.h),
                                 borderColor: '#ff4757',
                                 backgroundColor: 'rgba(255, 71, 87, 0.1)',
@@ -671,7 +753,7 @@
                                 pointHoverRadius: 10,
                                 borderDash: [8, 4]
                             }, {
-                                label: `📉 ${ticker} Low`,
+                                label: `${ticker} Low`,
                                 data: chartData.map(d => d.l),
                                 borderColor: '#3742fa',
                                 backgroundColor: 'rgba(55, 66, 250, 0.1)',
@@ -692,9 +774,9 @@
                             backgroundColor: 'white',
                             layout: {
                                 padding: {
-                                    top: 30,
+                                    top: 10,
                                     right: 30,
-                                    bottom: 25,
+                                    bottom: 60,
                                     left: 25
                                 }
                             },
@@ -732,15 +814,7 @@
                                         }
                                     },
                                     title: {
-                                        display: true,
-                                        text: '📅 Date',
-                                        color: '#000',
-                                        font: {
-                                            family: 'Poppins',
-                                            size: 16,
-                                            weight: 'bold'
-                                        },
-                                        padding: 15
+                                        display: false
                                     },
                                     border: {
                                         color: '#000',
@@ -766,15 +840,7 @@
                                         }
                                     },
                                     title: {
-                                        display: true,
-                                        text: '💰 Price ($)',
-                                        color: '#000',
-                                        font: {
-                                            family: 'Poppins',
-                                            size: 16,
-                                            weight: 'bold'
-                                        },
-                                        padding: 15
+                                        display: false
                                     },
                                     border: {
                                         color: '#000',
@@ -785,20 +851,20 @@
                             plugins: {
                                 legend: {
                                     display: true,
-                                    position: 'top',
-                                    align: 'end',
+                                    position: 'bottom',
+                                    align: 'center',
                                     labels: {
                                         color: '#000',
                                         font: {
                                             family: 'Poppins',
-                                            size: 13,
+                                            size: 16,
                                             weight: 'bold'
                                         },
-                                        padding: 15,
+                                        padding: 20,
                                         usePointStyle: true,
                                         pointStyle: 'circle',
-                                        boxWidth: 15,
-                                        boxHeight: 15
+                                        boxWidth: 20,
+                                        boxHeight: 20
                                     }
                                 },
                                 tooltip: {
@@ -845,7 +911,7 @@
                                 mode: 'index'
                             },
                             animation: {
-                                duration: 2000,
+                                duration: 800,
                                 easing: 'easeInOutQuart'
                             }
                         }
@@ -907,6 +973,9 @@
                 if (currentDayCount) {
                     currentDayCount.textContent = currentDayRange;
                 }
+                
+                // NOTE: Do NOT update the purple day display box - it should remain static
+                // showing the original report analysis period
                 
                 // Update button states
                 if (removeDayBtn) {
