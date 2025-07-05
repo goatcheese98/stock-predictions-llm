@@ -252,7 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     content: output,
                     timestamp: Date.now(),
                     dayRange: this.dayRange, // Include day range for chart context
-                    rawStockData: this.rawStockData // Store raw data for charts
+                    rawStockData: this.rawStockData, // Store raw data for charts
+                    personality: this.selectedPersonality // Include selected personality
                 }
                 
                 try {
