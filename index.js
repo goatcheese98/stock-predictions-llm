@@ -1,4 +1,4 @@
-import { dates } from '/utils/dates'
+import { dates, getDatesForRange } from '/utils/dates'
 
 // Fallback functionality for when Vue.js doesn't work
 let fallbackData = {
@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadingMessage: '',
                 loadingStep: 'fetching', // 'fetching', 'analyzing', 'generating'
                 selectedPersonality: 'dodgy-dave', // Default to Dodgy Dave
+                dayRange: 3, // configurable day range (3-30 days)
+                rawStockData: null, // Store raw API data for charts
                 personalities: {
                     'dodgy-dave': {
                         name: 'Dodgy Dave',
@@ -109,8 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Loading message:', this.loadingMessage)
                 
                 try {
+                    // Get dynamic date range based on user selection
+                    const dateRange = getDatesForRange(this.dayRange)
+                    console.log('Using date range:', dateRange)
+                    
                     const stockData = await Promise.all(this.tickersArr.map(async (ticker, index) => {
-                        const url = `https://polygon-api-worker.jasani-rohan.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`;
+                        const url = `https://polygon-api-worker.jasani-rohan.workers.dev/?ticker=${ticker}&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
                         console.log('Fetching from URL:', url)
                         
                         // Update loading message to show progress
@@ -128,6 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }))
                     
                     console.log('Stock data received:', stockData)
+                    
+                    // Store raw stock data for chart processing
+                    this.rawStockData = stockData
+                    
                     this.loadingStep = 'analyzing'
                     this.loadingMessage = 'Processing stock data with AI...'
                     
@@ -213,7 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reportData = {
                     tickers: this.tickersArr.join(', '),
                     content: output,
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    dayRange: this.dayRange, // Include day range for chart context
+                    rawStockData: this.rawStockData // Store raw data for charts
                 }
                 
                 try {

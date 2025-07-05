@@ -11,6 +11,15 @@ function getDateNDaysAgo(n) {
     return formatDate(now);
 }
 
+// Create a function to get dates based on dynamic day range
+export function getDatesForRange(dayRange = 3) {
+    return {
+        startDate: getDateNDaysAgo(dayRange), // configurable days back
+        endDate: getDateNDaysAgo(1) // leave at 1 to get yesterday's data
+    }
+}
+
+// Keep the original dates object for backward compatibility
 export const dates = {
     startDate: getDateNDaysAgo(3), // alter days to increase/decrease data set
     endDate: getDateNDaysAgo(1) // leave at 1 to get yesterday's data

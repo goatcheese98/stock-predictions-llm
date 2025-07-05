@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
     <style>
         .report-page {
             max-width: 900px;
@@ -94,28 +98,82 @@
         .secondary-btn:hover {
             background-color: #f0f0f0;
         }
+        
+        /* Chart Styles */
+        .charts-section {
+            margin: 2em 0;
+        }
+        
+        .chart-container {
+            background: white;
+            border: 2px solid #000;
+            border-radius: 8px;
+            padding: 1.5em;
+            margin-bottom: 2em;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 1em;
+            text-align: center;
+            color: #000;
+            border-bottom: 2px solid #000;
+            padding-bottom: 0.5em;
+        }
+        
+        .chart-canvas {
+            width: 100%;
+            height: 400px;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-canvas {
+                height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="report-page">
+    <div id="reportApp" class="report-page">
         <header class="report-header">
             <img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions" style="width: 300px;">
         </header>
         
         <main id="reportContent">
-            <div class="loading-message">
+            <div v-if="isLoading" class="loading-message">
                 Loading your report...
+            </div>
+            
+            <div v-else-if="hasError" class="error-message">
+                {{ errorMessage }}
+            </div>
+            
+            <div v-else>
+                <div class="tickers-analyzed">
+                    📊 Analyzed Tickers: {{ tickers }}
+                </div>
+                
+                <div v-if="hasChartData" class="charts-section">
+                    <div class="chart-container">
+                        <div class="chart-title">📈 Stock Price Charts ({{ dayRange }} days)</div>
+                        <div id="chartsContainer"></div>
+                    </div>
+                </div>
+                
+                <div class="report-content" v-html="reportData"></div>
             </div>
         </main>
         
         <div class="action-buttons">
-            <button class="back-button" onclick="window.location.href='index.html'">
+            <button class="back-button" @click="goHome">
                 ← Back to Home
             </button>
-            <button class="back-button secondary-btn" onclick="window.print()">
+            <button class="back-button secondary-btn" @click="printReport">
                 🖨️ Print Report
             </button>
-            <button class="back-button secondary-btn" onclick="shareReport()">
+            <button class="back-button secondary-btn" @click="shareReport">
                 📤 Share Report
             </button>
         </div>
@@ -126,99 +184,329 @@
     </div>
 
     <script>
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const reportId = urlParams.get('id');
-        const tickersFromUrl = urlParams.get('tickers');
-        const reportFromUrl = urlParams.get('report');
+        // Vue.js Application
+        const { createApp } = Vue;
         
-        console.log('Report page loaded with URL params:', {
-            id: reportId,
-            tickers: tickersFromUrl,
-            reportLength: reportFromUrl ? reportFromUrl.length : 0
-        });
-        
-        const reportContent = document.getElementById('reportContent');
-        let tickers, reportData;
-        
-        // Try to get data from sessionStorage first (new method)
-        if (reportId) {
-            try {
-                const storedData = sessionStorage.getItem('stockReport');
-                if (storedData) {
-                    const parsedData = JSON.parse(storedData);
-                    tickers = parsedData.tickers;
-                    reportData = parsedData.content;
-                    console.log('Loaded report from sessionStorage:', {
-                        tickers: tickers,
-                        reportLength: reportData.length
-                    });
+        createApp({
+            data() {
+                return {
+                    isLoading: true,
+                    hasError: false,
+                    errorMessage: '',
+                    tickers: '',
+                    reportData: '',
+                    rawStockData: null,
+                    dayRange: 3,
+                    hasChartData: false
                 }
-            } catch (error) {
-                console.error('Error loading from sessionStorage:', error);
+            },
+            mounted() {
+                this.loadReportData();
+            },
+            methods: {
+                loadReportData() {
+                    console.log('Loading report data...');
+                    
+                    // Get URL parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const reportId = urlParams.get('id');
+                    const tickersFromUrl = urlParams.get('tickers');
+                    const reportFromUrl = urlParams.get('report');
+                    
+                    console.log('Report page loaded with URL params:', {
+                        id: reportId,
+                        tickers: tickersFromUrl,
+                        reportLength: reportFromUrl ? reportFromUrl.length : 0
+                    });
+                    
+                    let tickers, reportData, rawStockData, dayRange;
+                    
+                    // Try to get data from sessionStorage first (new method)
+                    if (reportId) {
+                        try {
+                            const storedData = sessionStorage.getItem('stockReport');
+                            if (storedData) {
+                                const parsedData = JSON.parse(storedData);
+                                tickers = parsedData.tickers;
+                                reportData = parsedData.content;
+                                rawStockData = parsedData.rawStockData;
+                                dayRange = parsedData.dayRange || 3;
+                                console.log('Loaded report from sessionStorage:', {
+                                    tickers: tickers,
+                                    reportLength: reportData.length,
+                                    dayRange: dayRange,
+                                    hasRawData: !!rawStockData
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Error loading from sessionStorage:', error);
+                        }
+                    }
+                    
+                    // Fallback to URL parameters (old method)
+                    if (!tickers && !reportData && tickersFromUrl && reportFromUrl) {
+                        try {
+                            tickers = tickersFromUrl;
+                            reportData = decodeURIComponent(reportFromUrl);
+                            console.log('Loaded report from URL parameters');
+                        } catch (error) {
+                            console.error('Error decoding URL parameters:', error);
+                        }
+                    }
+                    
+                    // Update Vue data
+                    if (tickers && reportData) {
+                        this.tickers = tickers;
+                        this.reportData = reportData;
+                        this.rawStockData = rawStockData;
+                        this.dayRange = dayRange || 3;
+                        this.hasChartData = !!(rawStockData && rawStockData.length > 0);
+                        this.isLoading = false;
+                        
+                        // Create charts if we have raw data
+                        if (this.hasChartData) {
+                            this.$nextTick(() => {
+                                setTimeout(() => createStockCharts(rawStockData, tickers.split(', ')), 100);
+                            });
+                        }
+                    } else {
+                        this.hasError = true;
+                        this.errorMessage = `No report data found. Please generate a report first.`;
+                        this.isLoading = false;
+                    }
+                },
+                goHome() {
+                    window.location.href = 'index.html';
+                },
+                printReport() {
+                    window.print();
+                },
+                shareReport() {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Stock Report - Dodgy Dave\'s Predictions',
+                            text: 'Check out this stock analysis report!',
+                            url: window.location.href
+                        }).catch(console.error);
+                    } else {
+                        // Fallback: copy URL to clipboard
+                        navigator.clipboard.writeText(window.location.href).then(() => {
+                            alert('Report URL copied to clipboard!');
+                        }).catch(() => {
+                            alert('URL: ' + window.location.href);
+                        });
+                    }
+                }
             }
-        }
+        }).mount('#reportApp');
         
-        // Fallback to URL parameters (old method)
-        if (!tickers && !reportData && tickersFromUrl && reportFromUrl) {
-            try {
-                tickers = tickersFromUrl;
-                reportData = decodeURIComponent(reportFromUrl);
-                console.log('Loaded report from URL parameters');
-            } catch (error) {
-                console.error('Error decoding URL parameters:', error);
+        // Chart creation functionality
+        function createStockCharts(stockDataArray, tickerNames) {
+            console.log('Creating charts for:', tickerNames, stockDataArray);
+            
+            const chartsContainer = document.getElementById('chartsContainer');
+            if (!chartsContainer) {
+                console.error('Charts container not found');
+                return;
             }
+            
+            stockDataArray.forEach((stockDataText, index) => {
+                try {
+                    // Parse the stock data text to extract JSON
+                    const jsonMatch = stockDataText.match(/```json\s*([\s\S]*?)\s*```/);
+                    if (!jsonMatch) {
+                        console.error('No JSON data found for ticker:', tickerNames[index]);
+                        return;
+                    }
+                    
+                    const stockData = JSON.parse(jsonMatch[1]);
+                    const ticker = tickerNames[index];
+                    
+                    if (!stockData.results || stockData.results.length === 0) {
+                        console.error('No results data for ticker:', ticker);
+                        return;
+                    }
+                    
+                    // Create canvas for this ticker
+                    const canvasId = `chart-${ticker.replace(/[^a-zA-Z0-9]/g, '')}-${index}`;
+                    const chartHtml = `
+                        <div style="margin-bottom: 2em;">
+                            <h3 style="text-align: center; margin-bottom: 1em; color: #000; font-size: 16px;">
+                                ${ticker} Stock Price
+                            </h3>
+                            <canvas id="${canvasId}" class="chart-canvas"></canvas>
+                        </div>
+                    `;
+                    
+                    chartsContainer.innerHTML += chartHtml;
+                    
+                    // Prepare data for Chart.js
+                    const chartData = stockData.results.map(day => ({
+                        x: new Date(day.t),
+                        o: day.o, // open
+                        h: day.h, // high
+                        l: day.l, // low
+                        c: day.c  // close
+                    }));
+                    
+                    // Create the chart with cartoonish styling
+                    const ctx = document.getElementById(canvasId).getContext('2d');
+                    new Chart(ctx, {
+                        type: 'line', // Use line chart instead of candlestick for better compatibility
+                        data: {
+                            labels: chartData.map(d => d.x),
+                            datasets: [{
+                                label: `${ticker} Close Price`,
+                                data: chartData.map(d => d.c),
+                                borderColor: '#000',
+                                backgroundColor: 'rgba(70, 255, 144, 0.2)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.1,
+                                pointBackgroundColor: '#46ff90',
+                                pointBorderColor: '#000',
+                                pointBorderWidth: 2,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                pointHoverBorderWidth: 3
+                            }, {
+                                label: `${ticker} High`,
+                                data: chartData.map(d => d.h),
+                                borderColor: '#ff4757',
+                                backgroundColor: 'rgba(255, 71, 87, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.1,
+                                pointBackgroundColor: '#ff4757',
+                                pointBorderColor: '#000',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                borderDash: [5, 5]
+                            }, {
+                                label: `${ticker} Low`,
+                                data: chartData.map(d => d.l),
+                                borderColor: '#3742fa',
+                                backgroundColor: 'rgba(55, 66, 250, 0.1)',
+                                borderWidth: 2,
+                                fill: false,
+                                tension: 0.1,
+                                pointBackgroundColor: '#3742fa',
+                                pointBorderColor: '#000',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                borderDash: [10, 5]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            backgroundColor: 'white',
+                            scales: {
+                                x: {
+                                    grid: {
+                                        color: '#ddd',
+                                        lineWidth: 1
+                                    },
+                                    ticks: {
+                                        color: '#000',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 12,
+                                            weight: 'bold'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: '📅 Date',
+                                        color: '#000',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        color: '#ddd',
+                                        lineWidth: 1
+                                    },
+                                    ticks: {
+                                        color: '#000',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 12,
+                                            weight: 'bold'
+                                        },
+                                        callback: function(value) {
+                                            return '$' + value.toFixed(2);
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: '💰 Price ($)',
+                                        color: '#000',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 14,
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: 'top',
+                                    labels: {
+                                        color: '#000',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 12,
+                                            weight: 'bold'
+                                        },
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        pointStyle: 'circle'
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                    titleColor: '#46ff90',
+                                    bodyColor: '#fff',
+                                    borderColor: '#46ff90',
+                                    borderWidth: 2,
+                                    cornerRadius: 8,
+                                    titleFont: {
+                                        family: 'Poppins',
+                                        size: 14,
+                                        weight: 'bold'
+                                    },
+                                    bodyFont: {
+                                        family: 'Poppins',
+                                        size: 12
+                                    },
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                        }
+                                    }
+                                }
+                            },
+                            interaction: {
+                                intersect: false,
+                                mode: 'index'
+                            }
+                        }
+                    });
+                    
+                    console.log(`Chart created for ${ticker}`);
+                } catch (error) {
+                    console.error(`Error creating chart for ${tickerNames[index]}:`, error);
+                }
+            });
         }
-        
-        // Display the report
-        if (tickers && reportData) {
-            try {
-                console.log('Displaying report:', reportData.substring(0, 100) + '...');
-                
-                reportContent.innerHTML = `
-                    <div class="tickers-analyzed">
-                        📊 Analyzed Tickers: ${tickers}
-                    </div>
-                    <div class="report-content">
-                        ${reportData}
-                    </div>
-                `;
-            } catch (error) {
-                console.error('Error displaying report:', error);
-                reportContent.innerHTML = `
-                    <div class="error-message">
-                        Error loading report: ${error.message}<br>
-                        Please try generating a new report.
-                    </div>
-                `;
-            }
-        } else {
-            console.error('No report data found');
-            reportContent.innerHTML = `
-                <div class="error-message">
-                    No report data found. Please generate a report first.<br>
-                    <small>Missing: ${!tickers ? 'tickers' : ''} ${!reportData ? 'report data' : ''}</small>
-                </div>
-            `;
-        }
-        
-        // Share functionality
-        function shareReport() {
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Stock Report - Dodgy Dave\'s Predictions',
-                    text: 'Check out this stock analysis report!',
-                    url: window.location.href
-                }).catch(console.error);
-            } else {
-                // Fallback: copy URL to clipboard
-                navigator.clipboard.writeText(window.location.href).then(() => {
-                    alert('Report URL copied to clipboard!');
-                }).catch(() => {
-                    alert('URL: ' + window.location.href);
-                });
-            }
-        }
+
     </script>
 </body>
 </html> 

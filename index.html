@@ -9,6 +9,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta charset="UTF-8">
 		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
 	</head>
 
 	<body>
@@ -31,6 +34,26 @@
 						<span v-if="tickersArr.length === 0">Your tickers will appear here...</span>
 						<span v-for="ticker in tickersArr" :key="ticker" class="ticker">{{ ticker }}</span>
 					</p>
+					
+					<!-- Day Range Selection -->
+					<div class="day-range-selection">
+						<label>Analysis Period: {{ dayRange }} days 📅</label>
+						<div class="day-range-slider">
+							<input 
+								type="range" 
+								v-model="dayRange" 
+								min="3" 
+								max="30" 
+								step="1"
+								class="slider"
+								id="dayRangeSlider"
+							>
+							<div class="slider-labels">
+								<span>3 days</span>
+								<span>30 days</span>
+							</div>
+						</div>
+					</div>
 					
 					<!-- Personality Selection -->
 					<div class="personality-selection">
