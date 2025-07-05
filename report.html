@@ -128,31 +128,63 @@
     <script>
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const tickers = urlParams.get('tickers');
-        const reportData = urlParams.get('report');
+        const reportId = urlParams.get('id');
+        const tickersFromUrl = urlParams.get('tickers');
+        const reportFromUrl = urlParams.get('report');
         
-        console.log('Report page loaded with:', {
-            tickers: tickers,
-            reportLength: reportData ? reportData.length : 0
+        console.log('Report page loaded with URL params:', {
+            id: reportId,
+            tickers: tickersFromUrl,
+            reportLength: reportFromUrl ? reportFromUrl.length : 0
         });
         
         const reportContent = document.getElementById('reportContent');
+        let tickers, reportData;
         
+        // Try to get data from sessionStorage first (new method)
+        if (reportId) {
+            try {
+                const storedData = sessionStorage.getItem('stockReport');
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    tickers = parsedData.tickers;
+                    reportData = parsedData.content;
+                    console.log('Loaded report from sessionStorage:', {
+                        tickers: tickers,
+                        reportLength: reportData.length
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading from sessionStorage:', error);
+            }
+        }
+        
+        // Fallback to URL parameters (old method)
+        if (!tickers && !reportData && tickersFromUrl && reportFromUrl) {
+            try {
+                tickers = tickersFromUrl;
+                reportData = decodeURIComponent(reportFromUrl);
+                console.log('Loaded report from URL parameters');
+            } catch (error) {
+                console.error('Error decoding URL parameters:', error);
+            }
+        }
+        
+        // Display the report
         if (tickers && reportData) {
             try {
-                const decodedReport = decodeURIComponent(reportData);
-                console.log('Decoded report:', decodedReport.substring(0, 100) + '...');
+                console.log('Displaying report:', reportData.substring(0, 100) + '...');
                 
                 reportContent.innerHTML = `
                     <div class="tickers-analyzed">
                         📊 Analyzed Tickers: ${tickers}
                     </div>
                     <div class="report-content">
-                        ${decodedReport}
+                        ${reportData}
                     </div>
                 `;
             } catch (error) {
-                console.error('Error decoding report:', error);
+                console.error('Error displaying report:', error);
                 reportContent.innerHTML = `
                     <div class="error-message">
                         Error loading report: ${error.message}<br>
@@ -161,7 +193,7 @@
                 `;
             }
         } else {
-            console.error('Missing parameters:', { tickers, reportData: !!reportData });
+            console.error('No report data found');
             reportContent.innerHTML = `
                 <div class="error-message">
                     No report data found. Please generate a report first.<br>

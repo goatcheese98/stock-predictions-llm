@@ -209,17 +209,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Rendering report:', output)
                 this.reportContent = output
                 
-                // Instead of showing the output panel, redirect to report page
-                console.log('Redirecting to report page with actual data...')
-                const tickers = this.tickersArr.join(', ')
-                const encodedReport = encodeURIComponent(output)
-                const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+                // Store report data in sessionStorage to avoid URL length issues
+                const reportData = {
+                    tickers: this.tickersArr.join(', '),
+                    content: output,
+                    timestamp: Date.now()
+                }
                 
-                console.log('Generated report URL:', reportUrl)
-                console.log('Redirecting to report page...')
-                
-                // Redirect to the report page
-                window.location.href = reportUrl
+                try {
+                    sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+                    console.log('Report data stored in sessionStorage')
+                    
+                    // Redirect to report page with just a simple identifier
+                    const reportUrl = `report.html?id=${Date.now()}`
+                    console.log('Redirecting to report page:', reportUrl)
+                    window.location.href = reportUrl
+                } catch (error) {
+                    console.error('Error storing report data:', error)
+                    // Fallback to URL method for smaller reports
+                    const tickers = this.tickersArr.join(', ')
+                    const encodedReport = encodeURIComponent(output)
+                    const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+                    window.location.href = reportUrl
+                }
             },
             
             goHome() {
@@ -296,19 +308,23 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             
             openReportPage() {
-                // Redirect to dedicated report page with URL parameters
+                // Store report data in sessionStorage and open report page
                 console.log('Opening report page with tickers:', this.tickersArr)
                 console.log('Report content length:', this.reportContent.length)
                 
-                const tickers = this.tickersArr.join(', ')
-                const encodedReport = encodeURIComponent(this.reportContent)
-                const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+                const reportData = {
+                    tickers: this.tickersArr.join(', '),
+                    content: this.reportContent,
+                    timestamp: Date.now()
+                }
                 
-                console.log('Generated report URL:', reportUrl)
-                console.log('Opening in new tab...')
-                
-                // Try multiple methods to ensure it works
                 try {
+                    sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+                    const reportUrl = `report.html?id=${Date.now()}`
+                    
+                    console.log('Generated report URL:', reportUrl)
+                    console.log('Opening in new tab...')
+                    
                     const newWindow = window.open(reportUrl, '_blank')
                     if (!newWindow) {
                         console.error('Popup blocked, trying same window...')
@@ -318,7 +334,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } catch (error) {
                     console.error('Error opening report page:', error)
-                    // Fallback: try to open in same window
+                    // Fallback to URL method
+                    const tickers = this.tickersArr.join(', ')
+                    const encodedReport = encodeURIComponent(this.reportContent)
+                    const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
                     window.location.href = reportUrl
                 }
             },
@@ -441,14 +460,27 @@ async function fallbackFetchReport(data) {
             throw new Error('AI Error')
         }
         
-        // Redirect to report page instead of showing inline
+        // Store report data and redirect to report page
         console.log('Fallback: Redirecting to report page...')
-        const tickers = fallbackData.tickersArr.join(', ')
-        const encodedReport = encodeURIComponent(responseData.content)
-        const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+        const reportData = {
+            tickers: fallbackData.tickersArr.join(', '),
+            content: responseData.content,
+            timestamp: Date.now()
+        }
         
-        console.log('Fallback report URL:', reportUrl)
-        window.location.href = reportUrl
+        try {
+            sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+            const reportUrl = `report.html?id=${Date.now()}`
+            console.log('Fallback report URL:', reportUrl)
+            window.location.href = reportUrl
+        } catch (error) {
+            console.error('Fallback sessionStorage error:', error)
+            // Fallback to URL method
+            const tickers = fallbackData.tickersArr.join(', ')
+            const encodedReport = encodeURIComponent(responseData.content)
+            const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+            window.location.href = reportUrl
+        }
         
     } catch (err) {
         console.error('Fallback AI error:', err)
@@ -457,8 +489,22 @@ async function fallbackFetchReport(data) {
 }
 
 function openReportInNewPage() {
-    const tickers = fallbackData.tickersArr.join(', ')
-    const encodedReport = encodeURIComponent(fallbackData.reportContent)
-    const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
-    window.open(reportUrl, '_blank')
+    const reportData = {
+        tickers: fallbackData.tickersArr.join(', '),
+        content: fallbackData.reportContent,
+        timestamp: Date.now()
+    }
+    
+    try {
+        sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+        const reportUrl = `report.html?id=${Date.now()}`
+        window.open(reportUrl, '_blank')
+    } catch (error) {
+        console.error('Error with sessionStorage:', error)
+        // Fallback to URL method
+        const tickers = fallbackData.tickersArr.join(', ')
+        const encodedReport = encodeURIComponent(fallbackData.reportContent)
+        const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
+        window.open(reportUrl, '_blank')
+    }
 }

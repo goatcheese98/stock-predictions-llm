@@ -12,6 +12,10 @@ export default defineConfig(({ command, mode }) => {
 			sourcemap: false,
 			minify: true,
 			rollupOptions: {
+				input: {
+					main: 'index.html',
+					report: 'report.html'
+				},
 				output: {
 					manualChunks: undefined,
 				},
