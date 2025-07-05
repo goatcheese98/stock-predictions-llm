@@ -649,6 +649,10 @@
             // Reset charts array
             window.stockCharts = [];
             
+            // Parse all stock data first and collect valid chart configs
+            const validChartConfigs = [];
+            let allChartsHtml = '';
+            
             stockDataArray.forEach((stockDataText, index) => {
                 try {
                     let stockData;
@@ -666,7 +670,7 @@
                             console.log('✅ Successfully parsed pure JSON data');
                         } catch (parseError) {
                             console.error('❌ Failed to parse JSON for ticker:', tickerNames[index], parseError);
-                            // Show error message in chart container
+                            // Add error message to HTML
                             const errorHtml = `
                                 <div class="chart-error">
                                     <h3>📊 ${tickerNames[index]} - Data Parse Error</h3>
@@ -674,7 +678,7 @@
                                     <p><strong>Parse Error:</strong> ${parseError.message}</p>
                                 </div>
                             `;
-                            chartsContainer.innerHTML += errorHtml;
+                            allChartsHtml += errorHtml;
                             return;
                         }
                     }
@@ -688,7 +692,7 @@
                                 <p>No stock data found for the selected date range.</p>
                             </div>
                         `;
-                        chartsContainer.innerHTML += errorHtml;
+                        allChartsHtml += errorHtml;
                         return;
                     }
                     
@@ -725,234 +729,251 @@
                         </div>
                     `;
                     
-                    chartsContainer.innerHTML += chartHtml;
+                    // Add to HTML collection
+                    allChartsHtml += chartHtml;
                     
-                    // Determine if we should show high/low lines (auto-disable if more than 30 days)
-                    const showHighLow = chartData.length <= 30;
-                    
-
-                    
-                    // Create the enhanced chart with cartoonish styling
-                    const ctx = document.getElementById(canvasId).getContext('2d');
-                    const chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: chartData.map(d => d.x),
-                            datasets: [{
-                                label: `💰 ${ticker} Close Price`,
-                                data: chartData.map(d => d.c),
-                                borderColor: '#000',
-                                backgroundColor: 'rgba(70, 255, 144, 0.3)',
-                                borderWidth: 4,
-                                fill: true,
-                                tension: 0.2,
-                                pointBackgroundColor: '#46ff90',
-                                pointBorderColor: '#000',
-                                pointBorderWidth: 3,
-                                pointRadius: 8,
-                                pointHoverRadius: 12,
-                                pointHoverBorderWidth: 4,
-                                pointHoverBackgroundColor: '#46ff90',
-                                pointHoverBorderColor: '#000'
-                            }, ...(showHighLow ? [{
-                                label: `${ticker} High`,
-                                data: chartData.map(d => d.h),
-                                borderColor: '#ff4757',
-                                backgroundColor: 'rgba(255, 71, 87, 0.1)',
-                                borderWidth: 3,
-                                fill: false,
-                                tension: 0.2,
-                                pointBackgroundColor: '#ff4757',
-                                pointBorderColor: '#000',
-                                pointBorderWidth: 2,
-                                pointRadius: 6,
-                                pointHoverRadius: 10,
-                                borderDash: [8, 4]
-                            }, {
-                                label: `${ticker} Low`,
-                                data: chartData.map(d => d.l),
-                                borderColor: '#3742fa',
-                                backgroundColor: 'rgba(55, 66, 250, 0.1)',
-                                borderWidth: 3,
-                                fill: false,
-                                tension: 0.2,
-                                pointBackgroundColor: '#3742fa',
-                                pointBorderColor: '#000',
-                                pointBorderWidth: 2,
-                                pointRadius: 6,
-                                pointHoverRadius: 10,
-                                borderDash: [12, 6]
-                            }] : [])]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            backgroundColor: 'white',
-                            layout: {
-                                padding: {
-                                    top: 10,
-                                    right: 30,
-                                    bottom: 60,
-                                    left: 25
-                                }
-                            },
-                            scales: {
-                                x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'day',
-                                        displayFormats: {
-                                            day: 'MMM dd',
-                                            hour: 'HH:mm'
-                                        },
-                                        tooltipFormat: 'MMM dd, yyyy'
-                                    },
-                                    grid: {
-                                        color: '#e0e0e0',
-                                        lineWidth: 2,
-                                        borderDash: [5, 5]
-                                    },
-                                    ticks: {
-                                        color: '#000',
-                                        font: {
-                                            family: 'Poppins',
-                                            size: 13,
-                                            weight: 'bold'
-                                        },
-                                        padding: 10,
-                                        maxTicksLimit: 8,
-                                        callback: function(value, index, values) {
-                                            const date = new Date(value);
-                                            return date.toLocaleDateString('en-US', { 
-                                                month: 'short', 
-                                                day: 'numeric' 
-                                            });
-                                        }
-                                    },
-                                    title: {
-                                        display: false
-                                    },
-                                    border: {
-                                        color: '#000',
-                                        width: 3
-                                    }
-                                },
-                                y: {
-                                    grid: {
-                                        color: '#e0e0e0',
-                                        lineWidth: 2,
-                                        borderDash: [3, 3]
-                                    },
-                                    ticks: {
-                                        color: '#000',
-                                        font: {
-                                            family: 'Poppins',
-                                            size: 13,
-                                            weight: 'bold'
-                                        },
-                                        padding: 10,
-                                        callback: function(value) {
-                                            return '$' + value.toFixed(2);
-                                        }
-                                    },
-                                    title: {
-                                        display: false
-                                    },
-                                    border: {
-                                        color: '#000',
-                                        width: 3
-                                    }
-                                }
-                            },
-                            plugins: {
-                                legend: {
-                                    display: true,
-                                    position: 'bottom',
-                                    align: 'center',
-                                    labels: {
-                                        color: '#000',
-                                        font: {
-                                            family: 'Poppins',
-                                            size: 16,
-                                            weight: 'bold'
-                                        },
-                                        padding: 20,
-                                        usePointStyle: true,
-                                        pointStyle: 'circle',
-                                        boxWidth: 20,
-                                        boxHeight: 20
-                                    }
-                                },
-                                tooltip: {
-                                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                                    titleColor: '#46ff90',
-                                    bodyColor: '#fff',
-                                    borderColor: '#46ff90',
-                                    borderWidth: 3,
-                                    cornerRadius: 12,
-                                    titleFont: {
-                                        family: 'Poppins',
-                                        size: 16,
-                                        weight: 'bold'
-                                    },
-                                    bodyFont: {
-                                        family: 'Poppins',
-                                        size: 14
-                                    },
-                                    padding: 15,
-                                    displayColors: true,
-                                    callbacks: {
-                                        title: function(context) {
-                                            const date = new Date(context[0].parsed.x);
-                                            return '📅 ' + date.toLocaleDateString('en-US', { 
-                                                weekday: 'short', 
-                                                year: 'numeric', 
-                                                month: 'short', 
-                                                day: 'numeric' 
-                                            });
-                                        },
-                                        label: function(context) {
-                                            return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
-                                        },
-                                        afterBody: function(context) {
-                                            const dataIndex = context[0].dataIndex;
-                                            const volume = chartData[dataIndex]?.v || 0;
-                                            return volume > 0 ? ['', '📦 Volume: ' + volume.toLocaleString()] : [];
-                                        }
-                                    }
-                                }
-                            },
-                            interaction: {
-                                intersect: false,
-                                mode: 'index'
-                            },
-                            animation: {
-                                duration: 800,
-                                easing: 'easeInOutQuart'
-                            }
-                        }
+                    // Store valid chart configuration for later creation
+                    validChartConfigs.push({
+                        canvasId: canvasId,
+                        ticker: ticker,
+                        chartData: chartData,
+                        showHighLow: chartData.length <= 30
                     });
                     
-                    // Store chart reference for zoom controls
-                    if (!window.stockCharts) {
-                        window.stockCharts = [];
-                    }
-                    window.stockCharts.push(chart);
-                    
-                    console.log(`✅ Enhanced chart created for ${ticker}`);
                 } catch (error) {
-                    console.error(`❌ Error creating chart for ${tickerNames[index]}:`, error);
-                    // Show error message in chart container
+                    console.error(`❌ Error processing chart for ${tickerNames[index]}:`, error);
+                    // Add error message to HTML
                     const errorHtml = `
                         <div class="chart-error">
                             <h3>📊 ${tickerNames[index]} - Error Loading Chart</h3>
                             <p>Technical error: ${error.message}</p>
                         </div>
                     `;
-                    chartsContainer.innerHTML += errorHtml;
+                    allChartsHtml += errorHtml;
                 }
             });
+            
+            // Set all HTML at once to avoid DOM invalidation issues
+            chartsContainer.innerHTML = allChartsHtml;
+            
+            // Create all charts after DOM is stable
+            requestAnimationFrame(() => {
+                validChartConfigs.forEach(config => {
+                    try {
+                        const ctx = document.getElementById(config.canvasId).getContext('2d');
+                        const chart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: config.chartData.map(d => d.x),
+                                datasets: [{
+                                    label: `💰 ${config.ticker} Close Price`,
+                                    data: config.chartData.map(d => d.c),
+                                    borderColor: '#000',
+                                    backgroundColor: 'rgba(70, 255, 144, 0.3)',
+                                    borderWidth: 4,
+                                    fill: true,
+                                    tension: 0.2,
+                                    pointBackgroundColor: '#46ff90',
+                                    pointBorderColor: '#000',
+                                    pointBorderWidth: 3,
+                                    pointRadius: 8,
+                                    pointHoverRadius: 12,
+                                    pointHoverBorderWidth: 4,
+                                    pointHoverBackgroundColor: '#46ff90',
+                                    pointHoverBorderColor: '#000'
+                                }, ...(config.showHighLow ? [{
+                                    label: `${config.ticker} High`,
+                                    data: config.chartData.map(d => d.h),
+                                    borderColor: '#ff4757',
+                                    backgroundColor: 'rgba(255, 71, 87, 0.1)',
+                                    borderWidth: 3,
+                                    fill: false,
+                                    tension: 0.2,
+                                    pointBackgroundColor: '#ff4757',
+                                    pointBorderColor: '#000',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 10,
+                                    borderDash: [8, 4]
+                                }, {
+                                    label: `${config.ticker} Low`,
+                                    data: config.chartData.map(d => d.l),
+                                    borderColor: '#3742fa',
+                                    backgroundColor: 'rgba(55, 66, 250, 0.1)',
+                                    borderWidth: 3,
+                                    fill: false,
+                                    tension: 0.2,
+                                    pointBackgroundColor: '#3742fa',
+                                    pointBorderColor: '#000',
+                                    pointBorderWidth: 2,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 10,
+                                    borderDash: [12, 6]
+                                }] : [])]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                backgroundColor: 'white',
+                                layout: {
+                                    padding: {
+                                        top: 10,
+                                        right: 30,
+                                        bottom: 60,
+                                        left: 25
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        type: 'time',
+                                        time: {
+                                            unit: 'day',
+                                            displayFormats: {
+                                                day: 'MMM dd',
+                                                hour: 'HH:mm'
+                                            },
+                                            tooltipFormat: 'MMM dd, yyyy'
+                                        },
+                                        grid: {
+                                            color: '#e0e0e0',
+                                            lineWidth: 2,
+                                            borderDash: [5, 5]
+                                        },
+                                        ticks: {
+                                            color: '#000',
+                                            font: {
+                                                family: 'Poppins',
+                                                size: 13,
+                                                weight: 'bold'
+                                            },
+                                            padding: 10,
+                                            maxTicksLimit: 8,
+                                            callback: function(value, index, values) {
+                                                const date = new Date(value);
+                                                return date.toLocaleDateString('en-US', { 
+                                                    month: 'short', 
+                                                    day: 'numeric' 
+                                                });
+                                            }
+                                        },
+                                        title: {
+                                            display: false
+                                        },
+                                        border: {
+                                            color: '#000',
+                                            width: 3
+                                        }
+                                    },
+                                    y: {
+                                        grid: {
+                                            color: '#e0e0e0',
+                                            lineWidth: 2,
+                                            borderDash: [3, 3]
+                                        },
+                                        ticks: {
+                                            color: '#000',
+                                            font: {
+                                                family: 'Poppins',
+                                                size: 13,
+                                                weight: 'bold'
+                                            },
+                                            padding: 10,
+                                            callback: function(value) {
+                                                return '$' + value.toFixed(2);
+                                            }
+                                        },
+                                        title: {
+                                            display: false
+                                        },
+                                        border: {
+                                            color: '#000',
+                                            width: 3
+                                        }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'bottom',
+                                        align: 'center',
+                                        labels: {
+                                            color: '#000',
+                                            font: {
+                                                family: 'Poppins',
+                                                size: 16,
+                                                weight: 'bold'
+                                            },
+                                            padding: 20,
+                                            usePointStyle: true,
+                                            pointStyle: 'circle',
+                                            boxWidth: 20,
+                                            boxHeight: 20
+                                        }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                                        titleColor: '#46ff90',
+                                        bodyColor: '#fff',
+                                        borderColor: '#46ff90',
+                                        borderWidth: 3,
+                                        cornerRadius: 12,
+                                        titleFont: {
+                                            family: 'Poppins',
+                                            size: 16,
+                                            weight: 'bold'
+                                        },
+                                        bodyFont: {
+                                            family: 'Poppins',
+                                            size: 14
+                                        },
+                                        padding: 15,
+                                        displayColors: true,
+                                        callbacks: {
+                                            title: function(context) {
+                                                const date = new Date(context[0].parsed.x);
+                                                return '📅 ' + date.toLocaleDateString('en-US', { 
+                                                    weekday: 'short', 
+                                                    year: 'numeric', 
+                                                    month: 'short', 
+                                                    day: 'numeric' 
+                                                });
+                                            },
+                                            label: function(context) {
+                                                return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
+                                            },
+                                            afterBody: function(context) {
+                                                const dataIndex = context[0].dataIndex;
+                                                const volume = config.chartData[dataIndex]?.v || 0;
+                                                return volume > 0 ? ['', '📦 Volume: ' + volume.toLocaleString()] : [];
+                                            }
+                                        }
+                                    }
+                                },
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index'
+                                },
+                                animation: {
+                                    duration: 800,
+                                    easing: 'easeInOutQuart'
+                                }
+                            }
+                        });
+                        
+                        // Store chart reference for zoom controls
+                        if (!window.stockCharts) {
+                            window.stockCharts = [];
+                        }
+                        window.stockCharts.push(chart);
+                        
+                        console.log(`✅ Enhanced chart created for ${config.ticker}`);
+                    } catch (error) {
+                        console.error(`❌ Error creating chart for ${config.ticker}:`, error);
+                    }
+                });
+            });
         }
+
 
         // Global variables for dynamic day management
         let currentDayRange = 3; // Default value, will be updated from Vue

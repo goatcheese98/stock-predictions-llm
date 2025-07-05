@@ -376,6 +376,9 @@ input[type="text"] {
 .ticker {
     margin: 0 .1em;
     content: '';
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
 }
 
 .ticker:after {
