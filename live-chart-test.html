@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Report - Dodgy Dave's Predictions</title>
+    <title>Live Chart Test - Apple Stock (AAPL)</title>
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,92 +11,156 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
+    <script src="/utils/dates.js" type="module"></script>
     <style>
-        .report-page {
-            max-width: 900px;
-            margin: 0 auto;
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
             padding: 2em;
         }
-        .report-header {
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border: 3px solid #000;
+            padding: 2em;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+        }
+        
+        .test-header {
             text-align: center;
             margin-bottom: 2em;
-            border-bottom: 2px solid #000;
+            border-bottom: 3px solid #000;
             padding-bottom: 1em;
         }
-        .report-content {
-            background: white;
-            padding: 2em;
-            border: 2px solid #000;
-            border-radius: 8px;
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 2em;
-            min-height: 200px;
-        }
-        .tickers-analyzed {
-            background: #46ff90;
-            padding: 1em 2em;
-            border: 2px solid #000;
-            display: inline-block;
-            margin-bottom: 2em;
-            font-weight: bold;
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .back-button {
-            display: inline-block;
-            padding: 1em 2em;
-            background-color: #46ff90;
-            border: 2px solid #000;
-            text-decoration: none;
-            color: #000;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.09em;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .back-button:hover {
-            background-color: #3ee080;
-        }
-        .disclaimer {
-            text-align: center;
-            font-size: 14px;
-            margin-top: 2em;
-            color: #666;
-            font-style: italic;
-        }
-        .error-message {
-            color: red;
-            text-align: center;
-            padding: 2em;
-            border: 2px solid red;
-            background-color: #ffe6e6;
-            margin: 2em 0;
-            border-radius: 8px;
-        }
-        .loading-message {
-            text-align: center;
-            padding: 2em;
-            font-size: 18px;
-            color: #666;
-        }
-        .action-buttons {
+        
+        .test-controls {
             display: flex;
             gap: 1em;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 2em;
+            padding: 1.5em;
+            background: #f8f9fa;
+            border: 2px solid #000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
         }
-        .secondary-btn {
-            background-color: #ffffff;
-            color: #000000;
-            border: 2px solid #000000;
+        
+        .test-button {
+            background: #46ff90;
+            border: 3px solid #000;
+            padding: 1em 2em;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
         }
-        .secondary-btn:hover {
-            background-color: #f0f0f0;
+        
+        .test-button:hover {
+            background: #3ee080;
+            transform: translateY(-2px);
+            box-shadow: 2px 4px 0 rgba(0,0,0,0.2);
+        }
+        
+        .test-button:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .day-range-control {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            background: white;
+            border: 2px solid #000;
+            padding: 1em;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+        }
+        
+        .day-range-control label {
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        .day-range-control input[type="range"] {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .status-panel {
+            background: white;
+            border: 3px solid #000;
+            padding: 1.5em;
+            margin-bottom: 2em;
+            box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+        }
+        
+        .status-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 1em;
+            color: #000;
+            border-bottom: 2px solid #000;
+            padding-bottom: 0.5em;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5em 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-label {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .status-value {
+            color: #666;
+            font-family: monospace;
+        }
+        
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 2em;
+            background: #fffbf0;
+            border: 3px solid #ffa500;
+            margin-bottom: 2em;
+            box-shadow: 6px 6px 0 rgba(255, 165, 0, 0.2);
+        }
+        
+        .loading-indicator.show {
+            display: block;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ffa500;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 1em;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         /* Enhanced Chart Styles */
@@ -107,7 +171,7 @@
         .chart-container {
             background: white;
             border: 2px solid #000;
-            border-radius: 0; /* Sharp edges for cartoonish look */
+            border-radius: 0;
             padding: 1.5em;
             margin-bottom: 2em;
             box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
@@ -204,7 +268,44 @@
             font-size: 14px;
         }
         
+        .api-info {
+            background: #e6f3ff;
+            border: 3px solid #007acc;
+            padding: 1.5em;
+            margin-bottom: 2em;
+            box-shadow: 6px 6px 0 rgba(0, 122, 204, 0.2);
+        }
+        
+        .api-info h3 {
+            margin: 0 0 1em 0;
+            color: #007acc;
+            font-size: 18px;
+        }
+        
+        .api-info p {
+            margin: 0.5em 0;
+            color: #333;
+        }
+        
+        .api-info code {
+            background: #f0f0f0;
+            padding: 0.2em 0.5em;
+            border: 1px solid #ccc;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
         @media (max-width: 768px) {
+            .test-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .day-range-control {
+                flex-direction: column;
+                text-align: center;
+            }
+            
             .chart-canvas {
                 height: 350px;
             }
@@ -219,183 +320,236 @@
                 width: 100%;
                 max-width: 300px;
             }
-            
-            .chart-ticker-title {
-                font-size: 18px;
-            }
-            
-            .individual-chart-container {
-                padding: 1em;
-            }
         }
     </style>
 </head>
 <body>
-    <div id="reportApp" class="report-page">
-        <header class="report-header">
-            <img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions" style="width: 300px;">
-        </header>
-        
-        <main id="reportContent">
-            <div v-if="isLoading" class="loading-message">
-                Loading your report...
-            </div>
-            
-            <div v-else-if="hasError" class="error-message">
-                {{ errorMessage }}
-            </div>
-            
-            <div v-else>
-                <div class="tickers-analyzed">
-                    📊 Analyzed Tickers: {{ tickers }}
-                </div>
-                
-                <div v-if="hasChartData" class="charts-section">
-                    <div class="chart-container">
-                        <div class="chart-title">📈 Stock Price Charts ({{ dayRange }} days)</div>
-                        <div id="chartsContainer"></div>
-                    </div>
-                </div>
-                
-                <div class="report-content" v-html="reportData"></div>
-            </div>
-        </main>
-        
-        <div class="action-buttons">
-            <button class="back-button" @click="goHome">
-                ← Back to Home
-            </button>
-            <button class="back-button secondary-btn" @click="printReport">
-                🖨️ Print Report
-            </button>
-            <button class="back-button secondary-btn" @click="shareReport">
-                📤 Share Report
-            </button>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>📊 Live Chart Test - Apple Stock (AAPL) 📊</h1>
+            <p>Testing with real Polygon API data</p>
         </div>
         
-        <div class="disclaimer">
-            © This is not real financial advice! Always correct 15% of the time!
+        <div class="api-info">
+            <h3>🔗 API Information</h3>
+            <p><strong>Endpoint:</strong> <code>https://polygon-api-worker.jasani-rohan.workers.dev</code></p>
+            <p><strong>Ticker:</strong> AAPL (Apple Inc.)</p>
+            <p><strong>Data Source:</strong> Polygon.io via your Cloudflare Worker</p>
+            <p><strong>Security:</strong> API keys handled securely through your worker</p>
+        </div>
+        
+        <div class="test-controls">
+            <button class="test-button" id="fetchButton" onclick="fetchLiveData()">
+                🍎 Fetch Live AAPL Data
+            </button>
+            <button class="test-button" onclick="clearCharts()">
+                🗑️ Clear Charts
+            </button>
+            <div class="day-range-control">
+                <label for="dayRange">📅 Days:</label>
+                <input type="range" id="dayRange" min="3" max="30" value="7" oninput="updateDayRange(this.value)">
+                <span id="dayRangeValue">7 days</span>
+            </div>
+        </div>
+        
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="loading-spinner"></div>
+            <span id="loadingMessage">Fetching live AAPL data from Polygon API...</span>
+        </div>
+        
+        <div class="status-panel">
+            <div class="status-title">📋 API Request Status</div>
+            <div class="status-item">
+                <span class="status-label">Request URL:</span>
+                <span class="status-value" id="requestUrl">Not requested yet</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Date Range:</span>
+                <span class="status-value" id="dateRange">Not set</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Response Status:</span>
+                <span class="status-value" id="responseStatus">Waiting...</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Data Points:</span>
+                <span class="status-value" id="dataPoints">0</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Last Updated:</span>
+                <span class="status-value" id="lastUpdated">Never</span>
+            </div>
+        </div>
+        
+        <div class="charts-section">
+            <div class="chart-container">
+                <div class="chart-title">📈 Live Apple Stock Data</div>
+                <div id="chartsContainer">
+                    <p style="text-align: center; color: #666; font-style: italic; padding: 3em;">
+                        Click "Fetch Live AAPL Data" to load real-time Apple stock charts from the Polygon API!
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="api-info">
+            <h3>💡 How It Works</h3>
+            <p>1. <strong>Date Calculation:</strong> Uses your existing date utility to calculate the proper date range</p>
+            <p>2. <strong>API Request:</strong> Calls your Cloudflare Worker endpoint with AAPL ticker and date range</p>
+            <p>3. <strong>Data Processing:</strong> Parses the JSON response and extracts stock price data</p>
+            <p>4. <strong>Chart Generation:</strong> Uses the same enhanced chart system as your main app</p>
+            <p>5. <strong>Real-time Stats:</strong> Calculates price changes, volume, and percentage changes</p>
         </div>
     </div>
 
-    <script>
-        // Vue.js Application
-        const { createApp } = Vue;
+    <script type="module">
+        import { getDatesForRange } from '/utils/dates.js';
         
-        createApp({
-            data() {
-                return {
-                    isLoading: true,
-                    hasError: false,
-                    errorMessage: '',
-                    tickers: '',
-                    reportData: '',
-                    rawStockData: null,
-                    dayRange: 3,
-                    hasChartData: false
-                }
-            },
-            mounted() {
-                this.loadReportData();
-            },
-            methods: {
-                loadReportData() {
-                    console.log('Loading report data...');
-                    
-                    // Get URL parameters
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const reportId = urlParams.get('id');
-                    const tickersFromUrl = urlParams.get('tickers');
-                    const reportFromUrl = urlParams.get('report');
-                    
-                    console.log('Report page loaded with URL params:', {
-                        id: reportId,
-                        tickers: tickersFromUrl,
-                        reportLength: reportFromUrl ? reportFromUrl.length : 0
-                    });
-                    
-                    let tickers, reportData, rawStockData, dayRange;
-                    
-                    // Try to get data from sessionStorage first (new method)
-                    if (reportId) {
-                        try {
-                            const storedData = sessionStorage.getItem('stockReport');
-                            if (storedData) {
-                                const parsedData = JSON.parse(storedData);
-                                tickers = parsedData.tickers;
-                                reportData = parsedData.content;
-                                rawStockData = parsedData.rawStockData;
-                                dayRange = parsedData.dayRange || 3;
-                                console.log('Loaded report from sessionStorage:', {
-                                    tickers: tickers,
-                                    reportLength: reportData.length,
-                                    dayRange: dayRange,
-                                    hasRawData: !!rawStockData
-                                });
-                            }
-                        } catch (error) {
-                            console.error('Error loading from sessionStorage:', error);
-                        }
-                    }
-                    
-                    // Fallback to URL parameters (old method)
-                    if (!tickers && !reportData && tickersFromUrl && reportFromUrl) {
-                        try {
-                            tickers = tickersFromUrl;
-                            reportData = decodeURIComponent(reportFromUrl);
-                            console.log('Loaded report from URL parameters');
-                        } catch (error) {
-                            console.error('Error decoding URL parameters:', error);
-                        }
-                    }
-                    
-                    // Update Vue data
-                    if (tickers && reportData) {
-                        this.tickers = tickers;
-                        this.reportData = reportData;
-                        this.rawStockData = rawStockData;
-                        this.dayRange = dayRange || 3;
-                        this.hasChartData = !!(rawStockData && rawStockData.length > 0);
-                        this.isLoading = false;
-                        
-                        // Create charts if we have raw data
-                        if (this.hasChartData) {
-                            this.$nextTick(() => {
-                                setTimeout(() => createStockCharts(rawStockData, tickers.split(', ')), 100);
-                            });
-                        }
-                    } else {
-                        this.hasError = true;
-                        this.errorMessage = `No report data found. Please generate a report first.`;
-                        this.isLoading = false;
-                    }
-                },
-                goHome() {
-                    window.location.href = 'index.html';
-                },
-                printReport() {
-                    window.print();
-                },
-                shareReport() {
-                    if (navigator.share) {
-                        navigator.share({
-                            title: 'Stock Report - Dodgy Dave\'s Predictions',
-                            text: 'Check out this stock analysis report!',
-                            url: window.location.href
-                        }).catch(console.error);
-                    } else {
-                        // Fallback: copy URL to clipboard
-                        navigator.clipboard.writeText(window.location.href).then(() => {
-                            alert('Report URL copied to clipboard!');
-                        }).catch(() => {
-                            alert('URL: ' + window.location.href);
-                        });
-                    }
-                }
+        let currentDayRange = 7;
+        
+        // Make functions available globally
+        window.updateDayRange = updateDayRange;
+        window.fetchLiveData = fetchLiveData;
+        window.clearCharts = clearCharts;
+        window.createStockCharts = createStockCharts;
+        
+        function updateDayRange(value) {
+            currentDayRange = parseInt(value);
+            document.getElementById('dayRangeValue').textContent = `${value} days`;
+            
+            // Update date range display
+            try {
+                const dateRange = getDatesForRange(currentDayRange);
+                document.getElementById('dateRange').textContent = 
+                    `${dateRange.startDate} to ${dateRange.endDate}`;
+            } catch (error) {
+                document.getElementById('dateRange').textContent = 'Error calculating dates';
             }
-        }).mount('#reportApp');
+        }
         
-        // Enhanced Chart creation functionality
+        async function fetchLiveData() {
+            console.log('🍎 Fetching live AAPL data...');
+            
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const fetchButton = document.getElementById('fetchButton');
+            const loadingMessage = document.getElementById('loadingMessage');
+            
+            // Show loading state
+            loadingIndicator.classList.add('show');
+            fetchButton.disabled = true;
+            fetchButton.textContent = '⏳ Fetching...';
+            
+            try {
+                // Get date range
+                const dateRange = getDatesForRange(currentDayRange);
+                console.log('📅 Using date range:', dateRange);
+                
+                // Update status display
+                document.getElementById('dateRange').textContent = 
+                    `${dateRange.startDate} to ${dateRange.endDate}`;
+                
+                // Construct API URL
+                const apiUrl = `https://polygon-api-worker.jasani-rohan.workers.dev/?ticker=AAPL&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
+                document.getElementById('requestUrl').textContent = apiUrl;
+                
+                console.log('🔗 API URL:', apiUrl);
+                
+                // Update loading message
+                loadingMessage.textContent = 'Connecting to Polygon API via Cloudflare Worker...';
+                
+                // Make API request
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`API Error (${response.status}): ${errorText}`);
+                }
+                
+                loadingMessage.textContent = 'Processing stock data...';
+                const stockDataText = await response.text();
+                
+                console.log('📊 Raw API Response:', stockDataText.substring(0, 200) + '...');
+                
+                // Update status
+                document.getElementById('responseStatus').textContent = `✅ Success (${response.status})`;
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+                
+                // Try to parse and count data points
+                try {
+                    let stockData;
+                    
+                    // Try markdown-wrapped JSON first, then pure JSON
+                    const jsonMatch = stockDataText.match(/```json\s*([\s\S]*?)\s*```/);
+                    if (jsonMatch) {
+                        stockData = JSON.parse(jsonMatch[1]);
+                        console.log('📋 Found markdown-wrapped JSON for counting');
+                    } else {
+                        stockData = JSON.parse(stockDataText);
+                        console.log('📋 Found pure JSON for counting');
+                    }
+                    
+                    const dataPointsCount = stockData.results ? stockData.results.length : 0;
+                    document.getElementById('dataPoints').textContent = dataPointsCount;
+                    
+                    if (dataPointsCount === 0) {
+                        throw new Error('No data points found in API response');
+                    }
+                    
+                    console.log(`✅ Successfully counted ${dataPointsCount} data points`);
+                } catch (parseError) {
+                    console.warn('⚠️ Could not parse data for counting:', parseError);
+                    document.getElementById('dataPoints').textContent = 'Parse error';
+                }
+                
+                loadingMessage.textContent = 'Generating enhanced charts...';
+                
+                // Generate charts using the same function as your main app
+                createStockCharts([stockDataText], ['AAPL']);
+                
+                console.log('✅ Live AAPL chart generated successfully!');
+                
+            } catch (error) {
+                console.error('❌ Error fetching live data:', error);
+                
+                // Update status with error
+                document.getElementById('responseStatus').textContent = `❌ Error: ${error.message}`;
+                
+                // Show error in chart container
+                const chartsContainer = document.getElementById('chartsContainer');
+                chartsContainer.innerHTML = `
+                    <div class="chart-error">
+                        <h3>❌ Error Fetching Live Data</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Possible causes:</strong></p>
+                        <ul style="text-align: left; margin: 1em 0;">
+                            <li>Network connectivity issues</li>
+                            <li>Polygon API rate limits</li>
+                            <li>Weekend/holiday (markets closed)</li>
+                            <li>Invalid date range</li>
+                        </ul>
+                        <p>Try again or check the browser console for more details.</p>
+                    </div>
+                `;
+            } finally {
+                // Hide loading state
+                loadingIndicator.classList.remove('show');
+                fetchButton.disabled = false;
+                fetchButton.textContent = '🍎 Fetch Live AAPL Data';
+            }
+        }
+        
+        function clearCharts() {
+            console.log('🗑️ Clearing charts...');
+            const container = document.getElementById('chartsContainer');
+            container.innerHTML = '<p style="text-align: center; color: #666; font-style: italic; padding: 3em;">Charts cleared. Click "Fetch Live AAPL Data" to load real-time charts!</p>';
+            
+            // Reset status
+            document.getElementById('responseStatus').textContent = 'Waiting...';
+            document.getElementById('dataPoints').textContent = '0';
+            document.getElementById('requestUrl').textContent = 'Not requested yet';
+        }
+        
+        // Enhanced Chart creation functionality (same as report.html)
         function createStockCharts(stockDataArray, tickerNames) {
             console.log('🎨 Creating enhanced charts for:', tickerNames, stockDataArray);
             
@@ -412,7 +566,7 @@
                 try {
                     let stockData;
                     
-                    // Try to parse as markdown-wrapped JSON first (from AI reports)
+                    // Try to parse as markdown-wrapped JSON first (from main app)
                     const jsonMatch = stockDataText.match(/```json\s*([\s\S]*?)\s*```/);
                     if (jsonMatch) {
                         console.log('📋 Found markdown-wrapped JSON data');
@@ -424,13 +578,14 @@
                             stockData = JSON.parse(stockDataText);
                             console.log('✅ Successfully parsed pure JSON data');
                         } catch (parseError) {
-                            console.error('❌ Failed to parse JSON for ticker:', tickerNames[index], parseError);
-                            // Show error message in chart container
+                            console.error('❌ Failed to parse as JSON:', parseError);
                             const errorHtml = `
                                 <div class="chart-error">
                                     <h3>📊 ${tickerNames[index]} - Data Parse Error</h3>
                                     <p>Unable to parse chart data for this ticker.</p>
                                     <p><strong>Parse Error:</strong> ${parseError.message}</p>
+                                    <p><strong>Raw Response Preview:</strong></p>
+                                    <pre style="background: #f0f0f0; padding: 1em; font-size: 12px; overflow: auto; max-height: 200px;">${stockDataText.substring(0, 500)}...</pre>
                                 </div>
                             `;
                             chartsContainer.innerHTML += errorHtml;
@@ -445,6 +600,7 @@
                             <div class="chart-error">
                                 <h3>📊 ${ticker} - No Data Available</h3>
                                 <p>No stock data found for the selected date range.</p>
+                                <p>This might happen during weekends, holidays, or if the date range is invalid.</p>
                             </div>
                         `;
                         chartsContainer.innerHTML += errorHtml;
@@ -456,7 +612,7 @@
                     const chartHtml = `
                         <div class="individual-chart-container">
                             <div class="chart-header">
-                                <h3 class="chart-ticker-title">📈 ${ticker} Stock Performance</h3>
+                                <h3 class="chart-ticker-title">📈 ${ticker} Stock Performance (Live Data)</h3>
                                 <div class="chart-stats">
                                     <span class="stat-item" id="stat-${canvasId}-change">📊 Change: Loading...</span>
                                     <span class="stat-item" id="stat-${canvasId}-volume">📦 Volume: Loading...</span>
@@ -479,6 +635,8 @@
                         c: day.c, // close
                         v: day.v || 0 // volume
                     })).sort((a, b) => a.x - b.x); // Sort by date
+                    
+                    console.log('📊 Processed chart data:', chartData);
                     
                     // Calculate statistics
                     const firstPrice = chartData[0]?.c || 0;
@@ -706,21 +864,24 @@
                         }
                     });
                     
-                    console.log(`✅ Enhanced chart created for ${ticker}`);
+                    console.log(`✅ Enhanced live chart created for ${ticker}`);
                 } catch (error) {
                     console.error(`❌ Error creating chart for ${tickerNames[index]}:`, error);
-                    // Show error message in chart container
                     const errorHtml = `
                         <div class="chart-error">
                             <h3>📊 ${tickerNames[index]} - Error Loading Chart</h3>
-                            <p>Technical error: ${error.message}</p>
+                            <p><strong>Technical error:</strong> ${error.message}</p>
+                            <p><strong>Raw data preview:</strong></p>
+                            <pre style="background: #f0f0f0; padding: 1em; font-size: 12px; overflow: auto; max-height: 200px;">${stockDataArray[index].substring(0, 500)}...</pre>
                         </div>
                     `;
                     chartsContainer.innerHTML += errorHtml;
                 }
             });
         }
-
+        
+        // Initialize date range display on page load
+        updateDayRange(currentDayRange);
     </script>
 </body>
 </html> 

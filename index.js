@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     wiggle: null,
                     clamper: null,
                     xSetter: null,
-                    ySetter: null
+                    ySetter: null,
+                    currentCursorState: 'confetti', // 'confetti' | 'pointer' | 'default'
+                    lastStateChange: 0, // Timestamp to prevent rapid switching
+                    stateChangeDelay: 50 // Minimum ms between state changes
                 },
                 personalities: {
                     'dodgy-dave': {
@@ -480,9 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     return
                 }
                 
-                // Set confetti cursor as default for entire body
-                document.body.style.cursor = 'none'
-                gsap.set('.confetti-cursor', { opacity: 1 })
+                // Initialize cursor state
+                this.setCursorState('confetti')
                 
                 // Bind methods to preserve 'this' context
                 const boundMouseEnter = this.onMouseEnter.bind(this)
@@ -499,46 +501,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.confettiSystem.boundMouseLeave = boundMouseLeave
                 this.confettiSystem.boundMouseMove = boundMouseMove
                 
-                // Add hover events to interactive elements to show normal cursor
+                // Initialize interactive element handling
                 this.addInteractiveElementEvents()
                 
-                console.log('✅ Mouse events initialized')
+                console.log('✅ Mouse events initialized with centralized cursor management')
             },
             
-            addInteractiveElementEvents() {
-                // Define selectors for interactive elements that should show normal cursor
-                const interactiveSelectors = [
-                    'button',
-                    'input',
-                    'select',
-                    'textarea',
-                    'a',
-                    '.personality-card',
-                    '.personality-selection',          // Entire personality selection area
-                    '.day-range-selection',           // Entire day range selection area
-                    '.day-range-slider',              // Entire slider container
-                    '.slider',
-                    '.generate-report-btn',
-                    '.add-ticker-btn',
-                    'label[for]',
-                    '.ticker'
-                ]
+                        addInteractiveElementEvents() {
+                // Note: Cursor state is now handled centrally in updateCursorState()
+                // This method is kept for any future interactive element setup
                 
-                interactiveSelectors.forEach(selector => {
-                    const elements = document.querySelectorAll(selector)
-                    elements.forEach(element => {
-                        element.addEventListener('mouseenter', () => {
-                            gsap.set('.confetti-cursor', { opacity: 0 })
-                            document.body.style.cursor = 'pointer'
-                        })
-                        element.addEventListener('mouseleave', () => {
-                            gsap.set('.confetti-cursor', { opacity: 1 })
-                            document.body.style.cursor = 'none'
-                        })
-                    })
-                })
-                
-                console.log('✅ Interactive element events added')
+                console.log('✅ Interactive element events initialized (cursor handled centrally)')
             },
             
             initObserver() {
@@ -556,10 +529,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         type: 'touch',
                         onPress: (e) => {
                             const elementUnderMouse = document.elementFromPoint(e.x, e.y)
-                            if (!this.isInteractiveElement(elementUnderMouse)) {
-                                this.clearTextSelection()
-                                this.createExplosion(e.x, e.y, 400)
+                            if (this.isInteractiveElement(elementUnderMouse)) {
+                                console.log('⚠️ Touch ignored (interactive element)')
+                                return false
                             }
+                            if (this.isNoClickElement(elementUnderMouse)) {
+                                console.log('⚠️ Touch ignored (no-click zone)')
+                                return false
+                            }
+                            this.clearTextSelection()
+                            this.createExplosion(e.x, e.y, 400)
                         }
                     })
                 } else {
@@ -576,11 +555,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 console.log('⚠️ Press ignored (interactive element)')
                                 return false // Don't start drawing
                             }
+                            // Check if we're in a no-click zone (but allow drag-through)
+                            if (this.isNoClickElement(elementUnderMouse)) {
+                                console.log('⚠️ Press ignored (no-click zone)')
+                                return false // Don't start drawing on click
+                            }
                             console.log('✅ Starting drawing')
                             this.startDrawing(e)
                             return true
                         },
                         onDrag: (e) => {
+                            // Allow drag-through even in no-click zones
                             if (this.confettiSystem.isDrawing) {
                                 this.updateDrawing(e)
                             }
@@ -625,9 +610,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.confettiSystem.ySetter(e.clientY)
                 }
                 
+                // Centralized cursor state management
+                this.updateCursorState(e.clientX, e.clientY)
+                
                 // Debug occasionally to avoid spam
                 if (Math.random() < 0.001) {
-                    console.log('🖱️ Mouse move:', { x: e.clientX, y: e.clientY })
+                    console.log('🖱️ Mouse move:', { 
+                        x: e.clientX, 
+                        y: e.clientY, 
+                        cursorState: this.confettiSystem.currentCursorState 
+                    })
                 }
             },
             
@@ -662,6 +654,140 @@ document.addEventListener('DOMContentLoaded', () => {
                 let currentElement = element
                 while (currentElement && currentElement !== document.body) {
                     for (const selector of interactiveSelectors) {
+                        if (currentElement.matches && currentElement.matches(selector)) {
+                            return true
+                        }
+                    }
+                    currentElement = currentElement.parentElement
+                }
+                
+                return false
+            },
+            
+            isInSafeZone(mouseX, mouseY) {
+                // Define selectors for elements that should have safe zones
+                const safeZoneSelectors = [
+                    'button',
+                    'input',
+                    'select',
+                    'textarea',
+                    'a',
+                    '.personality-card',
+                    '.personality-selection',
+                    '.day-range-selection',
+                    '.day-range-slider',
+                    '.slider',
+                    '.generate-report-btn',
+                    '.add-ticker-btn',
+                    'label[for]',
+                    '.ticker'
+                ]
+                
+                const safeZoneMargin = 4 // 4px safe zone as requested
+                
+                // Check each type of interactive element
+                for (const selector of safeZoneSelectors) {
+                    const elements = document.querySelectorAll(selector)
+                    for (const element of elements) {
+                        const rect = element.getBoundingClientRect()
+                        
+                        // Expand the element's bounds by the safe zone margin
+                        const expandedRect = {
+                            left: rect.left - safeZoneMargin,
+                            right: rect.right + safeZoneMargin,
+                            top: rect.top - safeZoneMargin,
+                            bottom: rect.bottom + safeZoneMargin
+                        }
+                        
+                        // Check if mouse is within the expanded bounds
+                        if (mouseX >= expandedRect.left && 
+                            mouseX <= expandedRect.right && 
+                            mouseY >= expandedRect.top && 
+                            mouseY <= expandedRect.bottom) {
+                            return true
+                        }
+                    }
+                }
+                
+                return false
+            },
+            
+            updateCursorState(mouseX, mouseY) {
+                const now = Date.now()
+                
+                // Prevent rapid state changes
+                if (now - this.confettiSystem.lastStateChange < this.confettiSystem.stateChangeDelay) {
+                    return
+                }
+                
+                // Determine what the cursor state should be
+                const elementUnderMouse = document.elementFromPoint(mouseX, mouseY)
+                const isOverInteractive = this.isInteractiveElement(elementUnderMouse)
+                const isInSafeZone = this.isInSafeZone(mouseX, mouseY)
+                
+                let desiredState = 'confetti'
+                
+                if (isOverInteractive) {
+                    // Direct hover over interactive element - use pointer
+                    desiredState = 'pointer'
+                } else if (isInSafeZone) {
+                    // In safe zone around interactive element - use default
+                    desiredState = 'default'
+                } else {
+                    // Normal area - use confetti cursor
+                    desiredState = 'confetti'
+                }
+                
+                // Only change state if different from current
+                if (desiredState !== this.confettiSystem.currentCursorState) {
+                    this.setCursorState(desiredState)
+                    this.confettiSystem.lastStateChange = now
+                }
+            },
+            
+            setCursorState(state) {
+                // Update internal state
+                this.confettiSystem.currentCursorState = state
+                
+                // Apply the cursor state
+                switch (state) {
+                    case 'confetti':
+                        gsap.set('.confetti-cursor', { opacity: 1 })
+                        document.body.style.cursor = 'none'
+                        break
+                    case 'pointer':
+                        gsap.set('.confetti-cursor', { opacity: 0 })
+                        document.body.style.cursor = 'pointer'
+                        break
+                    case 'default':
+                        gsap.set('.confetti-cursor', { opacity: 0 })
+                        document.body.style.cursor = 'default'
+                        break
+                }
+                
+                // Debug log for state changes
+                if (Math.random() < 0.1) { // 10% chance to avoid spam
+                    console.log('🎯 Cursor state changed to:', state)
+                }
+            },
+            
+            isNoClickElement(element) {
+                if (!element) return false
+                
+                // Areas where confetti clicks should be disabled but drag-through allowed
+                const noClickSelectors = [
+                    '.personality-selection',
+                    '.personality-grid',
+                    '.day-range-selection',
+                    '.day-range-slider',
+                    '.ticker-choice-display',
+                    '.form-input-control'
+                ]
+                
+                // Check the element itself and its parents
+                let currentElement = element
+                while (currentElement && currentElement !== document.body) {
+                    for (const selector of noClickSelectors) {
                         if (currentElement.matches && currentElement.matches(selector)) {
                             return true
                         }
