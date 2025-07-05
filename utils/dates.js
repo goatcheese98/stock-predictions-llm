@@ -13,9 +13,13 @@ function getDateNDaysAgo(n) {
 
 // Create a function to get dates based on dynamic day range
 export function getDatesForRange(dayRange = 3) {
+    // Always fetch 30 days worth of data (with buffer) to pre-load for dynamic rendering
+    // This ensures we have enough data for users to dynamically change day ranges
+    const maxDaysToFetch = 30;
+    const extendedRange = maxDaysToFetch + Math.ceil(maxDaysToFetch * 0.4); // Add ~40% more days
     return {
-        startDate: getDateNDaysAgo(dayRange), // configurable days back
-        endDate: getDateNDaysAgo(1) // leave at 1 to get yesterday's data
+        startDate: getDateNDaysAgo(extendedRange), // always fetch extended range for 30 days
+        endDate: getDateNDaysAgo(1) // use yesterday's date for more reliable data availability
     }
 }
 

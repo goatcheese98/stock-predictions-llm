@@ -1075,9 +1075,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 placeholder.innerHTML = ''
                 chars.forEach(char => placeholder.appendChild(char))
                 
-                // Add color pulse animation
+                // Add subtle color pulse animation
                 gsap.to(placeholder, {
-                    color: "#46ff90",
+                    color: "#2dd665",
                     duration: 3,
                     ease: "power2.inOut",
                     repeat: -1,
@@ -1132,6 +1132,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 
                 console.log('✅ Ticker placeholder scramble animation initialized')
+            },
+
+            animateDayRangeNumber(newValue, oldValue) {
+                const numberElement = document.querySelector('.day-range-number')
+                if (!numberElement) return
+                
+                // Set data attributes for shadows
+                const prevNumber = Math.max(3, newValue - 1)
+                const nextNumber = Math.min(30, newValue + 1)
+                
+                numberElement.setAttribute('data-prev', prevNumber)
+                numberElement.setAttribute('data-next', nextNumber)
+                
+                // Determine animation direction
+                const isIncreasing = newValue > oldValue
+                const direction = isIncreasing ? -1 : 1
+                
+                // GSAP animation
+                gsap.fromTo(numberElement, {
+                    y: direction * 20,
+                    opacity: 0.7,
+                    scale: 0.95
+                }, {
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.4,
+                    ease: "back.out(1.7)"
+                })
+            }
+        },
+        watch: {
+            dayRange(newValue, oldValue) {
+                if (oldValue !== undefined && newValue !== oldValue) {
+                    this.animateDayRangeNumber(newValue, oldValue)
+                }
             }
         },
         mounted() {
@@ -1141,6 +1177,13 @@ document.addEventListener('DOMContentLoaded', () => {
             this.$nextTick(() => {
                 this.initConfettiSystem()
                 this.initTickerPlaceholderAnimation()
+                
+                // Initialize day range number attributes
+                const numberElement = document.querySelector('.day-range-number')
+                if (numberElement) {
+                    numberElement.setAttribute('data-prev', Math.max(3, this.dayRange - 1))
+                    numberElement.setAttribute('data-next', Math.min(30, this.dayRange + 1))
+                }
             })
         }
     }).mount('#app')

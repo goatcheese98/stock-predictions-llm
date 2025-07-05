@@ -278,6 +278,7 @@ p.tag-line {
     display: flex;
     align-items: center;
     height: 3em; 
+    margin-bottom: 1em;
 }
 
 /* controls */
@@ -602,7 +603,7 @@ footer {
 /* Day Range Selection */
 .day-range-selection {
     width: 70%;
-    margin: 1em 0;
+    margin: 0.5em 0 1em 0;
     text-align: center;
 }
 
@@ -616,6 +617,47 @@ footer {
     width: 100%;
     text-align: center;
     display: block;
+}
+
+.day-range-number-container {
+    display: inline-block;
+    position: relative;
+    height: 24px;
+    width: 40px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.day-range-number {
+    display: inline-block;
+    position: relative;
+    font-weight: 600;
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.day-range-number::before {
+    content: attr(data-prev);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    opacity: 0.3;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
+}
+
+.day-range-number::after {
+    content: attr(data-next);
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    opacity: 0.3;
+    font-size: 0.9em;
+    color: #666;
+    text-align: center;
 }
 
 .day-range-slider {
