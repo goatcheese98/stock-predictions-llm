@@ -4,8 +4,9 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "NODE_ENV=production vite build",
+    "preview": "vite preview",
+    "build:github": "NODE_ENV=production vite build"
   },
   "dependencies": {
     "openai": "4.19.0",

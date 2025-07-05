@@ -34,73 +34,54 @@
 					
 					<!-- Personality Selection -->
 					<div class="personality-selection">
-						<h3>Choose Your Analyst</h3>
+						<label>Choose Your Analyst 👇</label>
 						<div class="personality-grid">
 							<div class="personality-card" 
 								 :class="{ active: selectedPersonality === 'dodgy-dave' }"
 								 @click="selectPersonality('dodgy-dave')">
 								<div class="personality-avatar">
-									<svg viewBox="0 0 100 100" class="personality-icon">
-										<circle cx="50" cy="50" r="45" fill="#ff6b35"/>
-										<circle cx="35" cy="40" r="5" fill="white"/>
-										<circle cx="65" cy="40" r="5" fill="white"/>
-										<path d="M30 65 Q50 85 70 65" stroke="white" stroke-width="3" fill="none"/>
-										<text x="50" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">$</text>
-									</svg>
+									<img src="images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image" loading="lazy">
 								</div>
-								<div class="personality-name">Dodgy Dave</div>
-								<div class="personality-subtitle">The Trading Guru</div>
+								<div class="personality-info">
+									<div class="personality-name">Dodgy Dave</div>
+									<div class="personality-subtitle">The Trading Guru</div>
+								</div>
 							</div>
 							
 							<div class="personality-card" 
 								 :class="{ active: selectedPersonality === 'stephen-colbert' }"
 								 @click="selectPersonality('stephen-colbert')">
 								<div class="personality-avatar">
-									<svg viewBox="0 0 100 100" class="personality-icon">
-										<circle cx="50" cy="50" r="45" fill="#1f4788"/>
-										<circle cx="35" cy="40" r="5" fill="white"/>
-										<circle cx="65" cy="40" r="5" fill="white"/>
-										<path d="M35 65 Q50 75 65 65" stroke="white" stroke-width="3" fill="none"/>
-										<rect x="25" y="25" width="50" height="15" fill="white" rx="2"/>
-										<text x="50" y="35" text-anchor="middle" fill="#1f4788" font-size="8" font-weight="bold">NEWS</text>
-									</svg>
+									<img src="images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image" loading="lazy">
 								</div>
-								<div class="personality-name">Stephen Colbert</div>
-								<div class="personality-subtitle">The Satirical Analyst</div>
+								<div class="personality-info">
+									<div class="personality-name">Stephen Colbert</div>
+									<div class="personality-subtitle">The Satirical Analyst</div>
+								</div>
 							</div>
 							
 							<div class="personality-card" 
 								 :class="{ active: selectedPersonality === 'scott-galloway' }"
 								 @click="selectPersonality('scott-galloway')">
 								<div class="personality-avatar">
-									<svg viewBox="0 0 100 100" class="personality-icon">
-										<circle cx="50" cy="50" r="45" fill="#2c3e50"/>
-										<circle cx="35" cy="40" r="5" fill="white"/>
-										<circle cx="65" cy="40" r="5" fill="white"/>
-										<path d="M35 65 L65 65" stroke="white" stroke-width="3"/>
-										<polygon points="30,20 70,20 75,30 25,30" fill="white"/>
-										<text x="50" y="28" text-anchor="middle" fill="#2c3e50" font-size="8" font-weight="bold">MBA</text>
-									</svg>
+									<img src="images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image" loading="lazy">
 								</div>
-								<div class="personality-name">Scott Galloway</div>
-								<div class="personality-subtitle">The Business Professor</div>
+								<div class="personality-info">
+									<div class="personality-name">Scott Galloway</div>
+									<div class="personality-subtitle">The Business Professor</div>
+								</div>
 							</div>
 							
 							<div class="personality-card" 
 								 :class="{ active: selectedPersonality === 'bernie-sanders' }"
 								 @click="selectPersonality('bernie-sanders')">
 								<div class="personality-avatar">
-									<svg viewBox="0 0 100 100" class="personality-icon">
-										<circle cx="50" cy="50" r="45" fill="#d32f2f"/>
-										<circle cx="35" cy="40" r="5" fill="white"/>
-										<circle cx="65" cy="40" r="5" fill="white"/>
-										<path d="M30 65 Q50 80 70 65" stroke="white" stroke-width="3" fill="none"/>
-										<path d="M35 25 Q50 15 65 25" stroke="white" stroke-width="2" fill="none"/>
-										<text x="50" y="85" text-anchor="middle" fill="white" font-size="10" font-weight="bold">✊</text>
-									</svg>
+									<img src="images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image" loading="lazy">
 								</div>
-								<div class="personality-name">Bernie Sanders</div>
-								<div class="personality-subtitle">The Economic Populist</div>
+								<div class="personality-info">
+									<div class="personality-name">Bernie Sanders</div>
+									<div class="personality-subtitle">The Economic Populist</div>
+								</div>
 							</div>
 						</div>
 					</div>
