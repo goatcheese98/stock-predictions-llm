@@ -62,7 +62,7 @@
 			</div>
 			
 			<header>
-				<img src="images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
+				                <img src="./images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
 			</header>
 			<main>
 				<section class="action-panel" v-show="currentView === 'input'">
@@ -71,7 +71,7 @@
 						<div class="form-input-control">
 							<input type="text" id="ticker-input" v-model="tickerInput" placeholder="MSFT">
 							<button type="submit" class="add-ticker-btn">
-								<img src="images/add.svg" class="add-ticker-svg" alt="add"> 
+								                    <img src="./images/add.svg" class="add-ticker-svg" alt="add"> 
 							</button>
 						</div>
 					</form>
@@ -114,7 +114,7 @@
 								 :class="{ active: selectedPersonality === 'dodgy-dave' }"
 								 @click="selectPersonality('dodgy-dave')">
 								<div class="personality-avatar">
-									<img src="images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image" loading="lazy">
+									                        <img src="./images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image" loading="lazy">
 								</div>
 								<div class="personality-info">
 									<div class="personality-name">Dodgy Dave</div>
@@ -126,7 +126,7 @@
 								 :class="{ active: selectedPersonality === 'stephen-colbert' }"
 								 @click="selectPersonality('stephen-colbert')">
 								<div class="personality-avatar">
-									<img src="images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image" loading="lazy">
+									                        <img src="./images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image" loading="lazy">
 								</div>
 								<div class="personality-info">
 									<div class="personality-name">Stephen Colbert</div>
@@ -138,7 +138,7 @@
 								 :class="{ active: selectedPersonality === 'scott-galloway' }"
 								 @click="selectPersonality('scott-galloway')">
 								<div class="personality-avatar">
-									<img src="images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image" loading="lazy">
+									                        <img src="./images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image" loading="lazy">
 								</div>
 								<div class="personality-info">
 									<div class="personality-name">Scott Galloway</div>
@@ -150,7 +150,7 @@
 								 :class="{ active: selectedPersonality === 'bernie-sanders' }"
 								 @click="selectPersonality('bernie-sanders')">
 								<div class="personality-avatar">
-									<img src="images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image" loading="lazy">
+									                        <img src="./images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image" loading="lazy">
 								</div>
 								<div class="personality-info">
 									<div class="personality-name">Bernie Sanders</div>
@@ -173,7 +173,7 @@
 							completed: loadingStep === 'analyzing' || loadingStep === 'generating' 
 						}">
 							<div class="progress-step-icon">
-								<img src="images/cloudflare.svg" alt="Cloudflare" class="progress-icon">
+								                        <img src="./images/cloudflare.svg" alt="Cloudflare" class="progress-icon">
 							</div>
 							<div class="progress-step-text">Fetching Stock Data</div>
 						</div>
@@ -182,7 +182,7 @@
 							completed: loadingStep === 'generating' 
 						}">
 							<div class="progress-step-icon">
-								<img src="images/OpenAI_light_dark/OpenAI_light.svg" alt="OpenAI" class="progress-icon">
+								                        <img src="./images/OpenAI_light_dark/OpenAI_light.svg" alt="OpenAI" class="progress-icon">
 							</div>
 							<div class="progress-step-text">AI Analysis</div>
 						</div>
@@ -190,7 +190,7 @@
 							active: loadingStep === 'generating' 
 						}">
 							<div class="progress-step-icon">
-								<img src="images/chartjs.svg" alt="Chart.js" class="progress-icon">
+								                        <img src="./images/chartjs.svg" alt="Chart.js" class="progress-icon">
 							</div>
 							<div class="progress-step-text">Generating Report</div>
 						</div>
@@ -198,7 +198,7 @@
 					
 					<div class="loading-spinner">
 						<div class="spinner">
-							<img src="images/vue.svg" alt="Vue.js" class="vue-icon">
+							                        <img src="./images/vue.svg" alt="Vue.js" class="vue-icon">
 						</div>
 					</div>
 					
