@@ -1021,15 +1021,13 @@
                         'bernie-sanders': 'images/Bernie_Sanders.png'
                     };
                     
-                    // Use relative path from current directory
                     const imagePath = personalityImages[this.personality] || personalityImages['dodgy-dave'];
                     
-                    // For GitHub Pages, use the repository path
-                    if (window.location.hostname.includes('github.io')) {
-                        return window.location.pathname.replace(/\/[^/]*$/, '/') + imagePath;
-                    }
+                    // Simple path resolution that works for both GitHub Pages and localhost
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
                     
-                    return imagePath;
+                    return basePath + imagePath;
                 }
             },
             mounted() {
@@ -1133,42 +1131,8 @@
                     }
                 },
                 handleImageError(event) {
-                    console.error('Image failed to load:', event.target.src);
-                    console.log('Current personality:', this.personality);
-                    console.log('Trying fallback image path...');
-                    
-                    // Try alternative paths based on current personality
-                    const personalityImages = {
-                        'dodgy-dave': 'images/Dody_Dave.png',
-                        'stephen-colbert': 'images/Stephen_Colbert.png',
-                        'scott-galloway': 'images/Scott_Galloway.png',
-                        'bernie-sanders': 'images/Bernie_Sanders.png'
-                    };
-                    
-                    const currentPersonalityImage = personalityImages[this.personality] || personalityImages['dodgy-dave'];
-                    
-                    const fallbackPaths = [
-                        currentPersonalityImage,
-                        './' + currentPersonalityImage,
-                        '/' + currentPersonalityImage,
-                        'images/Dody_Dave.png', // Always try dodgy dave as final fallback
-                        './images/Dody_Dave.png',
-                        '/images/Dody_Dave.png'
-                    ];
-                    
-                    // Check if we haven't tried this path already
-                    const currentSrc = event.target.src.split('/').pop();
-                    for (const path of fallbackPaths) {
-                        const pathFile = path.split('/').pop();
-                        if (currentSrc !== pathFile && !event.target.src.includes(path)) {
-                            console.log('Trying fallback path:', path);
-                            event.target.src = path;
-                            return;
-                        }
-                    }
-                    
-                    // If all paths fail, create a placeholder
-                    console.log('All image paths failed, using placeholder');
+                    console.log('Image failed to load:', event.target.src);
+                    // Simply hide the image and show a placeholder - no retries to prevent infinite loops
                     event.target.style.display = 'none';
                     event.target.parentElement.innerHTML = '<div class="personality-placeholder">📊</div>';
                 }
