@@ -260,17 +260,53 @@ document.addEventListener('DOMContentLoaded', () => {
                     sessionStorage.setItem('stockReport', JSON.stringify(reportData))
                     console.log('Report data stored in sessionStorage')
                     
-                    // Redirect to report page with just a simple identifier
+                    // 🎉 Trigger confetti celebration for successful report generation!
+                    if (this.confettiSystem.animationIsOk && this.confettiSystem.explosionKeys.length > 0) {
+                        // Create a spectacular confetti celebration before navigating
+                        const centerX = window.innerWidth / 2
+                        const centerY = window.innerHeight / 2
+                        
+                        // Main central explosion
+                        this.createExplosion(centerX, centerY, 600)
+                        
+                        // Additional explosions for extra celebration
+                        setTimeout(() => {
+                            this.createExplosion(centerX - 200, centerY - 100, 400)
+                            this.createExplosion(centerX + 200, centerY - 100, 400)
+                        }, 150)
+                        
+                        setTimeout(() => {
+                            this.createExplosion(centerX - 300, centerY + 50, 300)
+                            this.createExplosion(centerX + 300, centerY + 50, 300)
+                        }, 300)
+                        
+                        console.log('🎊 Confetti celebration triggered for report generation!')
+                    }
+                    
+                    // Redirect to report page with just a simple identifier (slight delay to show confetti)
                     const reportUrl = `report.html?id=${Date.now()}`
                     console.log('Redirecting to report page:', reportUrl)
-                    window.location.href = reportUrl
+                    setTimeout(() => {
+                        window.location.href = reportUrl
+                    }, 800) // Allow time for confetti to start
                 } catch (error) {
                     console.error('Error storing report data:', error)
                     // Fallback to URL method for smaller reports
                     const tickers = this.tickersArr.join(', ')
                     const encodedReport = encodeURIComponent(output)
                     const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
-                    window.location.href = reportUrl
+                    
+                    // Add confetti for fallback method too
+                    if (this.confettiSystem.animationIsOk && this.confettiSystem.explosionKeys.length > 0) {
+                        const centerX = window.innerWidth / 2
+                        const centerY = window.innerHeight / 2
+                        this.createExplosion(centerX, centerY, 500)
+                        console.log('🎊 Confetti celebration triggered for fallback report generation!')
+                    }
+                    
+                    setTimeout(() => {
+                        window.location.href = reportUrl
+                    }, 800) // Allow time for confetti to start
                 }
             },
             
@@ -371,6 +407,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = reportUrl
                     } else {
                         console.log('Successfully opened in new tab')
+                        
+                        // 🎉 Trigger confetti celebration for successful report generation!
+                        if (this.confettiSystem.animationIsOk && this.confettiSystem.explosionKeys.length > 0) {
+                            // Create multiple confetti explosions across the screen for a big celebration
+                            const centerX = window.innerWidth / 2
+                            const centerY = window.innerHeight / 2
+                            
+                            // Main central explosion
+                            this.createExplosion(centerX, centerY, 600)
+                            
+                            // Additional explosions for extra celebration
+                            setTimeout(() => {
+                                this.createExplosion(centerX - 200, centerY - 100, 400)
+                                this.createExplosion(centerX + 200, centerY - 100, 400)
+                            }, 150)
+                            
+                            setTimeout(() => {
+                                this.createExplosion(centerX - 300, centerY + 50, 300)
+                                this.createExplosion(centerX + 300, centerY + 50, 300)
+                            }, 300)
+                            
+                            console.log('🎊 Confetti celebration triggered for report generation!')
+                        }
                     }
                 } catch (error) {
                     console.error('Error opening report page:', error)
