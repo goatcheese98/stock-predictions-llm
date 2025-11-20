@@ -1,0 +1,18 @@
+# Cloudflare Pages configuration
+# This file configures deployment to Cloudflare Pages
+
+name = "stock-predictions-llm"
+pages_build_output_dir = "dist"
+
+# Build command and configuration
+[build]
+command = "npm run build"
+cwd = "./"
+root = "."
+
+# Environment configuration
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.preview]
+vars = { ENVIRONMENT = "preview" }
