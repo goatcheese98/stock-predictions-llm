@@ -33,6 +33,16 @@
             line-height: 1.8;
             margin-bottom: 2em;
             min-height: 200px;
+            animation: fadeIn 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         .tickers-analyzed {
             background: #46ff90;
@@ -459,17 +469,58 @@
         .carousel-slide {
             flex: 1;
             max-width: 900px;
-            animation: slideIn 0.4s ease;
+            animation: slideInRight 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        @keyframes slideIn {
+        .carousel-slide.slide-left {
+            animation: slideOutLeft 0.4s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+        }
+
+        .carousel-slide.slide-right {
+            animation: slideOutRight 0.4s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+        }
+
+        @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(20px);
+                transform: translateX(40px) rotateY(-10deg);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) rotateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px) rotateY(10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotateY(0);
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0) rotateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-40px) rotateY(-10deg);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0) rotateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(40px) rotateY(10deg);
             }
         }
 
@@ -551,6 +602,48 @@
             font-family: 'Poppins', sans-serif;
             padding-bottom: 0.5em;
             border-bottom: 2px solid #46ff90;
+            animation: fadeInDown 0.5s ease-out 0.1s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .report-content-wrapper {
+            animation: fadeInUp 0.5s ease-out 0.2s both;
+        }
+
+        .personality-circle {
+            animation: scaleInFast 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes scaleInFast {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1340,20 +1433,46 @@
                 },
                 nextPersonality() {
                     if (this.currentPersonalityIndex < this.personalityIds.length - 1) {
+                        this.animateSlide('next');
                         this.currentPersonalityIndex++;
                         this.personality = this.currentPersonalityId;
                     }
                 },
                 previousPersonality() {
                     if (this.currentPersonalityIndex > 0) {
+                        this.animateSlide('prev');
                         this.currentPersonalityIndex--;
                         this.personality = this.currentPersonalityId;
                     }
                 },
                 goToPersonality(index) {
                     if (index >= 0 && index < this.personalityIds.length) {
+                        if (index > this.currentPersonalityIndex) {
+                            this.animateSlide('next');
+                        } else if (index < this.currentPersonalityIndex) {
+                            this.animateSlide('prev');
+                        }
                         this.currentPersonalityIndex = index;
                         this.personality = this.currentPersonalityId;
+                    }
+                },
+                animateSlide(direction) {
+                    const slide = document.querySelector('.carousel-slide');
+                    if (slide) {
+                        // Remove previous animation classes
+                        slide.classList.remove('slide-left', 'slide-right');
+
+                        // Add appropriate animation class
+                        if (direction === 'next') {
+                            slide.classList.add('slide-left');
+                        } else if (direction === 'prev') {
+                            slide.classList.add('slide-right');
+                        }
+
+                        // Remove animation class after animation completes to allow re-animation
+                        setTimeout(() => {
+                            slide.classList.remove('slide-left', 'slide-right');
+                        }, 400);
                     }
                 },
                 goHome() {
