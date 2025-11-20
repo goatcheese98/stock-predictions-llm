@@ -106,13 +106,13 @@
 						Generate Report
 					</button>
 					
-					<!-- Personality Selection - Moved below Generate Report -->
+					<!-- Personality Selection - Multi-select enabled -->
 					<div class="personality-selection">
-						<label>Choose Your Analyst 👇</label>
+						<label>Choose Your Analyst(s) 👇 <span class="multi-select-hint">(Click multiple to compare)</span></label>
 						<div class="personality-grid">
-							<div class="personality-card" 
-								 :class="{ active: selectedPersonality === 'dodgy-dave' }"
-								 @click="selectPersonality('dodgy-dave')">
+							<div class="personality-card"
+								 :class="{ active: isPersonalitySelected('dodgy-dave') }"
+								 @click="togglePersonality('dodgy-dave')">
 								<div class="personality-avatar">
 									                        <img src="./images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image" loading="lazy">
 								</div>
@@ -120,11 +120,12 @@
 									<div class="personality-name">Dodgy Dave</div>
 									<div class="personality-subtitle">The Trading Guru</div>
 								</div>
+								<div class="personality-checkmark" v-if="isPersonalitySelected('dodgy-dave')">✓</div>
 							</div>
-							
-							<div class="personality-card" 
-								 :class="{ active: selectedPersonality === 'stephen-colbert' }"
-								 @click="selectPersonality('stephen-colbert')">
+
+							<div class="personality-card"
+								 :class="{ active: isPersonalitySelected('stephen-colbert') }"
+								 @click="togglePersonality('stephen-colbert')">
 								<div class="personality-avatar">
 									                        <img src="./images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image" loading="lazy">
 								</div>
@@ -132,11 +133,12 @@
 									<div class="personality-name">Stephen Colbert</div>
 									<div class="personality-subtitle">The Satirical Analyst</div>
 								</div>
+								<div class="personality-checkmark" v-if="isPersonalitySelected('stephen-colbert')">✓</div>
 							</div>
-							
-							<div class="personality-card" 
-								 :class="{ active: selectedPersonality === 'scott-galloway' }"
-								 @click="selectPersonality('scott-galloway')">
+
+							<div class="personality-card"
+								 :class="{ active: isPersonalitySelected('scott-galloway') }"
+								 @click="togglePersonality('scott-galloway')">
 								<div class="personality-avatar">
 									                        <img src="./images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image" loading="lazy">
 								</div>
@@ -144,11 +146,12 @@
 									<div class="personality-name">Scott Galloway</div>
 									<div class="personality-subtitle">The Business Professor</div>
 								</div>
+								<div class="personality-checkmark" v-if="isPersonalitySelected('scott-galloway')">✓</div>
 							</div>
-							
-							<div class="personality-card" 
-								 :class="{ active: selectedPersonality === 'bernie-sanders' }"
-								 @click="selectPersonality('bernie-sanders')">
+
+							<div class="personality-card"
+								 :class="{ active: isPersonalitySelected('bernie-sanders') }"
+								 @click="togglePersonality('bernie-sanders')">
 								<div class="personality-avatar">
 									                        <img src="./images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image" loading="lazy">
 								</div>
@@ -156,6 +159,7 @@
 									<div class="personality-name">Bernie Sanders</div>
 									<div class="personality-subtitle">The Economic Populist</div>
 								</div>
+								<div class="personality-checkmark" v-if="isPersonalitySelected('bernie-sanders')">✓</div>
 							</div>
 						</div>
 					</div>

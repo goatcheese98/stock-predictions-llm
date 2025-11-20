@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tickersArr: [],
                 loadingMessage: '',
                 loadingStep: 'fetching', // 'fetching', 'analyzing', 'generating'
-                selectedPersonality: 'dodgy-dave', // Default to Dodgy Dave
+                selectedPersonalities: ['dodgy-dave'], // Array for multi-select
                 dayRange: 3, // configurable day range (3-30 days)
                 rawStockData: null, // Store raw API data for charts
                 // Integrated Confetti System
@@ -114,9 +114,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 label.textContent = 'Add up to 3 stock tickers below to get a super accurate stock predictions report👇'
             },
             
-            selectPersonality(personalityId) {
-                console.log('Selected personality:', personalityId)
-                this.selectedPersonality = personalityId
+            togglePersonality(personalityId) {
+                console.log('Toggling personality:', personalityId)
+                const index = this.selectedPersonalities.indexOf(personalityId)
+                if (index > -1) {
+                    // Remove if already selected (but keep at least one)
+                    if (this.selectedPersonalities.length > 1) {
+                        this.selectedPersonalities.splice(index, 1)
+                    }
+                } else {
+                    // Add if not selected
+                    this.selectedPersonalities.push(personalityId)
+                }
+                console.log('Current selected personalities:', this.selectedPersonalities)
+            },
+
+            isPersonalitySelected(personalityId) {
+                return this.selectedPersonalities.includes(personalityId)
             },
             
             async fetchStockData() {
@@ -185,53 +199,66 @@ document.addEventListener('DOMContentLoaded', () => {
             },
 
             async fetchReport(stockData) {
-                console.log('Fetching AI report...')
+                console.log('Fetching AI reports...')
                 this.loadingStep = 'generating'
                 this.loadingMessage = 'AI is analyzing your stocks and generating insights...'
-                
-                // Get the selected personality
-                const personality = this.personalities[this.selectedPersonality]
-                console.log('Using personality:', personality.name)
-                
-    const messages = [
-        {
-            role: 'system',
-                        content: personality.systemPrompt
-        },
-        {
-            role: 'user',
-                        content: `${stockData}
+
+                const reports = {}
+                const url = 'https://openai-api-worker.jasani-rohan.workers.dev'
+
+                try {
+                    // Fetch report for each selected personality
+                    for (let i = 0; i < this.selectedPersonalities.length; i++) {
+                        const personalityId = this.selectedPersonalities[i]
+                        const personality = this.personalities[personalityId]
+                        console.log(`Generating report for personality: ${personality.name}`)
+
+                        this.loadingMessage = `AI is analyzing your stocks (${i + 1} of ${this.selectedPersonalities.length})...`
+
+                        const messages = [
+                            {
+                                role: 'system',
+                                content: personality.systemPrompt
+                            },
+                            {
+                                role: 'user',
+                                content: `${stockData}
             ###
                         ${personality.examples}
             ###
             `
-        }
-    ]
-    
-    try {
-        const url = 'https://openai-api-worker.jasani-rohan.workers.dev'
-        
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(messages)
-        })
-                    
-                    const responseData = await response.json()
-                    console.log('AI response received:', responseData)
+                            }
+                        ]
 
-                    if (!response.ok) {
-                        throw new Error(`Worker Error: ${responseData.error}`)
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(messages)
+                        })
+
+                        const responseData = await response.json()
+                        console.log(`AI response received for ${personality.name}:`, responseData)
+
+                        if (!response.ok) {
+                            throw new Error(`Worker Error: ${responseData.error}`)
+                        }
+
+                        reports[personalityId] = responseData.content
+
+                        // Small delay between API calls
+                        if (i < this.selectedPersonalities.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 500))
+                        }
                     }
-                    
+
                     this.loadingMessage = 'Finalizing your report...'
-                    
+
                     // Brief delay before redirect
                     await new Promise(resolve => setTimeout(resolve, 1000))
-                    
-                    this.renderReport(responseData.content)
+
+                    this.renderReport(reports)
                 } catch (err) {
                     console.error('Error generating report:', err)
                     this.loadingMessage = 'Error generating AI report. Please try again.'
@@ -242,18 +269,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             },
 
-            renderReport(output) {
-                console.log('Rendering report:', output)
-                this.reportContent = output
-                
+            renderReport(reports) {
+                console.log('Rendering reports:', reports)
+
                 // Store report data in sessionStorage to avoid URL length issues
                 const reportData = {
                     tickers: this.tickersArr.join(', '),
-                    content: output,
+                    reports: reports, // Object with personality IDs as keys
+                    personalityIds: this.selectedPersonalities, // Array of selected personality IDs
                     timestamp: Date.now(),
                     dayRange: this.dayRange, // Include day range for chart context
-                    rawStockData: this.rawStockData, // Store raw data for charts
-                    personality: this.selectedPersonality // Include selected personality
+                    rawStockData: this.rawStockData // Store raw data for charts
                 }
                 
                 try {

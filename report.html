@@ -420,7 +420,139 @@
             font-weight: 500;
             font-size: 11px;
         }
-        
+
+        /* Carousel Styles */
+        .carousel-container {
+            width: 100%;
+            margin: 2em 0;
+        }
+
+        .carousel-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .carousel-header h2 {
+            font-size: 28px;
+            margin: 0 0 0.5em 0;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        .carousel-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+            font-style: italic;
+        }
+
+        .carousel-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5em;
+            margin-bottom: 2em;
+            position: relative;
+        }
+
+        .carousel-slide {
+            flex: 1;
+            max-width: 900px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .carousel-nav {
+            background: #46ff90;
+            border: 3px solid #000;
+            color: #000;
+            font-size: 24px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 3px 3px 0 #000;
+            flex-shrink: 0;
+        }
+
+        .carousel-nav:hover:not(:disabled) {
+            background: #2dd665;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 #000;
+        }
+
+        .carousel-nav:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .carousel-nav:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: 2px 2px 0 #999;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.8em;
+            margin-bottom: 1.5em;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            border: 2px solid #000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .indicator.active {
+            background: #46ff90;
+            transform: scale(1.3);
+        }
+
+        .indicator:hover {
+            background: #ddd;
+        }
+
+        .carousel-counter {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .personality-name-carousel {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
+            margin: 1em 0;
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid #46ff90;
+        }
+
         @media (max-width: 768px) {
             .chart-canvas {
                 height: 450px;
@@ -917,7 +1049,7 @@
                     </div>
                 </div>
                 
-                <div class="report-content-wrapper">
+                <div class="report-content-wrapper" v-if="!isCarouselMode">
                     <div class="day-display-box">
                         <span class="day-number">{{ dayRange }}</span>
                         <span class="day-label">DAY REPORT</span>
@@ -926,6 +1058,45 @@
                         <img :src="personalityImage" alt="Personality" class="personality-img" @error="handleImageError">
                     </div>
                     <div class="report-content" v-html="reportData"></div>
+                </div>
+
+                <!-- Carousel for multiple personalities -->
+                <div v-if="isCarouselMode" class="carousel-container">
+                    <div class="carousel-header">
+                        <h2>📊 Multi-Analyst Comparison</h2>
+                        <p class="carousel-subtitle">Swipe or use arrows to compare different analyst perspectives</p>
+                    </div>
+                    <div class="carousel-wrapper">
+                        <button class="carousel-nav carousel-prev" @click="previousPersonality" :disabled="currentPersonalityIndex === 0">❮</button>
+
+                        <div class="carousel-slide">
+                            <div class="report-content-wrapper">
+                                <div class="day-display-box">
+                                    <span class="day-number">{{ dayRange }}</span>
+                                    <span class="day-label">DAY REPORT</span>
+                                </div>
+                                <div class="personality-circle">
+                                    <img :src="currentPersonalityImage" alt="Personality" class="personality-img" @error="handleImageError">
+                                </div>
+                                <div class="personality-name-carousel">{{ currentPersonalityName }}</div>
+                                <div class="report-content" v-html="currentPersonalityReport"></div>
+                            </div>
+                        </div>
+
+                        <button class="carousel-nav carousel-next" @click="nextPersonality" :disabled="currentPersonalityIndex === personalityIds.length - 1">❯</button>
+                    </div>
+
+                    <div class="carousel-indicators">
+                        <span v-for="(id, index) in personalityIds" :key="id"
+                              class="indicator"
+                              :class="{ active: index === currentPersonalityIndex }"
+                              @click="goToPersonality(index)">
+                        </span>
+                    </div>
+
+                    <div class="carousel-counter">
+                        {{ currentPersonalityIndex + 1 }} / {{ personalityIds.length }}
+                    </div>
                 </div>
             </div>
         </main>
@@ -1006,13 +1177,47 @@
                     errorMessage: '',
                     tickers: '',
                     reportData: '',
+                    reports: {}, // For multiple personalities
+                    personalityIds: [], // Array of personality IDs
+                    currentPersonalityIndex: 0, // Current slide in carousel
                     rawStockData: null,
                     dayRange: 3,
                     hasChartData: false,
-                    personality: 'dodgy-dave'
+                    personality: 'dodgy-dave',
+                    personalityNames: {
+                        'dodgy-dave': 'Dodgy Dave - The Trading Guru',
+                        'stephen-colbert': 'Stephen Colbert - The Satirical Analyst',
+                        'scott-galloway': 'Scott Galloway - The Business Professor',
+                        'bernie-sanders': 'Bernie Sanders - The Economic Populist'
+                    }
                 }
             },
             computed: {
+                isCarouselMode() {
+                    return this.personalityIds && this.personalityIds.length > 1;
+                },
+                currentPersonalityId() {
+                    return this.personalityIds[this.currentPersonalityIndex];
+                },
+                currentPersonalityReport() {
+                    return this.reports[this.currentPersonalityId] || '';
+                },
+                currentPersonalityName() {
+                    return this.personalityNames[this.currentPersonalityId] || this.currentPersonalityId;
+                },
+                currentPersonalityImage() {
+                    const personalityImages = {
+                        'dodgy-dave': 'images/Dody_Dave.png',
+                        'stephen-colbert': 'images/Stephen_Colbert.png',
+                        'scott-galloway': 'images/Scott_Galloway.png',
+                        'bernie-sanders': 'images/Bernie_Sanders.png'
+                    };
+
+                    const imagePath = personalityImages[this.currentPersonalityId] || personalityImages['dodgy-dave'];
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+                    return basePath + imagePath;
+                },
                 personalityImage() {
                     const personalityImages = {
                         'dodgy-dave': 'images/Dody_Dave.png',
@@ -1020,13 +1225,13 @@
                         'scott-galloway': 'images/Scott_Galloway.png',
                         'bernie-sanders': 'images/Bernie_Sanders.png'
                     };
-                    
+
                     const imagePath = personalityImages[this.personality] || personalityImages['dodgy-dave'];
-                    
+
                     // Simple path resolution that works for both GitHub Pages and localhost
                     const currentPath = window.location.pathname;
                     const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-                    
+
                     return basePath + imagePath;
                 }
             },
@@ -1036,21 +1241,21 @@
             methods: {
                 loadReportData() {
                     console.log('Loading report data...');
-                    
+
                     // Get URL parameters
                     const urlParams = new URLSearchParams(window.location.search);
                     const reportId = urlParams.get('id');
                     const tickersFromUrl = urlParams.get('tickers');
                     const reportFromUrl = urlParams.get('report');
-                    
+
                     console.log('Report page loaded with URL params:', {
                         id: reportId,
                         tickers: tickersFromUrl,
                         reportLength: reportFromUrl ? reportFromUrl.length : 0
                     });
-                    
-                    let tickers, reportData, rawStockData, dayRange, personalityFromStorage;
-                    
+
+                    let tickers, reportData, reports, personalityIds, rawStockData, dayRange, personalityFromStorage;
+
                     // Try to get data from sessionStorage first (new method)
                     if (reportId) {
                         try {
@@ -1058,22 +1263,33 @@
                             if (storedData) {
                                 const parsedData = JSON.parse(storedData);
                                 tickers = parsedData.tickers;
-                                reportData = parsedData.content;
+
+                                // Check if we have multiple reports (new format)
+                                if (parsedData.reports) {
+                                    reports = parsedData.reports;
+                                    personalityIds = parsedData.personalityIds || [];
+                                    reportData = reports[personalityIds[0]] || ''; // Fallback to first report
+                                } else {
+                                    // Single report format
+                                    reportData = parsedData.content;
+                                    personalityFromStorage = parsedData.personality || 'dodgy-dave';
+                                }
+
                                 rawStockData = parsedData.rawStockData;
                                 dayRange = parsedData.dayRange || 3;
-                                personalityFromStorage = parsedData.personality || 'dodgy-dave';
                                 console.log('Loaded report from sessionStorage:', {
                                     tickers: tickers,
                                     reportLength: reportData.length,
                                     dayRange: dayRange,
-                                    hasRawData: !!rawStockData
+                                    hasRawData: !!rawStockData,
+                                    isCarousel: !!reports
                                 });
                             }
                         } catch (error) {
                             console.error('Error loading from sessionStorage:', error);
                         }
                     }
-                    
+
                     // Fallback to URL parameters (old method)
                     if (!tickers && !reportData && tickersFromUrl && reportFromUrl) {
                         try {
@@ -1085,17 +1301,31 @@
                             console.error('Error decoding URL parameters:', error);
                         }
                     }
-                    
+
                     // Update Vue data
-                    if (tickers && reportData) {
+                    if (tickers && (reportData || reports)) {
                         this.tickers = tickers;
-                        this.reportData = reportData;
                         this.rawStockData = rawStockData;
                         this.dayRange = dayRange || 3;
-                        this.personality = personalityFromStorage || 'dodgy-dave';
+
+                        if (reports && personalityIds && personalityIds.length > 0) {
+                            // Multi-personality mode
+                            this.reports = reports;
+                            this.personalityIds = personalityIds;
+                            this.currentPersonalityIndex = 0;
+                            this.reportData = reports[personalityIds[0]] || '';
+                            this.personality = personalityIds[0];
+                        } else {
+                            // Single personality mode
+                            this.reportData = reportData;
+                            this.reports = {};
+                            this.personalityIds = [];
+                            this.personality = personalityFromStorage || 'dodgy-dave';
+                        }
+
                         this.hasChartData = !!(rawStockData && rawStockData.length > 0);
                         this.isLoading = false;
-                        
+
                         // Create charts if we have raw data
                         if (this.hasChartData) {
                             this.$nextTick(() => {
@@ -1106,6 +1336,24 @@
                         this.hasError = true;
                         this.errorMessage = `No report data found. Please generate a report first.`;
                         this.isLoading = false;
+                    }
+                },
+                nextPersonality() {
+                    if (this.currentPersonalityIndex < this.personalityIds.length - 1) {
+                        this.currentPersonalityIndex++;
+                        this.personality = this.currentPersonalityId;
+                    }
+                },
+                previousPersonality() {
+                    if (this.currentPersonalityIndex > 0) {
+                        this.currentPersonalityIndex--;
+                        this.personality = this.currentPersonalityId;
+                    }
+                },
+                goToPersonality(index) {
+                    if (index >= 0 && index < this.personalityIds.length) {
+                        this.currentPersonalityIndex = index;
+                        this.personality = this.currentPersonalityId;
                     }
                 },
                 goHome() {
