@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Stock Report - Dodgy Dave's Predictions</title>
     <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
     <style>
         .report-page {
             max-width: 900px;
             margin: 0 auto;
             padding: 2em;
         }
+
         .report-header {
             text-align: center;
             margin-bottom: 2em;
             border-bottom: 2px solid #000;
             padding-bottom: 1em;
         }
+
         .report-content {
             background: white;
             padding: 2em;
@@ -40,10 +47,12 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
         }
+
         .tickers-analyzed {
             background: #46ff90;
             padding: 1em 2em;
@@ -55,6 +64,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+
         .back-button {
             display: inline-block;
             padding: 1em 2em;
@@ -69,9 +79,11 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
+
         .back-button:hover {
             background-color: #3ee080;
         }
+
         .disclaimer {
             text-align: center;
             font-size: 14px;
@@ -79,6 +91,7 @@
             color: #666;
             font-style: italic;
         }
+
         .error-message {
             color: red;
             text-align: center;
@@ -88,42 +101,47 @@
             margin: 2em 0;
             border-radius: 8px;
         }
+
         .loading-message {
             text-align: center;
             padding: 2em;
             font-size: 18px;
             color: #666;
         }
+
         .action-buttons {
             display: flex;
             gap: 1em;
             justify-content: center;
             flex-wrap: wrap;
         }
+
         .secondary-btn {
             background-color: #ffffff;
             color: #000000;
             border: 2px solid #000000;
         }
+
         .secondary-btn:hover {
             background-color: #f0f0f0;
         }
-        
+
         /* Enhanced Chart Styles */
         .charts-section {
             margin: 3em 0;
         }
-        
+
         .chart-container {
             background: white;
             border: 2px solid #000;
-            border-radius: 0; /* Sharp edges for cartoonish look */
+            border-radius: 0;
+            /* Sharp edges for cartoonish look */
             padding: 1.5em;
             margin-bottom: 2em;
-            box-shadow: 6px 6px 0 rgba(0,0,0,0.2);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
             position: relative;
         }
-        
+
         .chart-ticker-display {
             position: absolute;
             top: -25px;
@@ -141,7 +159,7 @@
             letter-spacing: 1px;
             z-index: 10;
         }
-        
+
         .chart-title {
             font-size: 20px;
             font-weight: bold;
@@ -238,15 +256,15 @@
         }
 
 
-        
+
         .individual-chart-container {
             background: white;
             border: 3px solid #000;
             margin-bottom: 2em;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.15);
             padding: 1.5em;
         }
-        
+
         .individual-chart-controls {
             display: flex;
             justify-content: center;
@@ -254,7 +272,7 @@
             gap: 15px;
             margin-bottom: 1.5em;
         }
-        
+
         .individual-day-btn {
             background: linear-gradient(135deg, #46ff90, #2dd665);
             color: #000;
@@ -273,18 +291,18 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .individual-day-btn:hover {
             background: #2dd665;
             transform: translateY(-1px);
             box-shadow: 3px 3px 0 #000;
         }
-        
+
         .individual-day-btn:active {
             transform: translateY(0);
             box-shadow: 1px 1px 0 #000;
         }
-        
+
         .individual-day-btn:disabled {
             background: #ccc;
             color: #666;
@@ -292,7 +310,7 @@
             transform: none;
             box-shadow: 1px 1px 0 #999;
         }
-        
+
         .individual-day-counter {
             background: #f8f9fa;
             border: 2px solid #000;
@@ -305,7 +323,7 @@
             min-width: 80px;
             text-align: center;
         }
-        
+
         .fund-icon {
             width: 24px;
             height: 24px;
@@ -314,7 +332,7 @@
             fill: #2d4a3a;
             color: #2d4a3a;
         }
-        
+
         .personality-placeholder {
             width: 80px;
             height: 80px;
@@ -327,15 +345,15 @@
             color: #000;
             font-weight: 900;
             border: 3px solid #000;
-            box-shadow: 5px 5px 0 rgba(0,0,0,0.3);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
         }
-        
+
         .chart-header {
             margin-bottom: 1em;
             border-bottom: 2px solid #000;
             padding-bottom: 0.5em;
         }
-        
+
         .chart-ticker-title {
             font-size: 22px;
             font-weight: bold;
@@ -346,7 +364,7 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-        
+
         .chart-stats {
             display: flex;
             justify-content: space-around;
@@ -354,7 +372,7 @@
             gap: 1em;
             margin-top: 1em;
         }
-        
+
         .stat-item {
             background: #f8f9fa;
             border: 2px solid #000;
@@ -364,21 +382,21 @@
             font-family: 'Poppins', sans-serif;
             text-align: center;
             min-width: 150px;
-            box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
         }
-        
+
         .chart-canvas-wrapper {
             background: white;
             border: 2px solid #000;
             padding: 1em;
-            box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
+            box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1);
         }
-        
+
         .chart-canvas {
             width: 100%;
             height: 600px;
         }
-        
+
         .chart-error {
             background: #ffe6e6;
             border: 3px solid #ff4757;
@@ -387,7 +405,7 @@
             margin-bottom: 2em;
             box-shadow: 6px 6px 0 rgba(255, 71, 87, 0.2);
         }
-        
+
         .chart-error h3 {
             color: #ff4757;
             margin: 0 0 1em 0;
@@ -395,7 +413,7 @@
             font-weight: bold;
             font-family: 'Poppins', sans-serif;
         }
-        
+
         .chart-error p {
             color: #666;
             margin: 0;
@@ -485,6 +503,7 @@
                 opacity: 0;
                 transform: translateX(40px) rotateY(-10deg);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0) rotateY(0);
@@ -496,6 +515,7 @@
                 opacity: 0;
                 transform: translateX(-40px) rotateY(10deg);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0) rotateY(0);
@@ -507,6 +527,7 @@
                 opacity: 1;
                 transform: translateX(0) rotateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateX(-40px) rotateY(-10deg);
@@ -518,6 +539,7 @@
                 opacity: 1;
                 transform: translateX(0) rotateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: translateX(40px) rotateY(10deg);
@@ -610,6 +632,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -621,6 +644,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -640,6 +664,7 @@
                 opacity: 0;
                 transform: scale(0.8);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -650,37 +675,37 @@
             .chart-canvas {
                 height: 450px;
             }
-            
+
             .chart-ticker-title {
                 font-size: 18px;
             }
-            
+
             .individual-chart-container {
                 padding: 1em;
             }
-            
+
             .day-display-box {
                 font-size: 14px;
                 padding: 8px 12px;
                 min-width: 60px;
             }
-            
+
             .day-number {
                 font-size: 18px;
             }
-            
+
             .personality-circle {
                 width: 60px;
                 height: 60px;
                 bottom: 10px;
                 right: 10px;
             }
-            
+
             .chart-controls {
                 margin-bottom: 1em;
             }
         }
-        
+
         /* Print Dialog Styles */
         .print-dialog-overlay {
             display: none;
@@ -693,7 +718,7 @@
             z-index: 1000;
             animation: fadeIn 0.3s ease;
         }
-        
+
         .print-dialog {
             position: absolute;
             top: 50%;
@@ -710,7 +735,7 @@
             overflow-y: auto;
             animation: slideIn 0.3s ease;
         }
-        
+
         .print-dialog-header {
             background: #f8f9fa;
             border-bottom: 2px solid #000;
@@ -720,7 +745,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .print-dialog-close {
             background: #ff4444;
             color: white;
@@ -737,18 +762,18 @@
             box-shadow: 2px 2px 0 #000;
             transition: all 0.2s ease;
         }
-        
+
         .print-dialog-close:hover {
             background: #cc0000;
             transform: translateY(-1px);
             box-shadow: 3px 3px 0 #000;
         }
-        
+
         .print-dialog-close:active {
             transform: translateY(0);
             box-shadow: 1px 1px 0 #000;
         }
-        
+
         .print-dialog h3 {
             margin: 0;
             font-size: 24px;
@@ -756,12 +781,12 @@
             color: #000;
             font-family: 'Poppins', sans-serif;
         }
-        
+
         .print-options {
             margin-bottom: 1.5em;
             padding: 1.5em 2em;
         }
-        
+
         .print-option {
             margin-bottom: 1em;
             padding: 1em;
@@ -769,21 +794,21 @@
             border-radius: 8px;
             background: #f8f9fa;
         }
-        
+
         .print-option label {
             display: block;
             font-weight: bold;
             margin-bottom: 0.5em;
             font-family: 'Poppins', sans-serif;
         }
-        
+
         .stock-checkboxes {
             display: flex;
             flex-direction: column;
             gap: 0.8em;
             margin-top: 0.8em;
         }
-        
+
         .stock-checkbox {
             display: flex;
             align-items: center;
@@ -795,20 +820,20 @@
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        
+
         .stock-checkbox:hover {
             background: #f0f8ff;
             transform: translateY(-1px);
             box-shadow: 2px 2px 0 #000;
         }
-        
+
         .stock-checkbox input[type="checkbox"] {
             width: 20px;
             height: 20px;
             accent-color: #46ff90;
             cursor: pointer;
         }
-        
+
         .stock-checkbox label {
             font-weight: bold;
             font-size: 16px;
@@ -816,7 +841,7 @@
             cursor: pointer;
             margin: 0;
         }
-        
+
         .print-actions {
             display: flex;
             gap: 1.5em;
@@ -824,7 +849,7 @@
             flex-wrap: wrap;
             padding: 0 2em 1.5em 2em;
         }
-        
+
         .print-btn {
             padding: 1em 2em;
             border: 2px solid #000;
@@ -835,36 +860,36 @@
             transition: all 0.2s ease;
             box-shadow: 3px 3px 0 #000;
         }
-        
+
         .print-btn-primary {
             background: #46ff90;
             color: #000;
         }
-        
+
         .print-btn-primary:hover {
             background: #2dd665;
             transform: translateY(-2px);
             box-shadow: 5px 5px 0 #000;
         }
-        
+
         .print-btn-secondary {
             background: #fff;
             color: #000;
         }
-        
+
         .print-btn-secondary:hover {
             background: #f0f0f0;
             transform: translateY(-2px);
             box-shadow: 5px 5px 0 #000;
         }
-        
+
         .print-options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1em;
             margin-top: 1em;
         }
-        
+
         .print-option-card {
             background: #fff;
             border: 3px solid #000;
@@ -877,18 +902,18 @@
             font-family: 'Poppins', sans-serif;
             box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
         }
-        
+
         .print-option-card:hover {
             transform: translateY(-2px);
             box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
         }
-        
+
         .print-option-card.active {
             background: #f0fff0;
             border-color: #46ff90;
             transform: translateY(-1px);
         }
-        
+
         .print-option-card.active::after {
             content: '✓';
             position: absolute;
@@ -907,7 +932,7 @@
             border: 2px solid #000;
             z-index: 10;
         }
-        
+
         .print-option-title {
             font-weight: 600;
             font-size: 14px;
@@ -915,55 +940,61 @@
             margin-bottom: 0.5em;
             line-height: 1.2;
         }
-        
+
         .print-option-subtitle {
             font-size: 11px;
             color: #666;
             font-weight: 400;
             line-height: 1.3;
         }
-        
+
         .print-option-card.active .print-option-subtitle {
             color: #333;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
-        
+
         @keyframes slideIn {
-            from { 
+            from {
                 opacity: 0;
                 transform: translate(-50%, -60%);
             }
-            to { 
+
+            to {
                 opacity: 1;
                 transform: translate(-50%, -50%);
             }
         }
-        
+
         /* Print-specific styles */
         @media print {
             @page {
                 size: A4;
                 margin: 0.15in;
             }
-            
+
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
-            
+
             body * {
                 visibility: hidden;
             }
-            
+
             .print-content,
             .print-content * {
                 visibility: visible;
             }
-            
+
             .print-content {
                 position: absolute;
                 left: 0;
@@ -976,7 +1007,7 @@
                 line-height: 1.3;
                 box-sizing: border-box;
             }
-            
+
             .print-chart-page,
             .print-analysis-page {
                 page-break-before: always;
@@ -988,12 +1019,12 @@
                 padding: 0.4em;
                 box-sizing: border-box;
             }
-            
+
             .print-chart-page:first-child,
             .print-analysis-page:first-child {
                 page-break-before: avoid;
             }
-            
+
             .print-page-header {
                 text-align: center;
                 margin-bottom: 0.5em;
@@ -1002,21 +1033,21 @@
                 page-break-after: avoid;
                 flex-shrink: 0;
             }
-            
+
             .print-title {
                 font-size: 16px;
                 font-weight: bold;
                 margin: 0;
                 font-family: 'Poppins', sans-serif;
             }
-            
+
             .print-subtitle {
                 font-size: 9px;
                 margin: 0.1em 0 0 0;
                 color: #333;
                 font-family: 'Poppins', sans-serif;
             }
-            
+
             .print-day-highlight {
                 background: #000;
                 color: #fff;
@@ -1026,7 +1057,7 @@
                 display: inline-block;
                 margin: 0.2em 0;
             }
-            
+
             .print-chart-container {
                 flex-grow: 1;
                 display: flex;
@@ -1040,7 +1071,7 @@
                 margin-bottom: 0.5em;
                 aspect-ratio: 1.3;
             }
-            
+
             .print-chart-ticker-overlay {
                 position: absolute;
                 top: 15px;
@@ -1053,10 +1084,10 @@
                 font-size: 16px;
                 font-weight: 900;
                 font-family: 'Poppins', sans-serif;
-                box-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+                box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
                 z-index: 10;
             }
-            
+
             .print-chart-title {
                 font-size: 14px;
                 font-weight: bold;
@@ -1064,7 +1095,7 @@
                 text-align: center;
                 font-family: 'Poppins', sans-serif;
             }
-            
+
             .print-chart-canvas {
                 width: 100% !important;
                 height: 570px !important;
@@ -1075,7 +1106,7 @@
                 object-fit: contain;
                 margin: 0 auto;
             }
-            
+
             .print-chart-metrics {
                 margin-top: 0.3em;
                 padding: 0.4em;
@@ -1086,11 +1117,11 @@
                 line-height: 1.2;
                 text-align: center;
             }
-            
+
             .print-analysis-page {
                 padding: 1.5em;
             }
-            
+
             .print-analysis-content {
                 flex-grow: 1;
                 padding: 1em;
@@ -1102,7 +1133,7 @@
                 overflow: hidden;
                 text-align: justify;
             }
-            
+
             .print-page-footer {
                 margin-top: 0.5em;
                 padding: 0.3em;
@@ -1116,39 +1147,42 @@
         }
     </style>
 </head>
+
 <body>
     <div id="reportApp" class="report-page">
         <header class="report-header">
-                            <img src="./images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions" style="width: 300px;">
+            <img src="/images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions" style="width: 300px;">
         </header>
-        
+
         <main id="reportContent">
             <div v-if="isLoading" class="loading-message">
                 Loading your report...
             </div>
-            
+
             <div v-else-if="hasError" class="error-message">
                 {{ errorMessage }}
             </div>
-            
+
             <div v-else>
 
-                
+
                 <div v-if="hasChartData" class="charts-section">
                     <div class="chart-container">
                         <div class="chart-ticker-display">{{ tickers }}</div>
                         <div id="chartsContainer"></div>
-                        <div class="chart-note">Note: Charts show actual trading days only (excludes weekends & holidays)</div>
+                        <div class="chart-note">Note: Charts show actual trading days only (excludes weekends &
+                            holidays)</div>
                     </div>
                 </div>
-                
+
                 <div class="report-content-wrapper" v-if="!isCarouselMode">
                     <div class="day-display-box">
                         <span class="day-number">{{ dayRange }}</span>
                         <span class="day-label">DAY REPORT</span>
                     </div>
                     <div class="personality-circle">
-                        <img :src="personalityImage" alt="Personality" class="personality-img" @error="handleImageError">
+                        <img :src="personalityImage" alt="Personality" class="personality-img"
+                            @error="handleImageError">
                     </div>
                     <div class="report-content" v-html="reportData"></div>
                 </div>
@@ -1160,7 +1194,8 @@
                         <p class="carousel-subtitle">Swipe or use arrows to compare different analyst perspectives</p>
                     </div>
                     <div class="carousel-wrapper">
-                        <button class="carousel-nav carousel-prev" @click="previousPersonality" :disabled="currentPersonalityIndex === 0">❮</button>
+                        <button class="carousel-nav carousel-prev" @click="previousPersonality"
+                            :disabled="currentPersonalityIndex === 0">❮</button>
 
                         <div class="carousel-slide">
                             <div class="report-content-wrapper">
@@ -1169,21 +1204,21 @@
                                     <span class="day-label">DAY REPORT</span>
                                 </div>
                                 <div class="personality-circle">
-                                    <img :src="currentPersonalityImage" alt="Personality" class="personality-img" @error="handleImageError">
+                                    <img :src="currentPersonalityImage" alt="Personality" class="personality-img"
+                                        @error="handleImageError">
                                 </div>
                                 <div class="personality-name-carousel">{{ currentPersonalityName }}</div>
                                 <div class="report-content" v-html="currentPersonalityReport"></div>
                             </div>
                         </div>
 
-                        <button class="carousel-nav carousel-next" @click="nextPersonality" :disabled="currentPersonalityIndex === personalityIds.length - 1">❯</button>
+                        <button class="carousel-nav carousel-next" @click="nextPersonality"
+                            :disabled="currentPersonalityIndex === personalityIds.length - 1">❯</button>
                     </div>
 
                     <div class="carousel-indicators">
-                        <span v-for="(id, index) in personalityIds" :key="id"
-                              class="indicator"
-                              :class="{ active: index === currentPersonalityIndex }"
-                              @click="goToPersonality(index)">
+                        <span v-for="(id, index) in personalityIds" :key="id" class="indicator"
+                            :class="{ active: index === currentPersonalityIndex }" @click="goToPersonality(index)">
                         </span>
                     </div>
 
@@ -1193,7 +1228,7 @@
                 </div>
             </div>
         </main>
-        
+
         <div class="action-buttons">
             <button class="back-button" @click="goHome">
                 ← Back to Home
@@ -1205,12 +1240,12 @@
                 Share Report
             </button>
         </div>
-        
+
         <div class="disclaimer">
             © This is not real financial advice! Always correct 15% of the time!
         </div>
     </div>
-    
+
     <!-- Print Dialog -->
     <div id="printDialog" class="print-dialog-overlay">
         <div class="print-dialog">
@@ -1218,7 +1253,7 @@
                 <h3>Customize Your Report</h3>
                 <button class="print-dialog-close" onclick="closePrintDialog()">×</button>
             </div>
-            
+
             <div class="print-options">
                 <div class="print-option">
                     <label>Select Stocks to Include:</label>
@@ -1226,22 +1261,25 @@
                         <!-- Dynamically populated -->
                     </div>
                 </div>
-                
+
                 <div class="print-option">
                     <label>Print Options:</label>
                     <div class="print-options-grid">
-                        <div class="print-option-card" id="includeAnalysisCard" onclick="togglePrintOption('includeAnalysis')">
+                        <div class="print-option-card" id="includeAnalysisCard"
+                            onclick="togglePrintOption('includeAnalysis')">
                             <div class="print-option-title">Include AI Analysis</div>
                             <div class="print-option-subtitle">AI personality insights and market predictions</div>
                         </div>
-                        <div class="print-option-card active" id="includeMetadataCard" onclick="togglePrintOption('includeMetadata')">
+                        <div class="print-option-card active" id="includeMetadataCard"
+                            onclick="togglePrintOption('includeMetadata')">
                             <div class="print-option-title">Include Report Metadata</div>
-                            <div class="print-option-subtitle">Analysis period, generation date, price ranges, volume data, and key metrics</div>
+                            <div class="print-option-subtitle">Analysis period, generation date, price ranges, volume
+                                data, and key metrics</div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="print-actions">
                 <button class="print-btn print-btn-primary" onclick="generateCustomPrint()">
                     Generate PDF
@@ -1252,7 +1290,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Hidden print content container -->
     <div id="printContent" class="print-content" style="display: none;">
         <!-- Dynamically generated print content -->
@@ -1261,7 +1299,7 @@
     <script>
         // Vue.js Application
         const { createApp } = Vue;
-        
+
         createApp({
             data() {
                 return {
@@ -1300,10 +1338,10 @@
                 },
                 currentPersonalityImage() {
                     const personalityImages = {
-                        'dodgy-dave': 'images/Dody_Dave.png',
-                        'stephen-colbert': 'images/Stephen_Colbert.png',
-                        'scott-galloway': 'images/Scott_Galloway.png',
-                        'bernie-sanders': 'images/Bernie_Sanders.png'
+                        'dodgy-dave': '/images/Dody_Dave.png',
+                        'stephen-colbert': '/images/Stephen_Colbert.png',
+                        'scott-galloway': '/images/Scott_Galloway.png',
+                        'bernie-sanders': '/images/Bernie_Sanders.png'
                     };
 
                     const imagePath = personalityImages[this.currentPersonalityId] || personalityImages['dodgy-dave'];
@@ -1313,10 +1351,10 @@
                 },
                 personalityImage() {
                     const personalityImages = {
-                        'dodgy-dave': 'images/Dody_Dave.png',
-                        'stephen-colbert': 'images/Stephen_Colbert.png',
-                        'scott-galloway': 'images/Scott_Galloway.png',
-                        'bernie-sanders': 'images/Bernie_Sanders.png'
+                        'dodgy-dave': '/images/Dody_Dave.png',
+                        'stephen-colbert': '/images/Stephen_Colbert.png',
+                        'scott-galloway': '/images/Scott_Galloway.png',
+                        'bernie-sanders': '/images/Bernie_Sanders.png'
                     };
 
                     const imagePath = personalityImages[this.personality] || personalityImages['dodgy-dave'];
@@ -1505,41 +1543,41 @@
                 }
             }
         }).mount('#reportApp');
-        
+
         // Enhanced Chart creation functionality
         function createStockCharts(stockDataArray, tickerNames, dayRange) {
             // Use the passed dayRange parameter (from Vue app) or fallback to current value
             const selectedDayRange = dayRange || currentDayRange;
-            
+
             console.log('🎨 Creating enhanced charts for:', tickerNames, 'with', selectedDayRange, 'days');
-            
+
             const chartsContainer = document.getElementById('chartsContainer');
             if (!chartsContainer) {
                 console.error('❌ Charts container not found');
                 return;
             }
-            
+
             // Store data globally for dynamic re-rendering
             allStockData = stockDataArray;
             allTickerNames = tickerNames;
-            
+
             // Update global current day range with the selected value
             currentDayRange = selectedDayRange;
-            
+
             // Clear existing charts
             chartsContainer.innerHTML = '';
-            
+
             // Reset charts array
             window.stockCharts = [];
-            
+
             // Parse all stock data first and collect valid chart configs
             const validChartConfigs = [];
             let allChartsHtml = '';
-            
+
             stockDataArray.forEach((stockDataText, index) => {
                 try {
                     let stockData;
-                    
+
                     // Try to parse as markdown-wrapped JSON first (from AI reports)
                     const jsonMatch = stockDataText.match(/```json\s*([\s\S]*?)\s*```/);
                     if (jsonMatch) {
@@ -1566,7 +1604,7 @@
                         }
                     }
                     const ticker = tickerNames[index];
-                    
+
                     if (!stockData.results || stockData.results.length === 0) {
                         console.error('❌ No results data for ticker:', ticker);
                         const errorHtml = `
@@ -1578,7 +1616,7 @@
                         allChartsHtml += errorHtml;
                         return;
                     }
-                    
+
                     // Prepare data for Chart.js with better date handling
                     const allChartData = stockData.results.map(day => ({
                         x: new Date(day.t),
@@ -1588,11 +1626,11 @@
                         c: day.c, // close
                         v: day.v || 0 // volume
                     })).sort((a, b) => a.x - b.x); // Sort by date
-                    
+
                     // Filter data to show only the requested number of trading days
                     // We want the most recent N trading days based on selectedDayRange
                     const chartData = allChartData.slice(-selectedDayRange);
-                    
+
                     // Create individual chart container with cartoonish styling
                     const canvasId = `chart-${ticker.replace(/[^a-zA-Z0-9]/g, '')}-${index}`;
                     const totalDataPoints = allChartData.length;
@@ -1623,13 +1661,13 @@
                             </div>
                         </div>
                     `;
-                    
+
                     // Add to HTML collection
                     allChartsHtml += chartHtml;
-                    
+
                     // Initialize individual day range for this chart
                     individualDayRanges[index] = selectedDayRange;
-                    
+
                     // Store valid chart configuration for later creation
                     validChartConfigs.push({
                         canvasId: canvasId,
@@ -1639,7 +1677,7 @@
                         showHighLow: chartData.length <= 30,
                         index: index
                     });
-                    
+
                 } catch (error) {
                     console.error(`❌ Error processing chart for ${tickerNames[index]}:`, error);
                     // Add error message to HTML
@@ -1652,10 +1690,10 @@
                     allChartsHtml += errorHtml;
                 }
             });
-            
+
             // Set all HTML at once to avoid DOM invalidation issues
             chartsContainer.innerHTML = allChartsHtml;
-            
+
             // Create all charts after DOM is stable
             requestAnimationFrame(() => {
                 validChartConfigs.forEach(config => {
@@ -1663,7 +1701,7 @@
                         // Use individual day range for this chart
                         const chartDayRange = individualDayRanges[config.index] || selectedDayRange;
                         const chartData = config.allChartData.slice(-chartDayRange);
-                        
+
                         const ctx = document.getElementById(config.canvasId).getContext('2d');
                         const chart = new Chart(ctx, {
                             type: 'line',
@@ -1752,11 +1790,11 @@
                                             },
                                             padding: 10,
                                             maxTicksLimit: 8,
-                                            callback: function(value, index, values) {
+                                            callback: function (value, index, values) {
                                                 const date = new Date(value);
-                                                return date.toLocaleDateString('en-US', { 
-                                                    month: 'short', 
-                                                    day: 'numeric' 
+                                                return date.toLocaleDateString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric'
                                                 });
                                             }
                                         },
@@ -1782,7 +1820,7 @@
                                                 weight: 'bold'
                                             },
                                             padding: 10,
-                                            callback: function(value) {
+                                            callback: function (value) {
                                                 return '$' + value.toFixed(2);
                                             }
                                         },
@@ -1833,19 +1871,19 @@
                                         padding: 15,
                                         displayColors: true,
                                         callbacks: {
-                                            title: function(context) {
+                                            title: function (context) {
                                                 const date = new Date(context[0].parsed.x);
-                                                return '📅 ' + date.toLocaleDateString('en-US', { 
-                                                    weekday: 'short', 
-                                                    year: 'numeric', 
-                                                    month: 'short', 
-                                                    day: 'numeric' 
+                                                return '📅 ' + date.toLocaleDateString('en-US', {
+                                                    weekday: 'short',
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
                                                 });
                                             },
-                                            label: function(context) {
+                                            label: function (context) {
                                                 return context.dataset.label + ': $' + context.parsed.y.toFixed(2);
                                             },
-                                            afterBody: function(context) {
+                                            afterBody: function (context) {
                                                 const dataIndex = context[0].dataIndex;
                                                 const volume = chartData[dataIndex]?.v || 0;
                                                 return volume > 0 ? ['', '📦 Volume: ' + volume.toLocaleString()] : [];
@@ -1863,28 +1901,28 @@
                                 }
                             }
                         });
-                        
+
                         // Store chart reference for zoom controls
                         if (!window.stockCharts) {
                             window.stockCharts = [];
                         }
                         window.stockCharts.push(chart);
-                        
+
                         console.log(`✅ Enhanced chart created for ${config.ticker}`);
                     } catch (error) {
                         console.error(`❌ Error creating chart for ${config.ticker}:`, error);
                     }
                 });
-                
+
                 // Add event listeners for individual chart controls
                 validChartConfigs.forEach(config => {
                     const index = config.index;
                     const addBtn = document.getElementById(`addDay-${index}`);
                     const removeBtn = document.getElementById(`removeDay-${index}`);
                     const dayCountSpan = document.getElementById(`currentDayCount-${index}`);
-                    
+
                     if (addBtn) {
-                        addBtn.addEventListener('click', function() {
+                        addBtn.addEventListener('click', function () {
                             if (individualDayRanges[index] < 30) {
                                 individualDayRanges[index]++;
                                 updateIndividualChart(index, config);
@@ -1892,9 +1930,9 @@
                             }
                         });
                     }
-                    
+
                     if (removeBtn) {
-                        removeBtn.addEventListener('click', function() {
+                        removeBtn.addEventListener('click', function () {
                             if (individualDayRanges[index] > 1) {
                                 individualDayRanges[index]--;
                                 updateIndividualChart(index, config);
@@ -1902,30 +1940,30 @@
                             }
                         });
                     }
-                    
+
                     // Initialize button states
                     updateIndividualButtons(index);
                 });
             });
         }
-        
+
         // Helper functions for individual chart controls
         function updateIndividualChart(index, config) {
             const chartDayRange = individualDayRanges[index];
             const chartData = config.allChartData.slice(-chartDayRange);
-            
+
             // Find the chart by canvas ID
             const chart = window.stockCharts.find(c => c.canvas.id === config.canvasId);
             if (chart) {
                 chart.data.labels = chartData.map(d => d.x);
                 chart.data.datasets[0].data = chartData.map(d => d.c);
-                
+
                 // Update high/low lines if they exist
                 if (chart.data.datasets.length > 1) {
                     chart.data.datasets[1].data = chartData.map(d => d.h);
                     chart.data.datasets[2].data = chartData.map(d => d.l);
                 }
-                
+
                 // Hide high/low lines if more than 30 days
                 if (chartData.length > 30) {
                     chart.data.datasets.forEach((dataset, i) => {
@@ -1936,22 +1974,22 @@
                         if (i > 0) dataset.hidden = false;
                     });
                 }
-                
+
                 chart.update('none');
             }
-            
+
             // Update day counter
             const dayCountSpan = document.getElementById(`currentDayCount-${index}`);
             if (dayCountSpan) {
                 dayCountSpan.textContent = chartDayRange;
             }
         }
-        
+
         function updateIndividualButtons(index) {
             const addBtn = document.getElementById(`addDay-${index}`);
             const removeBtn = document.getElementById(`removeDay-${index}`);
             const dayRange = individualDayRanges[index];
-            
+
             if (addBtn) {
                 addBtn.disabled = dayRange >= 30;
             }
@@ -1966,9 +2004,9 @@
         let allStockData = []; // Pre-loaded stock data
         let allTickerNames = [];
         let individualDayRanges = {}; // Store individual day ranges for each chart
-        
+
         // Individual chart controls are handled within createStockCharts function
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Set initial day range from Vue data if available
             const vueApp = document.querySelector('#reportApp');
             if (vueApp && vueApp.__vueParentComponent && vueApp.__vueParentComponent.ctx.dayRange) {
@@ -1980,11 +2018,11 @@
         function openPrintDialog() {
             const dialog = document.getElementById('printDialog');
             const stockCheckboxes = document.getElementById('stockCheckboxes');
-            
+
             // Populate stock checkboxes
-            const tickerNames = allTickerNames.length > 0 ? allTickerNames : 
+            const tickerNames = allTickerNames.length > 0 ? allTickerNames :
                 (document.querySelector('#reportApp').__vueParentComponent?.ctx.tickers?.split(', ') || []);
-            
+
             stockCheckboxes.innerHTML = '';
             tickerNames.forEach((ticker, index) => {
                 const checkboxDiv = document.createElement('div');
@@ -1993,18 +2031,18 @@
                     <input type="checkbox" id="stock-${index}" value="${ticker}" checked>
                     <label for="stock-${index}">${ticker}</label>
                 `;
-                
+
                 // Add click handler to the entire div for better UX
-                checkboxDiv.addEventListener('click', function(e) {
+                checkboxDiv.addEventListener('click', function (e) {
                     if (e.target.tagName !== 'INPUT') {
                         const checkbox = this.querySelector('input[type="checkbox"]');
                         checkbox.checked = !checkbox.checked;
                     }
                 });
-                
+
                 stockCheckboxes.appendChild(checkboxDiv);
             });
-            
+
             dialog.style.display = 'block';
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
@@ -2038,11 +2076,11 @@
 
             generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData);
             closePrintDialog();
-            
+
             // Wait a moment for content generation, then print
             setTimeout(() => {
                 window.print();
-                
+
                 // Hide print content after printing
                 setTimeout(() => {
                     document.getElementById('printContent').style.display = 'none';
@@ -2053,14 +2091,14 @@
         function generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData) {
             const printContent = document.getElementById('printContent');
             const vueApp = document.querySelector('#reportApp').__vueParentComponent?.ctx;
-            
+
             let html = '';
 
             // Generate each stock chart as a separate page
             selectedStocks.forEach((ticker, index) => {
                 const stockData = allStockData[allTickerNames.indexOf(ticker)];
                 const chartCanvas = document.querySelector(`canvas[id*="${ticker.replace(/[^a-zA-Z0-9]/g, '')}"]`);
-                
+
                 // Each chart gets its own page with header
                 html += `
                     <div class="print-chart-page">
@@ -2070,11 +2108,11 @@
                             ${includeMetadata ? `
                                 <p class="print-subtitle">
                                     Analysis Period: <span class="print-day-highlight">${vueApp?.dayRange || 3} DAYS</span> | 
-                                    Generated: ${new Date().toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                    })}
+                                    Generated: ${new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })}
                                 </p>
                             ` : ''}
                         </div>
@@ -2083,28 +2121,28 @@
                             <div class="print-chart-ticker-overlay">${ticker}</div>
                             <h3 class="print-chart-title">${ticker} - Stock Performance Analysis</h3>
                 `;
-                
+
                 if (chartCanvas) {
                     // Create a temporary canvas with proper dimensions (more square)
                     const tempCanvas = document.createElement('canvas');
                     const tempCtx = tempCanvas.getContext('2d');
-                    
+
                     // Set proper dimensions for print (more square-like for better layout)
                     const printWidth = 800;  // Optimized width for square layout
                     const printHeight = 670; // Slightly increased height to match container
                     tempCanvas.width = printWidth;
                     tempCanvas.height = printHeight;
-                    
+
                     // Draw the original chart to the temp canvas with proper scaling
                     tempCtx.drawImage(chartCanvas, 0, 0, printWidth, printHeight);
-                    
+
                     // Convert to image for printing
                     const chartImage = tempCanvas.toDataURL('image/png', 0.9);
                     html += `
                         <img src="${chartImage}" alt="${ticker} Chart" class="print-chart-canvas">
                     `;
                 }
-                
+
                 if (includeChartData && stockData) {
                     try {
                         let parsedData;
@@ -2114,13 +2152,13 @@
                         } else {
                             parsedData = JSON.parse(stockData);
                         }
-                        
+
                         if (parsedData.results && parsedData.results.length > 0) {
                             const recent = parsedData.results[parsedData.results.length - 1];
                             const oldest = parsedData.results[0];
                             const priceChange = ((recent.c - oldest.c) / oldest.c * 100).toFixed(2);
                             const changeDirection = priceChange >= 0 ? '↑' : '↓';
-                            
+
                             html += `
                                 <div class="print-chart-metrics">
                                     <strong>Key Metrics for ${ticker}:</strong><br>
@@ -2135,7 +2173,7 @@
                         console.warn('Could not parse stock data for metrics:', error);
                     }
                 }
-                
+
                 html += `
                         </div>
                         
@@ -2150,7 +2188,7 @@
             if (includeAnalysis && vueApp?.reportData) {
                 const cleanText = vueApp.reportData.replace(/<[^>]*>/g, '').trim();
                 const truncatedText = cleanText.length > 1200 ? cleanText.slice(0, 1200) + '...' : cleanText;
-                
+
                 html += `
                     <div class="print-analysis-page">
                         <div class="print-page-header">
@@ -2159,11 +2197,11 @@
                             ${includeMetadata ? `
                                 <p class="print-subtitle">
                                     Analysis Period: <span class="print-day-highlight">${vueApp?.dayRange || 3} DAYS</span> | 
-                                    Generated: ${new Date().toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'long', 
-                                        day: 'numeric' 
-                                    })}
+                                    Generated: ${new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                })}
                                 </p>
                             ` : ''}
                         </div>
@@ -2182,7 +2220,7 @@
             printContent.innerHTML = html;
             printContent.style.display = 'block';
         }
-        
+
         function previewPrint() {
             const selectedStocks = [];
             const stockCheckboxes = document.querySelectorAll('#stockCheckboxes input[type="checkbox"]:checked');
@@ -2200,11 +2238,11 @@
             const includeChartData = includeMetadata; // Always include chart data when metadata is included
 
             generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData);
-            
+
             // Open preview in a new window
             const printWindow = window.open('', 'PrintPreview', 'width=800,height=600,scrollbars=yes');
             const printContent = document.getElementById('printContent');
-            
+
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
@@ -2269,9 +2307,9 @@
                 </body>
                 </html>
             `);
-            
+
             printWindow.document.close();
-            
+
             // Hide print content after preview
             setTimeout(() => {
                 document.getElementById('printContent').style.display = 'none';
@@ -2279,28 +2317,28 @@
         }
 
         // Close dialog when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const dialog = document.getElementById('printDialog');
             const dialogContent = document.querySelector('.print-dialog');
-            
+
             if (event.target === dialog && !dialogContent.contains(event.target)) {
                 closePrintDialog();
             }
         });
 
         // Close dialog with Escape key
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closePrintDialog();
             }
         });
 
         // Handle print events for cleanup
-        window.addEventListener('beforeprint', function() {
+        window.addEventListener('beforeprint', function () {
             console.log('🖨️ Preparing print content...');
         });
 
-        window.addEventListener('afterprint', function() {
+        window.addEventListener('afterprint', function () {
             console.log('🖨️ Print dialog closed');
             // Ensure print content is hidden after printing
             setTimeout(() => {
@@ -2313,4 +2351,5 @@
 
     </script>
 </body>
-</html> 
+
+</html>

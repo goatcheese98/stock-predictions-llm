@@ -1,227 +1,230 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Dodgy Dave's Stock Predictions</title>
-		<link rel="stylesheet" href="index.css">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="UTF-8">
-		<meta property="og:title" content="Stock Predictions LLM Project" />
-		<meta property="og:description" content="An interactive Stock Prediction Dashboard built with LLMs and real-time data. A personal project exploring the intersection of AI and Finance." />
-		<meta property="og:image" content="https://stock-predictions-llm.pages.dev/images/logo-dave-text.png" />
-		<meta property="og:url" content="https://stock-predictions-llm.pages.dev/" />
-		<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
-		
-		<!-- GSAP 3.13.0 CDN with all plugins (now free) -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Observer.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomWiggle.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Physics2DPlugin.min.js"></script>
-	</head>
 
-	<body>
-		<div id="app">
-			<!-- Integrated Confetti System -->
-			<div class="confetti-cursor">
-				<img class="cursor-drag" src="https://assets.codepen.io/16327/hand-drag.png" alt="">
-				<img class="cursor-rock" src="https://assets.codepen.io/16327/hand-rock.png" alt="">
-				<img class="cursor-handle" src="https://assets.codepen.io/16327/2D-circle.png" alt="">
-				<div class="cursor-pink-pucker"></div>
-			</div>
-			<svg class="confetti-canvas"></svg>
-			
-			<!-- Preload images for confetti (hidden) -->
-			<div class="image-preload" aria-hidden="true" style="position: absolute; left: -9999px;">
-				<img data-key="combo" src="https://assets.codepen.io/16327/3D-combo.png" width="1" height="1" />
-				<img data-key="cone" src="https://assets.codepen.io/16327/3D-cone.png" width="1" height="1" />
-				<img data-key="hoop" src="https://assets.codepen.io/16327/3D-hoop.png" width="1" height="1" />
-				<img data-key="keyframe" src="https://assets.codepen.io/16327/3D-keyframe.png" width="1" height="1" />
-				<img data-key="semi" src="https://assets.codepen.io/16327/3D-semi.png" width="1" height="1" />
-				<img data-key="spiral" src="https://assets.codepen.io/16327/3D-spiral.png" width="1" height="1" />
-				<img data-key="squish" src="https://assets.codepen.io/16327/3D-squish.png" width="1" height="1" />
-				<img data-key="triangle" src="https://assets.codepen.io/16327/3D-triangle.png" width="1" height="1" />
-				<img data-key="tunnel" src="https://assets.codepen.io/16327/3D-tunnel.png" width="1" height="1" />
-				<img data-key="wat" src="https://assets.codepen.io/16327/3D-poly.png" width="1" height="1" />
-			</div>
-			<div class="explosion-preload" aria-hidden="true" style="position: absolute; left: -9999px;">
-				<img data-key="blue-circle" src="https://assets.codepen.io/16327/2D-circles.png" />
-				<img data-key="green-keyframe" src="https://assets.codepen.io/16327/2D-keyframe.png" />
-				<img data-key="orange-lightning" src="https://assets.codepen.io/16327/2D-lightning.png" />
-				<img data-key="orange-star" src="https://assets.codepen.io/16327/2D-star.png" />
-				<img data-key="purple-flower" src="https://assets.codepen.io/16327/2D-flower.png" />
-				<img data-key="cone" src="https://assets.codepen.io/16327/3D-cone.png" />
-				<img data-key="keyframe" src="https://assets.codepen.io/16327/3D-spiral.png" />
-				<img data-key="spiral" src="https://assets.codepen.io/16327/3D-spiral.png" />
-				<img data-key="tunnel" src="https://assets.codepen.io/16327/3D-tunnel.png" />
-				<img data-key="hoop" src="https://assets.codepen.io/16327/3D-hoop.png" />
-				<img data-key="semi" src="https://assets.codepen.io/16327/3D-semi.png" />
-			</div>
-			
-			<header>
-				                <img src="./images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
-			</header>
-			<main>
-				<section class="action-panel" v-show="currentView === 'input'">
-					<form id="ticker-input-form" @submit.prevent="handleSubmit">
-						<label for="ticker-input"> Add up to 3 stock tickers below to get a super accurate stock predictions report👇 </label>
-						<div class="form-input-control">
-							<input type="text" id="ticker-input" v-model="tickerInput" placeholder="MSFT">
-							<button type="submit" class="add-ticker-btn">
-								                    <img src="./images/add.svg" class="add-ticker-svg" alt="add"> 
-							</button>
-						</div>
-					</form>
-					<p class="ticker-choice-display">
-						<span v-if="tickersArr.length === 0" id="ticker-placeholder">Your tickers will appear here...</span>
-						<span v-for="ticker in tickersArr" :key="ticker" class="ticker">{{ ticker }}</span>
-					</p>
-					
-					<!-- Day Range Selection -->
-					<div class="day-range-selection">
-						<label>Analysis Period: <span class="day-range-number-container">
+<head>
+	<title>Dodgy Dave's Stock Predictions</title>
+	<link rel="stylesheet" href="index.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
+		rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+	<meta property="og:title" content="Stock Predictions LLM Project" />
+	<meta property="og:description"
+		content="An interactive Stock Prediction Dashboard built with LLMs and real-time data. A personal project exploring the intersection of AI and Finance." />
+	<meta property="og:image" content="https://stock-predictions-llm.pages.dev/images/logo-dave-text.png" />
+	<meta property="og:url" content="https://stock-predictions-llm.pages.dev/" />
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
+
+	<!-- GSAP 3.13.0 CDN with all plugins (now free) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Observer.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomWiggle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Physics2DPlugin.min.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<!-- Integrated Confetti System -->
+		<div class="confetti-cursor">
+			<img class="cursor-drag" src="https://assets.codepen.io/16327/hand-drag.png" alt="">
+			<img class="cursor-rock" src="https://assets.codepen.io/16327/hand-rock.png" alt="">
+			<img class="cursor-handle" src="https://assets.codepen.io/16327/2D-circle.png" alt="">
+			<div class="cursor-pink-pucker"></div>
+		</div>
+		<svg class="confetti-canvas"></svg>
+
+		<!-- Preload images for confetti (hidden) -->
+		<div class="image-preload" aria-hidden="true" style="position: absolute; left: -9999px;">
+			<img data-key="combo" src="https://assets.codepen.io/16327/3D-combo.png" width="1" height="1" />
+			<img data-key="cone" src="https://assets.codepen.io/16327/3D-cone.png" width="1" height="1" />
+			<img data-key="hoop" src="https://assets.codepen.io/16327/3D-hoop.png" width="1" height="1" />
+			<img data-key="keyframe" src="https://assets.codepen.io/16327/3D-keyframe.png" width="1" height="1" />
+			<img data-key="semi" src="https://assets.codepen.io/16327/3D-semi.png" width="1" height="1" />
+			<img data-key="spiral" src="https://assets.codepen.io/16327/3D-spiral.png" width="1" height="1" />
+			<img data-key="squish" src="https://assets.codepen.io/16327/3D-squish.png" width="1" height="1" />
+			<img data-key="triangle" src="https://assets.codepen.io/16327/3D-triangle.png" width="1" height="1" />
+			<img data-key="tunnel" src="https://assets.codepen.io/16327/3D-tunnel.png" width="1" height="1" />
+			<img data-key="wat" src="https://assets.codepen.io/16327/3D-poly.png" width="1" height="1" />
+		</div>
+		<div class="explosion-preload" aria-hidden="true" style="position: absolute; left: -9999px;">
+			<img data-key="blue-circle" src="https://assets.codepen.io/16327/2D-circles.png" />
+			<img data-key="green-keyframe" src="https://assets.codepen.io/16327/2D-keyframe.png" />
+			<img data-key="orange-lightning" src="https://assets.codepen.io/16327/2D-lightning.png" />
+			<img data-key="orange-star" src="https://assets.codepen.io/16327/2D-star.png" />
+			<img data-key="purple-flower" src="https://assets.codepen.io/16327/2D-flower.png" />
+			<img data-key="cone" src="https://assets.codepen.io/16327/3D-cone.png" />
+			<img data-key="keyframe" src="https://assets.codepen.io/16327/3D-spiral.png" />
+			<img data-key="spiral" src="https://assets.codepen.io/16327/3D-spiral.png" />
+			<img data-key="tunnel" src="https://assets.codepen.io/16327/3D-tunnel.png" />
+			<img data-key="hoop" src="https://assets.codepen.io/16327/3D-hoop.png" />
+			<img data-key="semi" src="https://assets.codepen.io/16327/3D-semi.png" />
+		</div>
+
+		<header>
+			<img src="/images/logo-dave-text.png" alt="Dodgy Dave's Stock Predictions">
+		</header>
+		<main>
+			<section class="action-panel" v-show="currentView === 'input'">
+				<form id="ticker-input-form" @submit.prevent="handleSubmit">
+					<label for="ticker-input"> Add up to 3 stock tickers below to get a super accurate stock predictions
+						report👇 </label>
+					<div class="form-input-control">
+						<input type="text" id="ticker-input" v-model="tickerInput" placeholder="MSFT">
+						<button type="submit" class="add-ticker-btn">
+							<img src="/images/add.svg" class="add-ticker-svg" alt="add">
+						</button>
+					</div>
+				</form>
+				<p class="ticker-choice-display">
+					<span v-if="tickersArr.length === 0" id="ticker-placeholder">Your tickers will appear here...</span>
+					<span v-for="ticker in tickersArr" :key="ticker" class="ticker">{{ ticker }}</span>
+				</p>
+
+				<!-- Day Range Selection -->
+				<div class="day-range-selection">
+					<label>Analysis Period: <span class="day-range-number-container">
 							<span class="day-range-number">{{ dayRange }}</span>
 						</span> days 📅</label>
-						<div class="day-range-slider">
-							<input 
-								type="range" 
-								v-model="dayRange" 
-								min="3" 
-								max="30" 
-								step="1"
-								class="slider"
-								id="dayRangeSlider"
-							>
-							<div class="slider-labels">
-								<span>3 days</span>
-								<span>30 days</span>
-							</div>
+					<div class="day-range-slider">
+						<input type="range" v-model="dayRange" min="3" max="30" step="1" class="slider"
+							id="dayRangeSlider">
+						<div class="slider-labels">
+							<span>3 days</span>
+							<span>30 days</span>
 						</div>
 					</div>
-					
-					<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0" @click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
-						Generate Report
-					</button>
-					
-					<!-- Personality Selection - Multi-select enabled -->
-					<div class="personality-selection">
-						<label>Choose Your Analyst(s) 👇 <span class="multi-select-hint">(Click multiple to compare)</span></label>
-						<div class="personality-grid">
-							<div class="personality-card"
-								 :class="{ active: isPersonalitySelected('dodgy-dave') }"
-								 @click="togglePersonality('dodgy-dave')">
-								<div class="personality-avatar">
-									                        <img src="./images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image" loading="lazy">
-								</div>
-								<div class="personality-info">
-									<div class="personality-name">Dodgy Dave</div>
-									<div class="personality-subtitle">The Trading Guru</div>
-								</div>
-								<div class="personality-checkmark" v-if="isPersonalitySelected('dodgy-dave')">✓</div>
-							</div>
+				</div>
 
-							<div class="personality-card"
-								 :class="{ active: isPersonalitySelected('stephen-colbert') }"
-								 @click="togglePersonality('stephen-colbert')">
-								<div class="personality-avatar">
-									                        <img src="./images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image" loading="lazy">
-								</div>
-								<div class="personality-info">
-									<div class="personality-name">Stephen Colbert</div>
-									<div class="personality-subtitle">The Satirical Analyst</div>
-								</div>
-								<div class="personality-checkmark" v-if="isPersonalitySelected('stephen-colbert')">✓</div>
-							</div>
+				<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0"
+					@click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
+					Generate Report
+				</button>
 
-							<div class="personality-card"
-								 :class="{ active: isPersonalitySelected('scott-galloway') }"
-								 @click="togglePersonality('scott-galloway')">
-								<div class="personality-avatar">
-									                        <img src="./images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image" loading="lazy">
-								</div>
-								<div class="personality-info">
-									<div class="personality-name">Scott Galloway</div>
-									<div class="personality-subtitle">The Business Professor</div>
-								</div>
-								<div class="personality-checkmark" v-if="isPersonalitySelected('scott-galloway')">✓</div>
+				<!-- Personality Selection - Multi-select enabled -->
+				<div class="personality-selection">
+					<label>Choose Your Analyst(s) 👇 <span class="multi-select-hint">(Click multiple to
+							compare)</span></label>
+					<div class="personality-grid">
+						<div class="personality-card" :class="{ active: isPersonalitySelected('dodgy-dave') }"
+							@click="togglePersonality('dodgy-dave')">
+							<div class="personality-avatar">
+								<img src="/images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image"
+									loading="lazy">
 							</div>
+							<div class="personality-info">
+								<div class="personality-name">Dodgy Dave</div>
+								<div class="personality-subtitle">The Trading Guru</div>
+							</div>
+							<div class="personality-checkmark" v-if="isPersonalitySelected('dodgy-dave')">✓</div>
+						</div>
 
-							<div class="personality-card"
-								 :class="{ active: isPersonalitySelected('bernie-sanders') }"
-								 @click="togglePersonality('bernie-sanders')">
-								<div class="personality-avatar">
-									                        <img src="./images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image" loading="lazy">
-								</div>
-								<div class="personality-info">
-									<div class="personality-name">Bernie Sanders</div>
-									<div class="personality-subtitle">The Economic Populist</div>
-								</div>
-								<div class="personality-checkmark" v-if="isPersonalitySelected('bernie-sanders')">✓</div>
+						<div class="personality-card" :class="{ active: isPersonalitySelected('stephen-colbert') }"
+							@click="togglePersonality('stephen-colbert')">
+							<div class="personality-avatar">
+								<img src="/images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image"
+									loading="lazy">
 							</div>
+							<div class="personality-info">
+								<div class="personality-name">Stephen Colbert</div>
+								<div class="personality-subtitle">The Satirical Analyst</div>
+							</div>
+							<div class="personality-checkmark" v-if="isPersonalitySelected('stephen-colbert')">✓</div>
+						</div>
+
+						<div class="personality-card" :class="{ active: isPersonalitySelected('scott-galloway') }"
+							@click="togglePersonality('scott-galloway')">
+							<div class="personality-avatar">
+								<img src="/images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image"
+									loading="lazy">
+							</div>
+							<div class="personality-info">
+								<div class="personality-name">Scott Galloway</div>
+								<div class="personality-subtitle">The Business Professor</div>
+							</div>
+							<div class="personality-checkmark" v-if="isPersonalitySelected('scott-galloway')">✓</div>
+						</div>
+
+						<div class="personality-card" :class="{ active: isPersonalitySelected('bernie-sanders') }"
+							@click="togglePersonality('bernie-sanders')">
+							<div class="personality-avatar">
+								<img src="/images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image"
+									loading="lazy">
+							</div>
+							<div class="personality-info">
+								<div class="personality-name">Bernie Sanders</div>
+								<div class="personality-subtitle">The Economic Populist</div>
+							</div>
+							<div class="personality-checkmark" v-if="isPersonalitySelected('bernie-sanders')">✓</div>
 						</div>
 					</div>
-					<p class="tag-line">Always correct 15% of the time!</p>
-				</section>
-				
-				<section class="loading-panel" :class="{ show: currentView === 'loading' }">
-					<div class="loading-tickers">
-						Analyzing: {{ tickersArr.join(', ') }}
-					</div>
-					
-					<div class="progress-steps">
-						<div class="progress-step" :class="{ 
+				</div>
+				<p class="tag-line">Always correct 15% of the time!</p>
+			</section>
+
+			<section class="loading-panel" :class="{ show: currentView === 'loading' }">
+				<div class="loading-tickers">
+					Analyzing: {{ tickersArr.join(', ') }}
+				</div>
+
+				<div class="progress-steps">
+					<div class="progress-step" :class="{ 
 							active: loadingStep === 'fetching', 
 							completed: loadingStep === 'analyzing' || loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">
-								                        <img src="./images/cloudflare.svg" alt="Cloudflare" class="progress-icon">
-							</div>
-							<div class="progress-step-text">Fetching Stock Data</div>
+						<div class="progress-step-icon">
+							<img src="/images/cloudflare.svg" alt="Cloudflare" class="progress-icon">
 						</div>
-						<div class="progress-step" :class="{ 
+						<div class="progress-step-text">Fetching Stock Data</div>
+					</div>
+					<div class="progress-step" :class="{ 
 							active: loadingStep === 'analyzing', 
 							completed: loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">
-								                        <img src="./images/OpenAI_light_dark/OpenAI_light.svg" alt="OpenAI" class="progress-icon">
-							</div>
-							<div class="progress-step-text">AI Analysis</div>
+						<div class="progress-step-icon">
+							<img src="/images/OpenAI_light_dark/OpenAI_light.svg" alt="OpenAI" class="progress-icon">
 						</div>
-						<div class="progress-step" :class="{ 
+						<div class="progress-step-text">AI Analysis</div>
+					</div>
+					<div class="progress-step" :class="{ 
 							active: loadingStep === 'generating' 
 						}">
-							<div class="progress-step-icon">
-								                        <img src="./images/chartjs.svg" alt="Chart.js" class="progress-icon">
-							</div>
-							<div class="progress-step-text">Generating Report</div>
+						<div class="progress-step-icon">
+							<img src="/images/chartjs.svg" alt="Chart.js" class="progress-icon">
 						</div>
+						<div class="progress-step-text">Generating Report</div>
 					</div>
-					
-					<div class="loading-spinner">
-						<div class="spinner">
-							                        <img src="./images/vue.svg" alt="Vue.js" class="vue-icon">
-						</div>
-					</div>
-					
-					<div id="api-message">
-						{{ loadingMessage }}<span class="loading-dots"></span>
-					</div>
-				</section>
-			</main>
-			<footer>
-				&copy; This is not real financial advice!
-			</footer>
-		</div>
-		
+				</div>
 
-		
-		<script src="index.js" type="module"></script>
-	</body>
+				<div class="loading-spinner">
+					<div class="spinner">
+						<img src="/images/vue.svg" alt="Vue.js" class="vue-icon">
+					</div>
+				</div>
+
+				<div id="api-message">
+					{{ loadingMessage }}<span class="loading-dots"></span>
+				</div>
+			</section>
+		</main>
+		<footer>
+			&copy; This is not real financial advice!
+		</footer>
+	</div>
+
+
+
+	<script src="index.js" type="module"></script>
+</body>
+
 </html>
