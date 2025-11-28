@@ -5,7 +5,7 @@ export default defineConfig(({ command, mode }) => {
 
 	return {
 		plugins: [],
-		base: '/',
+		base: '/stock-predictions-llm/',
 		build: {
 			outDir: 'dist',
 			assetsDir: 'assets',
