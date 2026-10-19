@@ -1,4 +1,6 @@
-import { dates, getDatesForRange } from '/utils/dates'
+import { fetchStock, fetchReportContent, storeReport } from './utils/report-api.ts'
+import { renderTickers } from './utils/ticker-dom.ts'
+import { dates, getDatesForRange } from './utils/dates.ts'
 
 // Fallback functionality for when Vue.js doesn't work
 let fallbackData = {
@@ -157,21 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('Using date range:', dateRange)
                     
                     const stockData = await Promise.all(this.tickersArr.map(async (ticker, index) => {
-                        const url = `https://polygon-api-worker.jasani-rohan.workers.dev/?ticker=${ticker}&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`;
-                        console.log('Fetching from URL:', url)
-                        
-                        // Update loading message to show progress
                         this.loadingMessage = `Fetching ${ticker} data (${index + 1} of ${this.tickersArr.length})`
-                        console.log('Updated loading message:', this.loadingMessage)
-                        
-            const response = await fetch(url)
-
-            if (!response.ok) {
-                const errMsg = await response.text()
-                throw new Error('Worker error: ' + errMsg)
-            }
-                        
-            return response.text()
+                        return fetchStock(ticker, dateRange)
         }))
                     
                     console.log('Stock data received:', stockData)
@@ -187,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Add a small delay to show the step transition
                     await new Promise(resolve => setTimeout(resolve, 800))
                     
-                    this.fetchReport(stockData.join(''))
+                    await this.fetchReport(stockData.join(''))
     } catch (err) {
                     console.error('Error fetching stock data:', err)
                     this.loadingMessage = 'Error fetching stock data. Please try again.'
@@ -204,7 +193,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.loadingMessage = 'AI is analyzing your stocks and generating insights...'
 
                 const reports = {}
-                const url = 'https://openai-api-worker.jasani-rohan.workers.dev'
 
                 try {
                     // Fetch report for each selected personality
@@ -230,22 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         ]
 
-                        const response = await fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(messages)
-                        })
-
-                        const responseData = await response.json()
-                        console.log(`AI response received for ${personality.name}:`, responseData)
-
-                        if (!response.ok) {
-                            throw new Error(`Worker Error: ${responseData.error}`)
-                        }
-
-                        reports[personalityId] = responseData.content
+                        reports[personalityId] = await fetchReportContent(messages)
 
                         // Small delay between API calls
                         if (i < this.selectedPersonalities.length - 1) {
@@ -283,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 try {
-                    sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+                    storeReport(reportData)
                     console.log('Report data stored in sessionStorage')
                     
                     // 🎉 Trigger confetti celebration for successful report generation!
@@ -319,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error storing report data:', error)
                     // Fallback to URL method for smaller reports
                     const tickers = this.tickersArr.join(', ')
-                    const encodedReport = encodeURIComponent(output)
+                    const encodedReport = encodeURIComponent(reports[this.selectedPersonalities[0]] || '')
                     const reportUrl = `report.html?tickers=${encodeURIComponent(tickers)}&report=${encodedReport}`
                     
                     // Add confetti for fallback method too
@@ -395,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <body>
                         <div class="header">
                             <h1>📈 Dodgy Dave's Stock Predictions 📈</h1>
-                            <div class="tickers">Analyzed Tickers: ${this.tickersArr.join(', ')}</div>
+                            <div class="tickers">Analyzed Tickers: </div>
                         </div>
                         <div class="report-content">
                             ${this.reportContent}
@@ -407,6 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </html>
                 `)
                 reportWindow.document.close()
+                reportWindow.document.querySelector('.tickers').textContent = `Analyzed Tickers: ${this.tickersArr.join(', ')}`
             },
             
             openReportPage() {
@@ -421,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 try {
-                    sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+                    storeReport(reportData)
                     const reportUrl = `report.html?id=${Date.now()}`
                     
                     console.log('Generated report URL:', reportUrl)
@@ -1312,9 +1286,7 @@ function updateFallbackUI() {
     const generateBtn = document.querySelector('.generate-report-btn')
     
     if (tickerDisplay) {
-        tickerDisplay.innerHTML = fallbackData.tickersArr.map(ticker => 
-            `<span class="ticker">${ticker}</span>`
-        ).join('')
+        renderTickers(tickerDisplay, fallbackData.tickersArr)
     }
     
     if (generateBtn) {
@@ -1330,12 +1302,7 @@ async function fallbackFetchStockData() {
     
     try {
         const stockData = await Promise.all(fallbackData.tickersArr.map(async (ticker) => {
-            const url = `https://polygon-api-worker.jasani-rohan.workers.dev/?ticker=${ticker}&startDate=${dates.startDate}&endDate=${dates.endDate}`;
-            const response = await fetch(url)
-            if (!response.ok) {
-                throw new Error('API Error')
-            }
-            return response.text()
+            return fetchStock(ticker, dates)
         }))
         
         await fallbackFetchReport(stockData.join(''))
@@ -1359,18 +1326,8 @@ async function fallbackFetchReport(data) {
     ]
     
     try {
-        const response = await fetch('https://openai-api-worker.jasani-rohan.workers.dev', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(messages)
-        })
-        
-        const responseData = await response.json()
-        
-        if (!response.ok) {
-            throw new Error('AI Error')
-        }
-        
+        const responseData = { content: await fetchReportContent(messages) }
+
         // Store report data and redirect to report page
         console.log('Fallback: Redirecting to report page...')
         const reportData = {
@@ -1380,7 +1337,7 @@ async function fallbackFetchReport(data) {
         }
         
         try {
-            sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+            storeReport(reportData)
             const reportUrl = `report.html?id=${Date.now()}`
             console.log('Fallback report URL:', reportUrl)
             window.location.href = reportUrl
@@ -1407,7 +1364,7 @@ function openReportInNewPage() {
     }
     
     try {
-        sessionStorage.setItem('stockReport', JSON.stringify(reportData))
+        storeReport(reportData)
         const reportUrl = `report.html?id=${Date.now()}`
         window.open(reportUrl, '_blank')
     } catch (error) {

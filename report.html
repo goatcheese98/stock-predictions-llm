@@ -1296,7 +1296,9 @@
         <!-- Dynamically generated print content -->
     </div>
 
-    <script>
+    <script type="module">
+        import { parseStoredReport } from './utils/report-api.ts'
+        import { createTextTemplate } from './utils/ticker-dom.ts'
         // Vue.js Application
         const { createApp } = Vue;
 
@@ -1392,7 +1394,7 @@
                         try {
                             const storedData = sessionStorage.getItem('stockReport');
                             if (storedData) {
-                                const parsedData = JSON.parse(storedData);
+                                const parsedData = parseStoredReport(JSON.parse(storedData));
                                 tickers = parsedData.tickers;
 
                                 // Check if we have multiple reports (new format)
@@ -1546,6 +1548,7 @@
 
         // Enhanced Chart creation functionality
         function createStockCharts(stockDataArray, tickerNames, dayRange) {
+            const safe = createTextTemplate();
             // Use the passed dayRange parameter (from Vue app) or fallback to current value
             const selectedDayRange = dayRange || currentDayRange;
 
@@ -1594,9 +1597,9 @@
                             // Add error message to HTML
                             const errorHtml = `
                                 <div class="chart-error">
-                                    <h3>${tickerNames[index]} - Data Parse Error</h3>
+                                    <h3>${safe.text(tickerNames[index])} - Data Parse Error</h3>
                                     <p>Unable to parse chart data for this ticker.</p>
-                                    <p><strong>Parse Error:</strong> ${parseError.message}</p>
+                                    <p><strong>Parse Error:</strong> ${safe.text(parseError.message)}</p>
                                 </div>
                             `;
                             allChartsHtml += errorHtml;
@@ -1609,7 +1612,7 @@
                         console.error('❌ No results data for ticker:', ticker);
                         const errorHtml = `
                             <div class="chart-error">
-                                <h3>${ticker} - No Data Available</h3>
+                                <h3>${safe.text(ticker)} - No Data Available</h3>
                                 <p>No stock data found for the selected date range.</p>
                             </div>
                         `;
@@ -1636,13 +1639,13 @@
                     const totalDataPoints = allChartData.length;
                     const displayedDataPoints = chartData.length;
                     const chartHtml = `
-                        <div class="individual-chart-container" data-ticker="${ticker}" data-index="${index}">
+                        <div class="individual-chart-container" data-ticker="${safe.text(ticker)}" data-index="${index}">
                             <div class="chart-header">
                                 <h3 class="chart-ticker-title">
                                     <svg class="fund-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91 2.84.69 4.18 1.9 4.18 3.91-.01 1.83-1.38 2.83-3.12 3.16z" fill="currentColor"/>
                                     </svg>
-                                    ${ticker} Stock Performance
+                                    ${safe.text(ticker)} Stock Performance
                                 </h3>
                                 <div class="chart-info">
                                     ${displayedDataPoints < 3 ? '<span class="data-note">Limited data due to weekends/holidays</span>' : ''}
@@ -1683,8 +1686,8 @@
                     // Add error message to HTML
                     const errorHtml = `
                         <div class="chart-error">
-                            <h3>${tickerNames[index]} - Error Loading Chart</h3>
-                            <p>Technical error: ${error.message}</p>
+                            <h3>${safe.text(tickerNames[index])} - Error Loading Chart</h3>
+                            <p>Technical error: ${safe.text(error.message)}</p>
                         </div>
                     `;
                     allChartsHtml += errorHtml;
@@ -1692,7 +1695,7 @@
             });
 
             // Set all HTML at once to avoid DOM invalidation issues
-            chartsContainer.innerHTML = allChartsHtml;
+            safe.render(chartsContainer, allChartsHtml);
 
             // Create all charts after DOM is stable
             requestAnimationFrame(() => {
@@ -2016,6 +2019,7 @@
 
         // Custom Print Dialog Functions
         function openPrintDialog() {
+            const safe = createTextTemplate();
             const dialog = document.getElementById('printDialog');
             const stockCheckboxes = document.getElementById('stockCheckboxes');
 
@@ -2027,10 +2031,10 @@
             tickerNames.forEach((ticker, index) => {
                 const checkboxDiv = document.createElement('div');
                 checkboxDiv.className = 'stock-checkbox';
-                checkboxDiv.innerHTML = `
-                    <input type="checkbox" id="stock-${index}" value="${ticker}" checked>
-                    <label for="stock-${index}">${ticker}</label>
-                `;
+                safe.render(checkboxDiv, `
+                    <input type="checkbox" id="stock-${index}" value="${safe.text(ticker)}" checked>
+                    <label for="stock-${index}">${safe.text(ticker)}</label>
+                `);
 
                 // Add click handler to the entire div for better UX
                 checkboxDiv.addEventListener('click', function (e) {
@@ -2089,6 +2093,7 @@
         }
 
         function generatePrintContent(selectedStocks, includeAnalysis, includeMetadata, includeChartData) {
+            const safe = createTextTemplate();
             const printContent = document.getElementById('printContent');
             const vueApp = document.querySelector('#reportApp').__vueParentComponent?.ctx;
 
@@ -2118,8 +2123,8 @@
                         </div>
                         
                         <div class="print-chart-container">
-                            <div class="print-chart-ticker-overlay">${ticker}</div>
-                            <h3 class="print-chart-title">${ticker} - Stock Performance Analysis</h3>
+                            <div class="print-chart-ticker-overlay">${safe.text(ticker)}</div>
+                            <h3 class="print-chart-title">${safe.text(ticker)} - Stock Performance Analysis</h3>
                 `;
 
                 if (chartCanvas) {
@@ -2139,7 +2144,7 @@
                     // Convert to image for printing
                     const chartImage = tempCanvas.toDataURL('image/png', 0.9);
                     html += `
-                        <img src="${chartImage}" alt="${ticker} Chart" class="print-chart-canvas">
+                        <img src="${chartImage}" alt="${safe.text(ticker)} Chart" class="print-chart-canvas">
                     `;
                 }
 
@@ -2161,7 +2166,7 @@
 
                             html += `
                                 <div class="print-chart-metrics">
-                                    <strong>Key Metrics for ${ticker}:</strong><br>
+                                    <strong>Key Metrics for ${safe.text(ticker)}:</strong><br>
                                     Latest Close: $${recent.c.toFixed(2)} | 
                                     Period Change: ${changeDirection} ${Math.abs(priceChange)}% | 
                                     High: $${recent.h.toFixed(2)} | 
@@ -2217,7 +2222,7 @@
                 `;
             }
 
-            printContent.innerHTML = html;
+            safe.render(printContent, html);
             printContent.style.display = 'block';
         }
 
@@ -2349,7 +2354,10 @@
             }, 500);
         });
 
+        // Inline print controls still call these handlers from HTML attributes.
+        Object.assign(window, { closePrintDialog, generateCustomPrint, previewPrint, togglePrintOption });
     </script>
+
 </body>
 
 </html>

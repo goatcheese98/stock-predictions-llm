@@ -6,11 +6,22 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:github": "vite build"
+    "build:github": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-isolation=none tests/boundary.test.mjs",
+    "test:browser": "playwright test"
   },
   "dependencies": {
     "openai": "4.19.0",
     "vite": "^5.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "typescript": "5.9.3",
+    "vue": "3.5.22"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
 }
