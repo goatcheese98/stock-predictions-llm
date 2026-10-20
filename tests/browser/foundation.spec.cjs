@@ -1,0 +1,75 @@
+const {test,expect}=require('@playwright/test')
+const {offline,stock,report,addTicker}=require('./helpers.cjs')
+for(const colorScheme of ['light','dark']) {
+    test(`retained LUM ${colorScheme} surfaces load local fonts and remain usable on mobile with focus and errors`,async({page})=>{
+        await page.emulateMedia({colorScheme,reducedMotion:'reduce'})
+        const external=[]
+        page.on('request',request=>{if(['font','script'].includes(request.resourceType()) && !request.url().startsWith('http://127.0.0.1')) external.push(request.url())})
+        await offline(page)
+        await page.setViewportSize({width:1280,height:900})
+        await page.goto('./')
+        await page.waitForFunction(()=>window.vueApp)
+        const fonts=await page.evaluate(async()=>{
+            const faces=await Promise.all([document.fonts.load('16px "Geist Variable"'),document.fonts.load('16px "Geist Mono Variable"')])
+            return faces.map(items=>items.map(font=>({family:font.family,status:font.status})))
+        })
+        expect(fonts.every(items=>items.length>0 && items.every(font=>font.status==='loaded'))).toBe(true)
+        expect(await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--bg').trim())).toBe(colorScheme==='dark'?'#0a0a0b':'#fff')
+        expect(await page.locator('.add-ticker-svg path').evaluate(el=>getComputedStyle(el).fill)).toBe(colorScheme==='dark'?'rgb(20, 18, 16)':'rgb(255, 255, 255)')
+        await page.screenshot({path:`docs/evidence/input-lum-${colorScheme}-desktop.png`,fullPage:true,animations:'disabled'})
+        await page.setViewportSize({width:390,height:844})
+        await page.locator('#ticker-input').focus()
+        await expect(page.locator('#ticker-input')).toBeFocused()
+        await page.keyboard.press('Tab')
+        expect(await page.locator('.add-ticker-btn').evaluate(el=>getComputedStyle(el).outlineStyle)).toBe('solid')
+        await addTicker(page,'aa')
+        await expect(page.getByRole('alert')).toContainText('You must add at least one ticker')
+        await page.locator('#ticker-input').focus()
+        await page.screenshot({path:`docs/evidence/input-lum-${colorScheme}-mobile-focus-error.png`,fullPage:true,animations:'disabled'})
+        expect(await page.locator('#ticker-input').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(16)
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+        await page.evaluate(({stock,report})=>sessionStorage.setItem('stockReport',JSON.stringify({tickers:'AAPL',content:report.content,timestamp:1,dayRange:3,rawStockData:[JSON.stringify(stock)]})),{stock,report})
+        await page.goto('report.html?id=fixture')
+        await page.waitForFunction(()=>window.stockCharts?.length===1)
+        await expect(page.locator('.report-content').first()).toBeVisible()
+        await expect(page.locator('.report-content').first()).toHaveText(report.content)
+        expect(await page.locator('.report-content').first().evaluate(el=>getComputedStyle(el).opacity)).toBe('1')
+        await page.evaluate(()=>{window.stockCharts[0].stop();window.stockCharts[0].update('none')})
+        await page.screenshot({path:`docs/evidence/report-lum-${colorScheme}-mobile.png`,fullPage:true,animations:'disabled'})
+        expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390)
+        await page.setViewportSize({width:1280,height:900})
+        await page.screenshot({path:`docs/evidence/report-lum-${colorScheme}-desktop.png`,fullPage:true,animations:'disabled'})
+        await page.getByRole('button',{name:'Custom Print'}).click()
+        await expect(page.locator('.print-dialog')).toBeVisible()
+        await page.screenshot({path:`docs/evidence/print-dialog-lum-${colorScheme}.png`,fullPage:false,animations:'disabled'})
+        const liveChart=await page.evaluate(()=>({color:window.stockCharts[0].options.scales.x.ticks.color,data:window.stockCharts[0].data.datasets.map(series=>series.data)}))
+        const popupPromise=page.waitForEvent('popup')
+        await page.evaluate(()=>window.previewPrint())
+        const popup=await popupPromise
+        await popup.emulateMedia({colorScheme,reducedMotion:'reduce'})
+        await popup.setViewportSize({width:800,height:900})
+        await popup.waitForFunction(()=>getComputedStyle(document.documentElement).getPropertyValue('--font').includes('Geist Popup'))
+        const popupFonts=await popup.evaluate(async()=>{
+            const faces=await Promise.all([document.fonts.load('16px "Geist Popup"'),document.fonts.load('16px "Geist Mono Popup"')])
+            return faces.map(items=>items.map(font=>font.status))
+        })
+        expect(popupFonts.every(items=>items.length>0 && items.every(status=>status==='loaded'))).toBe(true)
+        expect(await popup.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--bg').trim())).toBe(colorScheme==='dark'?'#0a0a0b':'#fff')
+        await expect(popup.locator('.preview-btn-print')).toBeVisible()
+        expect(await popup.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(800)
+        await popup.screenshot({path:`docs/evidence/print-preview-lum-${colorScheme}.png`,fullPage:true,animations:'disabled'})
+        expect(await popup.locator('.print-chart-canvas').evaluate(async image=>{
+            await image.decode()
+            const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight
+            const context=canvas.getContext('2d');context.drawImage(image,0,0)
+            const corner=[...context.getImageData(0,0,1,1).data]
+            const axis=context.getImageData(10,20,145,520).data
+            let ink=0
+            for(let index=0;index<axis.length;index+=4) if(axis[index]<80 && axis[index+1]<80 && axis[index+2]<80 && axis[index+3]===255) ink++
+            return {corner,readableAxis:ink>100}
+        })).toEqual({corner:[255,255,255,255],readableAxis:true})
+        expect(await page.evaluate(()=>({color:window.stockCharts[0].options.scales.x.ticks.color,data:window.stockCharts[0].data.datasets.map(series=>series.data)}))).toEqual(liveChart)
+        await popup.close()
+        expect(external).toEqual([])
+    })
+}

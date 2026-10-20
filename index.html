@@ -4,11 +4,6 @@
 <head>
 	<title>Dodgy Dave's Stock Predictions</title>
 	<link rel="stylesheet" href="index.css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
-		rel="stylesheet">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="UTF-8">
 	<meta property="og:title" content="Stock Predictions LLM Project" />
@@ -20,21 +15,8 @@
 	<meta name="author" content="Rohan Jasani" />
 	<meta property="article:author" content="Rohan Jasani" />
 	<meta property="article:published_time" content="2025-07-05" />
-	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
 
-	<!-- GSAP 3.13.0 CDN with all plugins (now free) -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Observer.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomEase.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/CustomWiggle.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Physics2DPlugin.min.js"></script>
+    <link rel="stylesheet" data-foundation href="./foundation.css">
 </head>
 
 <body>
@@ -85,8 +67,8 @@
 						report👇 </label>
 					<div class="form-input-control">
 						<input type="text" id="ticker-input" v-model="tickerInput" placeholder="MSFT">
-						<button type="submit" class="add-ticker-btn">
-							<img src="/images/add.svg" class="add-ticker-svg" alt="add">
+						<button type="submit" class="add-ticker-btn" aria-label="Add ticker">
+							<svg class="add-ticker-svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z"/></svg>
 						</button>
 					</div>
 				</form>
@@ -97,11 +79,11 @@
 
 				<!-- Day Range Selection -->
 				<div class="day-range-selection">
-					<label>Analysis Period: <span class="day-range-number-container">
+					<label for="dayRangeSlider">Analysis Period: <span class="day-range-number-container">
 							<span class="day-range-number">{{ dayRange }}</span>
 						</span> days 📅</label>
 					<div class="day-range-slider">
-						<input type="range" v-model="dayRange" min="3" max="30" step="1" class="slider"
+						<input type="range" v-model.number="dayRange" min="3" max="30" step="1" class="slider"
 							id="dayRangeSlider">
 						<div class="slider-labels">
 							<span>3 days</span>
@@ -111,7 +93,7 @@
 				</div>
 
 				<button class="generate-report-btn" type="button" :disabled="tickersArr.length === 0"
-					@click="fetchStockData" onclick="console.log('Generate Report button clicked!')">
+					@click="fetchStockData">
 					Generate Report
 				</button>
 
@@ -121,7 +103,7 @@
 							compare)</span></label>
 					<div class="personality-grid">
 						<div class="personality-card" :class="{ active: isPersonalitySelected('dodgy-dave') }"
-							@click="togglePersonality('dodgy-dave')">
+							role="button" tabindex="0" :aria-pressed="isPersonalitySelected('dodgy-dave')" @keydown.enter="togglePersonality('dodgy-dave')" @keydown.space.prevent="togglePersonality('dodgy-dave')" @click="togglePersonality('dodgy-dave')">
 							<div class="personality-avatar">
 								<img src="/images/Dody_Dave.png" alt="Dodgy Dave" class="personality-image"
 									loading="lazy">
@@ -134,7 +116,7 @@
 						</div>
 
 						<div class="personality-card" :class="{ active: isPersonalitySelected('stephen-colbert') }"
-							@click="togglePersonality('stephen-colbert')">
+							role="button" tabindex="0" :aria-pressed="isPersonalitySelected('stephen-colbert')" @keydown.enter="togglePersonality('stephen-colbert')" @keydown.space.prevent="togglePersonality('stephen-colbert')" @click="togglePersonality('stephen-colbert')">
 							<div class="personality-avatar">
 								<img src="/images/Stephen_Colbert.png" alt="Stephen Colbert" class="personality-image"
 									loading="lazy">
@@ -147,7 +129,7 @@
 						</div>
 
 						<div class="personality-card" :class="{ active: isPersonalitySelected('scott-galloway') }"
-							@click="togglePersonality('scott-galloway')">
+							role="button" tabindex="0" :aria-pressed="isPersonalitySelected('scott-galloway')" @keydown.enter="togglePersonality('scott-galloway')" @keydown.space.prevent="togglePersonality('scott-galloway')" @click="togglePersonality('scott-galloway')">
 							<div class="personality-avatar">
 								<img src="/images/Scott_Galloway.png" alt="Scott Galloway" class="personality-image"
 									loading="lazy">
@@ -160,7 +142,7 @@
 						</div>
 
 						<div class="personality-card" :class="{ active: isPersonalitySelected('bernie-sanders') }"
-							@click="togglePersonality('bernie-sanders')">
+							role="button" tabindex="0" :aria-pressed="isPersonalitySelected('bernie-sanders')" @keydown.enter="togglePersonality('bernie-sanders')" @keydown.space.prevent="togglePersonality('bernie-sanders')" @click="togglePersonality('bernie-sanders')">
 							<div class="personality-avatar">
 								<img src="/images/Bernie_Sanders.png" alt="Bernie Sanders" class="personality-image"
 									loading="lazy">
@@ -228,7 +210,7 @@
 
 
 
-	<script src="index.js" type="module"></script>
+	<script src="index.ts" type="module"></script>
 </body>
 
 </html>

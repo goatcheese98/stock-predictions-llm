@@ -56,3 +56,12 @@ temp/
 
 # Vite
 .vite/
+
+# Browser test artifacts
+test-results/
+playwright-report/
+
+quality-artifacts/
+
+# Local Pages/workerd state
+.wrangler/

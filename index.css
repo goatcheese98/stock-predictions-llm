@@ -1,8 +1,8 @@
 html, body {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #f6f6f6;
+    font-family: var(--font);
+    background-color: var(--bg);
 }
 
 /* Prevent text selection during confetti drag */
@@ -21,7 +21,7 @@ header {
     display: flex;
     justify-content: center;
     padding: 1em;
-    background-color: black;
+    background-color: var(--fg);
     margin: 0 auto;
 }
 
@@ -60,13 +60,13 @@ main {
     align-items: center;
     height: 625px;
     text-align: center;
-    background: linear-gradient(135deg, #f6f6f6 0%, #e9e9e9 100%);
-    border: 3px solid #000000;
-    border-radius: 0;
+    background: linear-gradient(135deg, var(--bg) 0%, var(--panel2) 100%);
+    border: 3px solid var(--line);
+    border-radius: var(--r-sm);
     margin: 2.5em;
     padding: 2.5em;
-    box-shadow: 6px 6px 0px #000000;
-    font-family: 'Poppins', sans-serif;
+    box-shadow: var(--shadow);
+    font-family: var(--font);
 }
 
 .loading-panel.show {
@@ -89,13 +89,13 @@ main {
 .spinner {
     width: 100px;
     height: 100px;
-    border: 6px solid #000000;
-    border-top: 6px solid #46ff90;
-    border-right: 6px solid #46ff90;
+    border: 6px solid var(--line);
+    border-top: 6px solid var(--acc);
+    border-right: 6px solid var(--acc);
     border-radius: 50%;
     animation: spin 1.2s linear infinite;
     position: relative;
-    background: #ffffff;
+    background: var(--panel);
 }
 
 .vue-icon {
@@ -129,9 +129,9 @@ main {
 
 /* Loading Message Styling */
 #api-message {
-    font-size: 18px;
+    font-size: var(--fs-18);
     font-weight: 500;
-    color: #333;
+    color: var(--fg);
     margin-top: 1em;
     min-height: 60px;
     display: flex;
@@ -177,63 +177,63 @@ main {
     flex-direction: column;
     align-items: center;
     padding: 1em;
-    border-radius: 0;
-    background: white;
-    border: 2px solid #000000;
+    border-radius: var(--r-sm);
+    background: var(--panel);
+    border: 2px solid var(--line);
     min-width: 120px;
     transition: all 0.3s ease;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font);
 }
 
 .progress-step.active {
-    border-color: #000000;
-    background: #46ff90;
+    border-color: var(--line);
+    background: var(--acc);
     transform: scale(1.05);
-    box-shadow: 3px 3px 0px #000000;
+    box-shadow: var(--shadow);
 }
 
 .progress-step.completed {
-    border-color: #000000;
+    border-color: var(--line);
     background: #90ee90;
-    box-shadow: 2px 2px 0px #000000;
+    box-shadow: var(--shadow);
 }
 
 .progress-step-icon {
-    font-size: 28px;
+    font-size: var(--fs-28);
     margin-bottom: 0.5em;
-    filter: drop-shadow(1px 1px 0px #000000);
+    filter: drop-shadow(1px 1px 0px var(--fg));
 }
 
 .progress-icon {
     width: 32px;
     height: 32px;
-    filter: drop-shadow(1px 1px 0px #000000);
+    filter: drop-shadow(1px 1px 0px var(--fg));
 }
 
 .progress-step-text {
-    font-size: 13px;
+    font-size: var(--fs-13);
     font-weight: 500;
     text-align: center;
-    color: #000000;
-    font-family: 'Poppins', sans-serif;
+    color: var(--fg);
+    font-family: var(--font);
 }
 
 .progress-step.active .progress-step-text {
-    color: #000000;
+    color: var(--fg);
     font-weight: 600;
 }
 
 /* Ticker Display in Loading */
 .loading-tickers {
-    background: #46ff90;
+    background: var(--acc);
     padding: 0.5em 1em;
-    border: 2px solid #000000;
-    border-radius: 0;
+    border: 2px solid var(--line);
+    border-radius: var(--r-sm);
     margin: 1em 0;
     font-weight: bold;
-    font-size: 15px;
-    font-family: 'Poppins', sans-serif;
-    box-shadow: 3px 3px 0px #000000;
+    font-size: var(--fs-15);
+    font-family: var(--font);
+    box-shadow: var(--shadow);
 }
 
 /* Action Buttons */
@@ -250,18 +250,18 @@ main {
     flex: 1;
     min-width: 140px;
     max-width: 180px;
-    font-size: 14px;
+    font-size: var(--fs-14);
     padding: 0.8em 1em;
 }
 
 .secondary-btn {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border: 2px solid #000000 !important;
+    background-color: var(--panel) !important;
+    color: var(--fg) !important;
+    border: 2px solid var(--line) !important;
 }
 
 .secondary-btn:hover {
-    background-color: #f0f0f0 !important;
+    background-color: var(--panel2) !important;
 }
 
 /* text */
@@ -270,16 +270,16 @@ h2 {
     text-align: center;
     font-weight: 400; 
     margin-top: -26px;
-    background-color: #f6f6f6;
+    background-color: var(--bg);
     padding: 0 10px;
-    font-size: 18px;
+    font-size: var(--fs-18);
     margin-bottom: 0;
 }
 
 p.tag-line {
-    font-family: 'Comic Neue';
+    font-family: var(--font);
     font-weight: 700;
-    font-size: 14px;
+    font-size: var(--fs-14);
 }
 
 .ticker-choice-display {
@@ -301,7 +301,7 @@ form {
 label {
     text-align: center;
     padding: .43em;
-    font-size: 15px;
+    font-size: var(--fs-15);
     margin-bottom: 1em;
     width: 80%;
 }
@@ -323,12 +323,12 @@ input[type="text"] {
 .add-ticker-btn {
     display: flex;
     align-items: center;
-    background-color: #ffffff;
+    background-color: var(--panel);
     font-size: 3em;
     padding: 0 .35em;
     cursor: pointer;
     border: 2px solid;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.1), 4px 4px 0 rgba(0,0,0,0.05);
+    box-shadow: var(--shadow);
     transition: all 0.2s ease;
     transform: translateY(0);
 }
@@ -336,7 +336,7 @@ input[type="text"] {
 .add-ticker-btn:hover {
     background-color: #d2d2d2;
     transform: translateY(-1px);
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.15), 5px 5px 0 rgba(0,0,0,0.1);
+    box-shadow: var(--shadow);
 }
 
 .add-ticker-svg {
@@ -347,22 +347,22 @@ input[type="text"] {
     width: 70%;
     padding: 1em 1.5em;
     cursor: pointer;
-    font-family: 'Poppins', sans;
-    border: 2px solid #000000;
-    background-color: #46ff90;
+    font-family: var(--font);
+    border: 2px solid var(--line);
+    background-color: var(--acc);
     text-transform: uppercase;
     font-weight: 500;
     letter-spacing: .09em;
     font-size: 105%;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.1), 6px 6px 0 rgba(0,0,0,0.05);
+    box-shadow: var(--shadow);
     transition: all 0.2s ease;
     transform: translateY(0);
 }
 
 .generate-report-btn:hover {
-    background-color: #3ee080;
+    background-color: var(--acc);
     transform: translateY(-2px);
-    box-shadow: 6px 6px 0 rgba(0,0,0,0.15), 8px 8px 0 rgba(0,0,0,0.1);
+    box-shadow: var(--shadow);
 }
 
 .generate-report-btn:disabled {
@@ -376,7 +376,7 @@ input[type="text"] {
 .ticker {
     margin: 0 .1em;
     content: '';
-    font-size: 36px;
+    font-size: var(--fs-36);
     font-weight: 900;
     line-height: 1;
 }
@@ -392,7 +392,7 @@ input[type="text"] {
 /* footer */
 
 footer {
-    font-size: 14px;
+    font-size: var(--fs-14);
     text-align: center;
 }
 
@@ -486,8 +486,8 @@ footer {
     position: absolute;
     top: 20px;
     width: 200%;
-    font-size: 10px;
-    color: #666;
+    font-size: var(--fs-10);
+    color: var(--mut);
 }
 
 .pricing-hero__drag,
@@ -584,7 +584,7 @@ footer {
         height: 500px;
         margin: 1.25em;
         padding: 1.25em;
-        box-shadow: 4px 4px 0px #000000;
+        box-shadow: var(--shadow);
     }
     
     .progress-steps {
@@ -609,7 +609,7 @@ footer {
     }
     
     #api-message {
-        font-size: 16px;
+        font-size: var(--fs-16);
     }
 }
 
@@ -621,10 +621,10 @@ footer {
 }
 
 .day-range-selection label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
+    font-family: var(--font);
+    font-size: var(--fs-15);
     font-weight: 400;
-    color: #000;
+    color: var(--fg);
     margin-bottom: 0.5em;
     padding: 0.43em;
     width: 100%;
@@ -645,7 +645,7 @@ footer {
     display: inline-block;
     position: relative;
     font-weight: 600;
-    font-size: 18px;
+    font-size: var(--fs-18);
     transition: transform 0.3s ease;
 }
 
@@ -657,7 +657,7 @@ footer {
     right: 0;
     opacity: 0.3;
     font-size: 0.9em;
-    color: #666;
+    color: var(--mut);
     text-align: center;
 }
 
@@ -669,16 +669,16 @@ footer {
     right: 0;
     opacity: 0.3;
     font-size: 0.9em;
-    color: #666;
+    color: var(--mut);
     text-align: center;
 }
 
 .day-range-slider {
-    background: white;
-    border: 2px solid #000;
+    background: var(--panel);
+    border: 2px solid var(--line);
     padding: 1em;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+    border-radius: var(--r-sm);
+    box-shadow: var(--shadow);
     margin-top: 0.5em;
 }
 
@@ -686,9 +686,9 @@ footer {
     width: 100%;
     height: 8px;
     background: #ddd;
-    border: 2px solid #000;
+    border: 2px solid var(--line);
     outline: none;
-    border-radius: 0;
+    border-radius: var(--r-sm);
     -webkit-appearance: none;
     appearance: none;
 }
@@ -698,29 +698,29 @@ footer {
     appearance: none;
     width: 25px;
     height: 25px;
-    background: #46ff90;
-    border: 2px solid #000;
+    background: var(--acc);
+    border: 2px solid var(--line);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    box-shadow: var(--shadow);
 }
 
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
-    background: #46ff90;
-    border: 2px solid #000;
+    background: var(--acc);
+    border: 2px solid var(--line);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    box-shadow: var(--shadow);
 }
 
 .slider-labels {
     display: flex;
     justify-content: space-between;
     margin-top: 0.5em;
-    font-size: 11px;
-    color: #666;
+    font-size: var(--fs-11);
+    color: var(--mut);
     font-weight: 500;
 }
 
@@ -732,10 +732,10 @@ footer {
 }
 
 .personality-selection label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
+    font-family: var(--font);
+    font-size: var(--fs-15);
     font-weight: 400;
-    color: #000;
+    color: var(--fg);
     margin-bottom: 0.5em;
     padding: 0.43em;
     width: 100%;
@@ -743,8 +743,8 @@ footer {
 }
 
 .multi-select-hint {
-    font-size: 12px;
-    color: #666;
+    font-size: var(--fs-12);
+    color: var(--mut);
     font-weight: 400;
     display: block;
     font-style: italic;
@@ -764,13 +764,13 @@ footer {
 .personality-card {
     background-color: transparent;
     border: none;
-    border-radius: 0;
+    border-radius: var(--r-sm);
     padding: 0.6em 0.3em;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
     position: relative;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -792,9 +792,9 @@ footer {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #46ff90;
-    color: #000000;
-    font-size: 16px;
+    background-color: var(--acc);
+    color: var(--fg);
+    font-size: var(--fs-16);
     font-weight: bold;
     width: 28px;
     height: 28px;
@@ -802,9 +802,9 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 3px solid #000000;
+    border: 3px solid var(--line);
     z-index: 10;
-    box-shadow: 2px 2px 0 #000;
+    box-shadow: var(--shadow);
     animation: scaleIn 0.3s ease;
 }
 
@@ -829,7 +829,7 @@ footer {
     height: 85px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #000000;
+    border: 3px solid var(--line);
     transition: all 0.2s ease;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
@@ -846,12 +846,12 @@ footer {
 
 .personality-card:hover .personality-image {
     transform: scale(1.05);
-    border-color: #46ff90;
+    border-color: var(--acc);
 }
 
 .personality-card.active .personality-image {
-    border-color: #46ff90;
-    box-shadow: 0 0 0 2px #46ff90;
+    border-color: var(--acc);
+    box-shadow: var(--shadow);
 }
 
 .personality-info {
@@ -863,10 +863,10 @@ footer {
 }
 
 .personality-name {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font);
     font-weight: 500;
-    font-size: 13px;
-    color: #000000;
+    font-size: var(--fs-13);
+    color: var(--fg);
     margin-bottom: 0.3em;
     line-height: 1.2;
     word-wrap: break-word;
@@ -874,9 +874,9 @@ footer {
 }
 
 .personality-subtitle {
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px;
-    color: #666666;
+    font-family: var(--font);
+    font-size: var(--fs-11);
+    color: var(--mut);
     font-weight: 400;
     line-height: 1.2;
     word-wrap: break-word;
@@ -885,7 +885,7 @@ footer {
 }
 
 .personality-card.active .personality-subtitle {
-    color: #333333;
+    color: var(--fg);
 }
 
 /* Responsive adjustments for day range and personality selection */
@@ -934,11 +934,11 @@ footer {
     }
     
     .personality-name {
-        font-size: 12px;
+        font-size: var(--fs-12);
     }
     
     .personality-subtitle {
-        font-size: 10px;
+        font-size: var(--fs-10);
     }
     
     .personality-card.active::after {
@@ -946,7 +946,7 @@ footer {
         right: 8px;
         width: 20px;
         height: 20px;
-        font-size: 10px;
+        font-size: var(--fs-10);
     }
     
     .personality-info {
@@ -1078,4 +1078,13 @@ body.confetti-dragging * {
 /* Ensure images don't interfere with layout */
 img {
     max-width: 100%;
+}
+/* Respect device motion preferences across the existing UI and carousel. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

@@ -6,11 +6,31 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:github": "vite build"
+    "build:github": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "test:browser": "playwright test",
+    "build:pages": "vite build --mode pages",
+    "test:pages": "PAGES_RUNTIME=1 playwright test"
   },
   "dependencies": {
-    "openai": "4.19.0",
-    "vite": "^5.2.0"
+    "@fontsource-variable/geist": "5.3.0",
+    "@fontsource-variable/geist-mono": "5.3.0",
+    "chart.js": "4.5.1",
+    "chartjs-adapter-date-fns": "3.0.0",
+    "date-fns": "4.4.0",
+    "dompurify": "3.4.17",
+    "gsap": "3.13.0",
+    "vue": "3.5.44"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "typescript": "5.9.3",
+    "vite": "8.3.4",
+    "wrangler": "4.151.2"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
 }

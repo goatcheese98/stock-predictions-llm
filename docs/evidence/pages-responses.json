@@ -1,0 +1,618 @@
+[
+  {
+    "path": "/index.html?x=%25",
+    "status": 308,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "location": "/?x=%25",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/report.html?id=fixture",
+    "status": 308,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "location": "/report?id=fixture",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "etag": "\"4872e482deece9169e1adb840cd92bf6\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/report?id=fixture",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "etag": "\"fa59c3c5d512532afd7934087cedd6d3\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/report?tickers=AAPL&report=Offline%20%25",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "etag": "\"fa59c3c5d512532afd7934087cedd6d3\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/offline-runtime-probe.json",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "application/json",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "etag": "\"2792e3a333d99d791e5d0c5b69f12ab3\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/stockReport.json",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/animation-runtime-CdrJfbXg.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:15 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"7380b6175a158603824cece05e98ae21\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/chart-runtime-6Jteo0bF.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"14a0c01f346103eecbc2032496bc792e\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"4056ab76c9682abd580684207687dee4\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"01c9a2834415214d4a38547dcc51a57d\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"421692736aab319653d89496beeb8456\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"bcf3b59bd3dfe3ec9fb4ddd599ad70e0\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-cyrillic-ext-wght-normal-X_5orZeX.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"49aeaff17fbf0807a5f25d652c115e95\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-cyrillic-wght-normal-DiZS0aHC.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"22cdf5db3d6f6c837b684fe11cd22505\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-latin-ext-wght-normal-Bwz-egvJ.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"51541af3efadb6d3c40a91939e7b58f1\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-latin-wght-normal-XN7g48iV.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"cbd8356f3a2a2083f16134cba88ab7c1\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-symbols2-wght-normal-CO5SzqOn.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"ec365cbaa14add6431e40efae268a5e2\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-mono-vietnamese-wght-normal-DadHysG0.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"69f3825620d8a975a3d87cb80b0a2597\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "font/woff2",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "etag": "\"0f3d78f97946f6b8a0ff02ab6f7317af\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/main-BFTzQFBR.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"898e4e186ec1ef28d443e05273e4cdcd\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/preload-helper-BETXwBPc.css",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:16 GMT",
+      "content-type": "text/css; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"f316ecbc0b125aaf92f63c66b3125ad9\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/preload-helper-DB0ch_xj.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"7d4c2b8c0512688fc0a34af14c5d0d3e\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/report-h2dwUsWo.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"5446c2d10da548612b1914add5d45e38\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/report-view-Dr-C7gmr.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"920b75436b494936e565ebcf31323e1a\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/ticker-dom-j7xMFQUJ.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"0aec56e8393d6d979fef7b996a844e40\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/vue-runtime-B_puy3D7.js",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "application/javascript",
+      "access-control-allow-origin": "*",
+      "cache-control": "public, max-age=31536000, immutable",
+      "content-encoding": "gzip",
+      "etag": "\"93e4ac0fb886007069770fc3c958c58f\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/images/Dody_Dave.png",
+    "status": 200,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "image/png",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "etag": "\"7ad1723aaeb91855f90afdc7635a8da6\"",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY",
+      "x-server-env": "dev"
+    }
+  },
+  {
+    "path": "/assets/missing-ABCDef12.js",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/missing-ABCDef12.css",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/missing-ABCDef12.woff2",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/animation-runtime-CdrJfbXg.js",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/preload-helper-BETXwBPc.css",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  },
+  {
+    "path": "/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+    "status": 404,
+    "headers": {
+      "transfer-encoding": "chunked",
+      "date": "Tue, 20 Oct 2026 08:58:17 GMT",
+      "content-type": "text/html; charset=utf-8",
+      "access-control-allow-origin": "*",
+      "cache-control": "no-store",
+      "content-encoding": "gzip",
+      "content-security-policy": "default-src 'none'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://assets.codepen.io; font-src 'self' data:; connect-src 'self' https://polygon-api-worker.jasani-rohan.workers.dev https://openai-api-worker.jasani-rohan.workers.dev; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'",
+      "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    }
+  }
+]
