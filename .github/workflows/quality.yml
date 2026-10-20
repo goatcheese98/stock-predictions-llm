@@ -1,0 +1,63 @@
+name: PR quality (no deployment)
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+concurrency:
+  group: pr-quality-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: 'true'
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.19.0'
+          cache: npm
+      - name: Record and verify exact PR head
+        run: |
+          mkdir -p quality-artifacts
+          git rev-parse HEAD | tee quality-artifacts/tested-head.txt
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          node --version | tee quality-artifacts/node.txt
+          npm --version | tee quality-artifacts/npm.txt
+      - name: Frozen install
+        run: |
+          npm ci
+          git diff --exit-code -- package-lock.json
+      - name: Strict application types
+        run: npm run typecheck
+      - name: Unit and boundary regressions
+        run: npm test 2>&1 | tee quality-artifacts/unit.txt
+      - name: Full runtime and tooling advisory audit
+        run: npm audit --json > quality-artifacts/audit.json
+      - name: Production build
+        run: npm run build 2>&1 | tee quality-artifacts/build.txt
+      - name: Install lock-pinned browser
+        run: |
+          node_modules/.bin/playwright install --with-deps chromium
+          cp node_modules/playwright-core/browsers.json quality-artifacts/browser-revisions.json
+          node_modules/.bin/playwright --version | tee quality-artifacts/playwright.txt
+      - name: Offline browser, security, print and lifecycle gates
+        run: npm run test:browser
+      - name: Preserve results and failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pr-quality-${{ github.event.pull_request.head.sha }}
+          path: |
+            quality-artifacts/
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn

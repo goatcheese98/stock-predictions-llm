@@ -60,3 +60,5 @@ temp/
 # Browser test artifacts
 test-results/
 playwright-report/
+
+quality-artifacts/
