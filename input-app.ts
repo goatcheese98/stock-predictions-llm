@@ -314,8 +314,15 @@ export function initializeApp(vue: typeof VueRuntime | null, runtime: typeof Ani
 // Fallback functionality
 function initializeFallback(lifecycle: Lifecycle, requests: Lifecycle): void {
     lifecycle.window('pagehide', () => requests.dispose());
-    lifecycle.window('pageshow', event => { if (event.persisted)
-        requests.renew(); });
+    lifecycle.window('pageshow', event => {
+        if (!event.persisted) return;
+        requests.renew();
+        const action = document.querySelector<HTMLElement>('.action-panel');
+        const loading = document.querySelector<HTMLElement>('.loading-panel');
+        if (action) action.style.display = '';
+        if (loading) loading.style.display = 'none';
+        updateFallbackUI();
+    });
     // Add event listeners for fallback
     const form = document.getElementById('ticker-input-form');
     const generateBtn = document.querySelector<HTMLButtonElement>('.generate-report-btn');

@@ -79,3 +79,7 @@ test('initial reduced motion can enable animation later without reloading input 
     await page.emulateMedia({reducedMotion:'reduce'})
     await expect.poll(()=>page.evaluate(()=>window.vueApp.confettiSystem.animationIsOk)).toBe(false)
 })
+
+test('native fallback aborts held stock work, restores entered tickers and retries its original report journey', async ({page}) => {
+    await require('./fallback-recovery.cjs')(page,/report\.html\?id=/)
+})
