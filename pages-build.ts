@@ -32,7 +32,18 @@ export function pagesPolicy(): Plugin {
                 ]), ''
             ].join('\n')
             this.emitFile({ type: 'asset', fileName: '_headers', source: headers })
-            this.emitFile({ type: 'asset', fileName: '404.html', source: '<!doctype html>\n<html lang="en">\n<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Not found — Dodgy Dave\'s Stock Predictions</title></head>\n<body><h1>Not found</h1><p>This file is unavailable.</p><a href="/">Back to Home</a></body>\n</html>\n' })
+            // Reuse Vite's processed foundation CSS/fonts at a root-absolute URL:
+            // relative URLs would break recovery for a missing nested asset.
+            const foundation = Object.values(bundle).find(asset => asset.type === 'asset' &&
+                asset.fileName.endsWith('.css') && String(asset.source).includes('--danger-bg'))
+            if (!foundation) throw new Error('Shared recovery foundations were not emitted')
+            this.emitFile({ type: 'asset', fileName: '404.html', source: `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta http-equiv="Content-Security-Policy" content="script-src 'none'; object-src 'none'; base-uri 'none'"><title>Not found — Dodgy Dave's Stock Predictions</title><link rel="stylesheet" href="/${foundation.fileName}"></head>
+<body class="recovery-page"><main class="recovery-panel"><p class="recovery-identity">Dodgy Dave's Stock Predictions</p><h1>Not found</h1><p>This file is unavailable.</p><a href="/">Back to Home</a></main></body>
+</html>
+` })
+
         }
     }
 }

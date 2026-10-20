@@ -47,6 +47,12 @@ export const PRINT_PREVIEW_STYLES = `
                             background: var(--panel2);
                             color: var(--fg);
                         }
+                        @media print {
+                            body { margin: 0; }
+                            .preview-container { padding: 0; border: 0; box-shadow: none; }
+                            .preview-container, .preview-container * { visibility: visible; }
+                            .preview-header, .preview-actions { display: none; }
+                        }
 
 `
 export const LEGACY_REPORT_STYLES = `

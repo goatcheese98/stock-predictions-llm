@@ -2,67 +2,23 @@ import type { Chart as ChartInstance } from 'chart.js'
 import { createTextTemplate } from './utils/ticker-dom'
 import { parseStockResponse } from './utils/report-api'
 import { loadChartRuntime } from './runtime/load-chart'
+import { exportPrintChart } from './utils/print-chart'
 
 type PriceChart = ChartInstance<'line', number[], Date>
 interface ChartDay { x: Date; o: number; h: number; l: number; c: number; v: number }
 interface ChartConfig { canvasId: string; ticker: string; chartData: ChartDay[]; allChartData: ChartDay[]; showHighLow: boolean; index: number }
 let charts: PriceChart[] = []
 let renderVersion = 0
+let chartRuntime: Awaited<ReturnType<typeof loadChartRuntime>> | null = null
 export function getCharts(): readonly PriceChart[] { return charts }
 export function printableChartImage(canvas: Element | null): string | null {
     if (!(canvas instanceof HTMLCanvasElement)) return null
     const chart = charts.find(chart => chart.canvas === canvas)
     if (!chart) return null
-    const restore: (() => void)[] = []
-    try {
-        // Paper needs light chart chrome even when the live page is dark.
-        // Preserve datasets, windows, fonts and the live palette exactly.
-        for (const [id, scale] of Object.entries(chart.options.scales ?? {})) {
-            if (!scale) continue
-            if (scale.ticks) {
-                const ticks = scale.ticks, color = ticks.color
-                restore.push(() => { const current=chart.options.scales?.[id]?.ticks; if(current) current.color=color })
-                ticks.color = '#18181b'
-            }
-            if (scale.grid) {
-                const grid = scale.grid, color = grid.color
-                restore.push(() => { const current=chart.options.scales?.[id]?.grid; if(current) current.color=color })
-                grid.color = '#e4e4e7'
-            }
-            if (scale.border) {
-                const border = scale.border, color = border.color
-                restore.push(() => { const current=chart.options.scales?.[id]?.border; if(current) current.color=color })
-                border.color = '#18181b'
-            }
-        }
-        const labels = chart.options.plugins?.legend?.labels
-        if (labels) {
-            const color = labels.color
-            restore.push(() => { const current=chart.options.plugins?.legend?.labels; if(current) current.color=color })
-            labels.color = '#18181b'
-        }
-        chart.stop()
-        chart.update('none')
-        const target = document.createElement('canvas')
-        target.width = 800
-        target.height = 670
-        const context = target.getContext('2d')
-        if (!context) return null
-        context.fillStyle = '#fff'
-        context.fillRect(0, 0, target.width, target.height)
-        context.drawImage(canvas, 0, 0, target.width, target.height)
-        return target.toDataURL('image/png', 0.9)
-    } catch (error) {
-        console.warn('Chart image unavailable for printing', error)
-        return null
-    } finally {
-        try {
-            // Chart.js rebuilds option resolvers on update; restore through fresh paths.
-            for (const reset of restore) reset()
-            chart.update('none')
-        } catch (error) { console.warn('Could not redraw the live chart after printing', error) }
-    }
+    if (!chartRuntime) return null
+    return exportPrintChart(chartRuntime, chart)
 }
+
 export function destroyCharts(): void {
     renderVersion++
     charts.forEach(chart => chart.destroy())
@@ -251,6 +207,7 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
             let Chart: Awaited<ReturnType<typeof loadChartRuntime>>
             try {
                 Chart = await loadChartRuntime()
+                chartRuntime = Chart
             } catch (error) {
                 if (version !== renderVersion) return
                 const notice = document.createElement('p')

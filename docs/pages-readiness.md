@@ -1,3 +1,5 @@
+> Follow-up: [proportionate print rendering and styled static recovery](print-export-recovery.md). The fixed-raster limitation recorded below belongs to this earlier checkpoint and is repaired in that follow-up.
+
 # Native fallback recovery and local Pages readiness
 
 This increment follows independently reviewed `79705e5f733d815338376e6e7cbdce9b5b04e04e` on the existing draft branch `codex/stock-report-typescript`. The restored checkout was clean and matched the remote draft; main remained `046e7fc4c0805a67703cf482f2500bac016a0727`. No repository or parent AGENTS.md was present. Exact published heads and hosted results are in the PR, rather than a self-referential commit hash in this file.
