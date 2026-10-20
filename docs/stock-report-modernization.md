@@ -1,5 +1,8 @@
 # Stock report boundary — slice 1
 
+Historical checkpoint at `1f367fe`. For the continued runtime/type migration and
+current dependency/validation limits, see [runtime modernization](runtime-modernization.md).
+
 ## Restoration and scope
 
 The fresh task restored a clean target checkout at assessment baseline
