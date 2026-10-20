@@ -1,3 +1,5 @@
+> Follow-up: [native fallback recovery and local Pages readiness](pages-readiness.md). This file records the earlier complete-TypeScript checkpoint.
+
 # Complete application TypeScript and retained-layout LUM foundations
 
 This follow-up is based on reviewed checkpoint `cdaf3f65a8966681cc1fe2e9947aa11a56e08188`, on draft branch `codex/stock-report-typescript`. Main was re-resolved to `046e7fc4c0805a67703cf482f2500bac016a0727` before editing. The cloud-restored checkout was clean and exactly matched the remote draft; no sibling checkout was changed. No AGENTS.md was present in this repository. Publication head and hosted run results are recorded in the PR, since a commit cannot contain its own SHA.

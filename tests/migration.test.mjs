@@ -3,7 +3,8 @@ import assert from 'node:assert/strict'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join, relative } from 'node:path'
 const root = new URL('../', import.meta.url).pathname
-const excluded = new Set(['node_modules','.git','dist','docs','tests','test-results','playwright-report','quality-artifacts'])
+// .wrangler contains generated vendor shims, not handwritten application source.
+const excluded = new Set(['node_modules','.git','.wrangler','dist','docs','tests','test-results','playwright-report','quality-artifacts'])
 function files(directory) {
     return readdirSync(directory,{withFileTypes:true}).flatMap(entry=> excluded.has(entry.name) ? [] :
         entry.isDirectory() ? files(join(directory,entry.name)) : [join(directory,entry.name)])

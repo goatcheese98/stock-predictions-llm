@@ -53,6 +53,20 @@ jobs:
           node_modules/.bin/playwright --version | tee quality-artifacts/playwright.txt
       - name: Offline browser, security, print and lifecycle gates
         run: npm run test:browser
+      - name: Record pinned local Pages runtime
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+          CLOUDFLARE_CF_FETCH_ENABLED: 'false'
+          WRANGLER_LOG_PATH: ./quality-artifacts/wrangler-logs
+          XDG_CONFIG_HOME: ./quality-artifacts/wrangler-config
+        run: |
+          node_modules/.bin/wrangler --version | tee quality-artifacts/wrangler.txt
+          node_modules/workerd/bin/workerd --version | tee quality-artifacts/workerd.txt
+          npm ls wrangler miniflare workerd | tee quality-artifacts/pages-runtime-tree.txt
+      - name: Build native Pages artifacts
+        run: npm run build:pages 2>&1 | tee quality-artifacts/pages-build.txt
+      - name: Local Pages response, CSP and browser gates (no deployment)
+        run: npm run test:pages
       - name: Preserve results and failure diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -60,6 +74,7 @@ jobs:
           name: pr-quality-${{ github.event.pull_request.head.sha }}
           path: |
             quality-artifacts/
+            !quality-artifacts/wrangler-config/**
             playwright-report/
             test-results/
           retention-days: 7

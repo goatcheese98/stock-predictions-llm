@@ -9,7 +9,9 @@
     "build:github": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-isolation=none tests/*.test.mjs",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "build:pages": "vite build --mode pages",
+    "test:pages": "PAGES_RUNTIME=1 playwright test"
   },
   "dependencies": {
     "@fontsource-variable/geist": "5.3.0",
@@ -24,7 +26,8 @@
   "devDependencies": {
     "@playwright/test": "1.56.1",
     "typescript": "5.9.3",
-    "vite": "8.3.4"
+    "vite": "8.3.4",
+    "wrangler": "4.151.2"
   },
   "type": "module",
   "engines": {

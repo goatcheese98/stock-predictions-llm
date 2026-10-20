@@ -1,3 +1,6 @@
 # Cloudflare Pages configuration
 name = "stock-predictions-llm"
 pages_build_output_dir = "dist"
+
+# Pinned local compatibility behavior; no account, bindings or deployment action.
+compatibility_date = "2026-10-01"
