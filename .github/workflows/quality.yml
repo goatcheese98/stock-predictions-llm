@@ -12,6 +12,9 @@ jobs:
   quality:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
     env:
       CI: 'true'
       EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}

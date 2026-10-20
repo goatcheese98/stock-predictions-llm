@@ -1,19 +1,19 @@
 export const PRINT_PREVIEW_STYLES = `
                         body {
-                            font-family: 'Poppins', sans-serif;
+                            font-family: var(--font);
                             margin: 20px;
-                            background: #f5f5f5;
+                            background: var(--bg);
                         }
                         .preview-container {
-                            background: white;
+                            background: var(--panel);
                             padding: 20px;
-                            border: 1px solid #ccc;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                            border: 1px solid var(--line);
+                            border-radius: var(--r-sm);
+                            box-shadow: var(--shadow);
                         }
                         .preview-header {
-                            background: #000;
-                            color: white;
+                            background: var(--panel2);
+                            color: var(--fg);
                             padding: 10px;
                             margin: -20px -20px 20px -20px;
                             text-align: center;
@@ -28,54 +28,54 @@ export const PRINT_PREVIEW_STYLES = `
                         }
                         .preview-btn {
                             padding: 10px 20px;
-                            border: 2px solid #000;
-                            border-radius: 5px;
+                            border: 2px solid var(--line);
+                            border-radius: var(--r-sm);
                             font-weight: bold;
                             cursor: pointer;
-                            box-shadow: 2px 2px 0 #000;
+                            box-shadow: var(--shadow);
                         }
                         .preview-btn-print {
-                            background: #46ff90;
-                            color: #000;
+                            background: var(--acc);
+                            color: var(--fg);
                         }
                         .preview-btn-close {
-                            background: #ff4444;
-                            color: white;
+                            background: var(--panel2);
+                            color: var(--fg);
                         }
 
 `
 export const LEGACY_REPORT_STYLES = `
                             body {
-                                font-family: 'Poppins', sans-serif;
+                                font-family: var(--font);
                                 padding: 2em;
-                                background-color: #f6f6f6;
+                                background-color: var(--bg);
                                 line-height: 1.6;
                             }
                             .header {
                                 text-align: center;
                                 margin-bottom: 2em;
-                                border-bottom: 2px solid #000;
+                                border-bottom: 2px solid var(--line);
                                 padding-bottom: 1em;
                             }
                             .report-content {
-                                background: white;
+                                background: var(--panel);
                                 padding: 2em;
-                                border: 2px solid #000;
-                                border-radius: 8px;
-                                font-size: 16px;
+                                border: 2px solid var(--line);
+                                border-radius: var(--r-sm);
+                                font-size: var(--fs-16);
                             }
                             .tickers {
-                                background: #46ff90;
+                                background: var(--acc);
                                 padding: 0.5em 1em;
-                                border: 2px solid #000;
+                                border: 2px solid var(--line);
                                 display: inline-block;
                                 margin-bottom: 1em;
                                 font-weight: bold;
                             }
                             .disclaimer {
                                 text-align: center;
-                                font-size: 12px;
+                                font-size: var(--fs-12);
                                 margin-top: 2em;
-                                color: #666;
+                                color: var(--mut);
                             }
 `

@@ -15,6 +15,13 @@ function frame(popup: Window, title: string, css: string): Document {
     const style = doc.createElement('style')
     style.textContent = css
     doc.head.replaceChildren(style)
+    const foundation = document.querySelector<HTMLLinkElement>('link[data-foundation]')
+    if (foundation) {
+        const link = doc.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = foundation.href
+        doc.head.append(link)
+    }
     doc.title = title
     doc.body.replaceChildren()
     return doc

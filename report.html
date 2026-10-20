@@ -4,11 +4,6 @@
 <head>
     <title>Stock Report - Dodgy Dave's Predictions</title>
     <link rel="stylesheet" href="index.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <style>
@@ -22,16 +17,16 @@
         .report-header {
             text-align: center;
             margin-bottom: 2em;
-            border-bottom: 2px solid #000;
+            border-bottom: 2px solid var(--line);
             padding-bottom: 1em;
         }
 
         .report-content {
-            background: white;
+            background: var(--panel);
             padding: 2em;
-            border: 2px solid #000;
-            border-radius: 8px;
-            font-size: 18px;
+            border: 2px solid var(--line);
+            border-radius: var(--r-sm);
+            font-size: var(--fs-18);
             line-height: 1.8;
             margin-bottom: 2em;
             min-height: 200px;
@@ -49,13 +44,13 @@
         }
 
         .tickers-analyzed {
-            background: #46ff90;
+            background: var(--acc);
             padding: 1em 2em;
-            border: 2px solid #000;
+            border: 2px solid var(--line);
             display: inline-block;
             margin-bottom: 2em;
             font-weight: bold;
-            font-size: 16px;
+            font-size: var(--fs-16);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -63,27 +58,27 @@
         .back-button {
             display: inline-block;
             padding: 1em 2em;
-            background-color: #46ff90;
-            border: 2px solid #000;
+            background-color: var(--acc);
+            border: 2px solid var(--line);
             text-decoration: none;
-            color: #000;
+            color: var(--fg);
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.09em;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             cursor: pointer;
             transition: background-color 0.2s;
         }
 
         .back-button:hover {
-            background-color: #3ee080;
+            background-color: var(--acc);
         }
 
         .disclaimer {
             text-align: center;
-            font-size: 14px;
+            font-size: var(--fs-14);
             margin-top: 2em;
-            color: #666;
+            color: var(--mut);
             font-style: italic;
         }
 
@@ -92,16 +87,16 @@
             text-align: center;
             padding: 2em;
             border: 2px solid red;
-            background-color: #ffe6e6;
+            background-color: var(--danger-bg);
             margin: 2em 0;
-            border-radius: 8px;
+            border-radius: var(--r-sm);
         }
 
         .loading-message {
             text-align: center;
             padding: 2em;
-            font-size: 18px;
-            color: #666;
+            font-size: var(--fs-18);
+            color: var(--mut);
         }
 
         .action-buttons {
@@ -112,13 +107,13 @@
         }
 
         .secondary-btn {
-            background-color: #ffffff;
-            color: #000000;
-            border: 2px solid #000000;
+            background-color: var(--panel);
+            color: var(--fg);
+            border: 2px solid var(--line);
         }
 
         .secondary-btn:hover {
-            background-color: #f0f0f0;
+            background-color: var(--panel2);
         }
 
         /* Let the existing flex layout shrink around responsive canvas content. */
@@ -133,13 +128,13 @@
         }
 
         .chart-container {
-            background: white;
-            border: 2px solid #000;
-            border-radius: 0;
+            background: var(--panel);
+            border: 2px solid var(--line);
+            border-radius: var(--r-sm);
             /* Sharp edges for cartoonish look */
             padding: 1.5em;
             margin-bottom: 2em;
-            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow);
             position: relative;
         }
 
@@ -147,38 +142,38 @@
             position: absolute;
             top: -25px;
             left: -25px;
-            background: linear-gradient(135deg, #46ff90, #2dd665);
-            color: #000;
+            background: linear-gradient(135deg, var(--acc), var(--acc));
+            color: var(--fg);
             padding: 12px 20px;
-            border-radius: 8px;
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0 #000;
-            font-size: 28px;
+            border-radius: var(--r-sm);
+            border: 3px solid var(--line);
+            box-shadow: var(--shadow);
+            font-size: var(--fs-28);
             font-weight: 900;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             text-transform: uppercase;
             letter-spacing: 1px;
             z-index: 10;
         }
 
         .chart-title {
-            font-size: 20px;
+            font-size: var(--fs-20);
             font-weight: bold;
             margin-bottom: 0.5em;
             text-align: center;
-            color: #000;
-            border-bottom: 3px solid #000;
+            color: var(--fg);
+            border-bottom: 3px solid var(--line);
             padding-bottom: 0.5em;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
         }
 
         .chart-subtitle {
             text-align: center;
-            font-size: 14px;
+            font-size: var(--fs-14);
             font-weight: 500;
             margin-bottom: 1em;
-            color: #666;
-            font-family: 'Poppins', sans-serif;
+            color: var(--mut);
+            font-family: var(--font);
             font-style: italic;
         }
 
@@ -193,12 +188,12 @@
             position: absolute;
             top: -40px;
             left: -40px;
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-            color: white;
+            background: linear-gradient(135deg, var(--acc), var(--acc));
+            color: var(--panel);
             padding: 14px 16px;
-            border-radius: 8px;
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0 #000;
+            border-radius: var(--r-sm);
+            border: 3px solid var(--line);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -210,24 +205,24 @@
         }
 
         .day-number {
-            font-size: 24px;
+            font-size: var(--fs-24);
             font-weight: 700;
             line-height: 1;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
         }
 
         .day-label {
-            font-size: 11px;
+            font-size: var(--fs-11);
             font-weight: 600;
             letter-spacing: 1px;
             margin-top: 2px;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
         }
 
         .chart-note {
             text-align: center;
-            font-size: 12px;
-            color: #666;
+            font-size: var(--fs-12);
+            color: var(--mut);
             margin-top: 0.5em;
             font-style: italic;
         }
@@ -239,9 +234,9 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            border: 4px solid #9b59b6;
-            background: white;
-            box-shadow: 4px 4px 0 rgba(155, 89, 182, 0.3);
+            border: 4px solid var(--acc);
+            background: var(--panel);
+            box-shadow: var(--shadow);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -259,10 +254,10 @@
 
 
         .individual-chart-container {
-            background: white;
-            border: 3px solid #000;
+            background: var(--panel);
+            border: 3px solid var(--line);
             margin-bottom: 2em;
-            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow);
             padding: 1.5em;
         }
 
@@ -275,17 +270,17 @@
         }
 
         .individual-day-btn {
-            background: linear-gradient(135deg, #46ff90, #2dd665);
-            color: #000;
-            border: 2px solid #000;
+            background: linear-gradient(135deg, var(--acc), var(--acc));
+            color: var(--fg);
+            border: 2px solid var(--line);
             padding: 8px 12px;
-            font-size: 16px;
+            font-size: var(--fs-16);
             font-weight: bold;
             cursor: pointer;
-            border-radius: 6px;
-            box-shadow: 2px 2px 0 #000;
+            border-radius: var(--r-sm);
+            box-shadow: var(--shadow);
             transition: all 0.1s ease;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             width: 40px;
             height: 40px;
             display: flex;
@@ -294,33 +289,33 @@
         }
 
         .individual-day-btn:hover {
-            background: #2dd665;
+            background: var(--acc);
             transform: translateY(-1px);
-            box-shadow: 3px 3px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .individual-day-btn:active {
             transform: translateY(0);
-            box-shadow: 1px 1px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .individual-day-btn:disabled {
-            background: #ccc;
-            color: #666;
+            background: var(--line);
+            color: var(--mut);
             cursor: not-allowed;
             transform: none;
-            box-shadow: 1px 1px 0 #999;
+            box-shadow: var(--shadow);
         }
 
         .individual-day-counter {
-            background: #f8f9fa;
-            border: 2px solid #000;
+            background: var(--panel2);
+            border: 2px solid var(--line);
             padding: 8px 16px;
-            font-size: 16px;
+            font-size: var(--fs-16);
             font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 2px 2px 0 #000;
-            border-radius: 4px;
+            font-family: var(--font);
+            box-shadow: var(--shadow);
+            border-radius: var(--r-sm);
             min-width: 80px;
             text-align: center;
         }
@@ -338,30 +333,30 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #46ff90, #2dd665);
+            background: linear-gradient(135deg, var(--acc), var(--acc));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            color: #000;
+            font-size: var(--fs-32);
+            color: var(--fg);
             font-weight: 900;
-            border: 3px solid #000;
-            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--line);
+            box-shadow: var(--shadow);
         }
 
         .chart-header {
             margin-bottom: 1em;
-            border-bottom: 2px solid #000;
+            border-bottom: 2px solid var(--line);
             padding-bottom: 0.5em;
         }
 
         .chart-ticker-title {
-            font-size: 22px;
+            font-size: var(--fs-22);
             font-weight: bold;
-            color: #000;
+            color: var(--fg);
             margin: 0 0 1em 0;
             text-align: center;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -375,22 +370,22 @@
         }
 
         .stat-item {
-            background: #f8f9fa;
-            border: 2px solid #000;
+            background: var(--panel2);
+            border: 2px solid var(--line);
             padding: 0.5em 1em;
-            font-size: 14px;
+            font-size: var(--fs-14);
             font-weight: bold;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             text-align: center;
             min-width: 150px;
-            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
         }
 
         .chart-canvas-wrapper {
-            background: white;
-            border: 2px solid #000;
+            background: var(--panel);
+            border: 2px solid var(--line);
             padding: 1em;
-            box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
         }
 
         .chart-canvas {
@@ -400,26 +395,26 @@
         }
 
         .chart-error {
-            background: #ffe6e6;
+            background: var(--danger-bg);
             border: 3px solid #ff4757;
             padding: 2em;
             text-align: center;
             margin-bottom: 2em;
-            box-shadow: 6px 6px 0 rgba(255, 71, 87, 0.2);
+            box-shadow: var(--shadow);
         }
 
         .chart-error h3 {
             color: #ff4757;
             margin: 0 0 1em 0;
-            font-size: 18px;
+            font-size: var(--fs-18);
             font-weight: bold;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
         }
 
         .chart-error p {
-            color: #666;
+            color: var(--mut);
             margin: 0;
-            font-size: 14px;
+            font-size: var(--fs-14);
         }
 
         .chart-info {
@@ -428,27 +423,27 @@
             align-items: center;
             gap: 15px;
             margin: 4px 0;
-            font-size: 12px;
+            font-size: var(--fs-12);
             flex-wrap: wrap;
         }
 
         .data-info {
-            background: #f0f0f0;
+            background: var(--panel2);
             padding: 4px 10px;
-            border-radius: 12px;
-            border: 1px solid #ccc;
+            border-radius: var(--r-lg);
+            border: 1px solid var(--line);
             font-weight: 500;
-            color: #333;
+            color: var(--fg);
         }
 
         .data-note {
             background: #fff3cd;
             color: #856404;
             padding: 4px 10px;
-            border-radius: 12px;
+            border-radius: var(--r-lg);
             border: 1px solid #ffeaa7;
             font-weight: 500;
-            font-size: 11px;
+            font-size: var(--fs-11);
         }
 
         /* Carousel Styles */
@@ -463,16 +458,16 @@
         }
 
         .carousel-header h2 {
-            font-size: 28px;
+            font-size: var(--fs-28);
             margin: 0 0 0.5em 0;
-            color: #000;
-            font-family: 'Poppins', sans-serif;
+            color: var(--fg);
+            font-family: var(--font);
             font-weight: 700;
         }
 
         .carousel-subtitle {
-            font-size: 14px;
-            color: #666;
+            font-size: var(--fs-14);
+            color: var(--mut);
             margin: 0;
             font-style: italic;
         }
@@ -549,10 +544,10 @@
         }
 
         .carousel-nav {
-            background: #46ff90;
-            border: 3px solid #000;
-            color: #000;
-            font-size: 24px;
+            background: var(--acc);
+            border: 3px solid var(--line);
+            color: var(--fg);
+            font-size: var(--fs-24);
             font-weight: bold;
             width: 50px;
             height: 50px;
@@ -562,26 +557,26 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
-            box-shadow: 3px 3px 0 #000;
+            box-shadow: var(--shadow);
             flex-shrink: 0;
         }
 
         .carousel-nav:hover:not(:disabled) {
-            background: #2dd665;
+            background: var(--acc);
             transform: translateY(-2px);
-            box-shadow: 5px 5px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .carousel-nav:active:not(:disabled) {
             transform: translateY(0);
-            box-shadow: 2px 2px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .carousel-nav:disabled {
-            background: #ccc;
+            background: var(--line);
             color: #999;
             cursor: not-allowed;
-            box-shadow: 2px 2px 0 #999;
+            box-shadow: var(--shadow);
         }
 
         .carousel-indicators {
@@ -595,14 +590,14 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #e0e0e0;
-            border: 2px solid #000;
+            background: var(--line);
+            border: 2px solid var(--line);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .indicator.active {
-            background: #46ff90;
+            background: var(--acc);
             transform: scale(1.3);
         }
 
@@ -612,20 +607,20 @@
 
         .carousel-counter {
             text-align: center;
-            font-size: 14px;
-            color: #666;
+            font-size: var(--fs-14);
+            color: var(--mut);
             font-weight: 500;
         }
 
         .personality-name-carousel {
             text-align: center;
-            font-size: 22px;
+            font-size: var(--fs-22);
             font-weight: bold;
-            color: #000;
+            color: var(--fg);
             margin: 1em 0;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             padding-bottom: 0.5em;
-            border-bottom: 2px solid #46ff90;
+            border-bottom: 2px solid var(--acc);
             animation: fadeInDown 0.5s ease-out 0.1s both;
         }
 
@@ -679,7 +674,7 @@
             }
 
             .chart-ticker-title {
-                font-size: 18px;
+                font-size: var(--fs-18);
             }
 
             .individual-chart-container {
@@ -687,13 +682,13 @@
             }
 
             .day-display-box {
-                font-size: 14px;
+                font-size: var(--fs-14);
                 padding: 8px 12px;
                 min-width: 60px;
             }
 
             .day-number {
-                font-size: 18px;
+                font-size: var(--fs-18);
             }
 
             .personality-circle {
@@ -726,10 +721,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
-            border: 3px solid #000;
-            border-radius: 12px;
-            box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.3);
+            background: var(--panel);
+            border: 3px solid var(--line);
+            border-radius: var(--r-lg);
+            box-shadow: var(--shadow);
             padding: 0;
             width: 500px;
             max-width: 90vw;
@@ -739,9 +734,9 @@
         }
 
         .print-dialog-header {
-            background: #f8f9fa;
-            border-bottom: 2px solid #000;
-            border-radius: 8px 8px 0 0;
+            background: var(--panel2);
+            border-bottom: 2px solid var(--line);
+            border-radius: var(--r-sm) 8px 0 0;
             padding: 1.5em 2em;
             display: flex;
             justify-content: space-between;
@@ -750,38 +745,38 @@
 
         .print-dialog-close {
             background: #ff4444;
-            color: white;
-            border: 2px solid #000;
+            color: var(--panel);
+            border: 2px solid var(--line);
             border-radius: 50%;
             width: 35px;
             height: 35px;
-            font-size: 20px;
+            font-size: var(--fs-20);
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 2px 2px 0 #000;
+            box-shadow: var(--shadow);
             transition: all 0.2s ease;
         }
 
         .print-dialog-close:hover {
             background: #cc0000;
             transform: translateY(-1px);
-            box-shadow: 3px 3px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .print-dialog-close:active {
             transform: translateY(0);
-            box-shadow: 1px 1px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .print-dialog h3 {
             margin: 0;
-            font-size: 24px;
+            font-size: var(--fs-24);
             font-weight: bold;
-            color: #000;
-            font-family: 'Poppins', sans-serif;
+            color: var(--fg);
+            font-family: var(--font);
         }
 
         .print-options {
@@ -792,16 +787,16 @@
         .print-option {
             margin-bottom: 1em;
             padding: 1em;
-            border: 2px solid #000;
-            border-radius: 8px;
-            background: #f8f9fa;
+            border: 2px solid var(--line);
+            border-radius: var(--r-sm);
+            background: var(--panel2);
         }
 
         .print-option label {
             display: block;
             font-weight: bold;
             margin-bottom: 0.5em;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
         }
 
         .stock-checkboxes {
@@ -816,9 +811,9 @@
             align-items: center;
             gap: 0.8em;
             padding: 0.8em;
-            background: #fff;
-            border: 2px solid #000;
-            border-radius: 8px;
+            background: var(--panel);
+            border: 2px solid var(--line);
+            border-radius: var(--r-sm);
             transition: all 0.2s ease;
             cursor: pointer;
         }
@@ -826,20 +821,20 @@
         .stock-checkbox:hover {
             background: #f0f8ff;
             transform: translateY(-1px);
-            box-shadow: 2px 2px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .stock-checkbox input[type="checkbox"] {
             width: 20px;
             height: 20px;
-            accent-color: #46ff90;
+            accent-color: var(--acc);
             cursor: pointer;
         }
 
         .stock-checkbox label {
             font-weight: bold;
-            font-size: 16px;
-            color: #000;
+            font-size: var(--fs-16);
+            color: var(--fg);
             cursor: pointer;
             margin: 0;
         }
@@ -854,35 +849,35 @@
 
         .print-btn {
             padding: 1em 2em;
-            border: 2px solid #000;
-            border-radius: 8px;
+            border: 2px solid var(--line);
+            border-radius: var(--r-sm);
             font-weight: bold;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font);
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 3px 3px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .print-btn-primary {
-            background: #46ff90;
-            color: #000;
+            background: var(--acc);
+            color: var(--fg);
         }
 
         .print-btn-primary:hover {
-            background: #2dd665;
+            background: var(--acc);
             transform: translateY(-2px);
-            box-shadow: 5px 5px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .print-btn-secondary {
-            background: #fff;
-            color: #000;
+            background: var(--panel);
+            color: var(--fg);
         }
 
         .print-btn-secondary:hover {
-            background: #f0f0f0;
+            background: var(--panel2);
             transform: translateY(-2px);
-            box-shadow: 5px 5px 0 #000;
+            box-shadow: var(--shadow);
         }
 
         .print-options-grid {
@@ -893,26 +888,26 @@
         }
 
         .print-option-card {
-            background: #fff;
-            border: 3px solid #000;
-            border-radius: 8px;
+            background: var(--panel);
+            border: 3px solid var(--line);
+            border-radius: var(--r-sm);
             padding: 1.2em;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
             position: relative;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+            font-family: var(--font);
+            box-shadow: var(--shadow);
         }
 
         .print-option-card:hover {
             transform: translateY(-2px);
-            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow);
         }
 
         .print-option-card.active {
             background: #f0fff0;
-            border-color: #46ff90;
+            border-color: var(--acc);
             transform: translateY(-1px);
         }
 
@@ -921,9 +916,9 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            background-color: #46ff90;
-            color: #000;
-            font-size: 12px;
+            background-color: var(--acc);
+            color: var(--fg);
+            font-size: var(--fs-12);
             font-weight: bold;
             width: 20px;
             height: 20px;
@@ -931,27 +926,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid #000;
+            border: 2px solid var(--line);
             z-index: 10;
         }
 
         .print-option-title {
             font-weight: 600;
-            font-size: 14px;
-            color: #000;
+            font-size: var(--fs-14);
+            color: var(--fg);
             margin-bottom: 0.5em;
             line-height: 1.2;
         }
 
         .print-option-subtitle {
-            font-size: 11px;
-            color: #666;
+            font-size: var(--fs-11);
+            color: var(--mut);
             font-weight: 400;
             line-height: 1.3;
         }
 
         .print-option-card.active .print-option-subtitle {
-            color: #333;
+            color: var(--fg);
         }
 
         @keyframes fadeIn {
@@ -1002,10 +997,10 @@
                 left: 0;
                 top: 0;
                 width: 100%;
-                background: white;
+                background: var(--panel);
                 padding: 0;
                 margin: 0;
-                font-size: 10px;
+                font-size: var(--fs-10);
                 line-height: 1.3;
                 box-sizing: border-box;
             }
@@ -1031,30 +1026,30 @@
                 text-align: center;
                 margin-bottom: 0.5em;
                 padding-bottom: 0.2em;
-                border-bottom: 1px solid #000;
+                border-bottom: 1px solid var(--line);
                 page-break-after: avoid;
                 flex-shrink: 0;
             }
 
             .print-title {
-                font-size: 16px;
+                font-size: var(--fs-16);
                 font-weight: bold;
                 margin: 0;
-                font-family: 'Poppins', sans-serif;
+                font-family: var(--font);
             }
 
             .print-subtitle {
-                font-size: 9px;
+                font-size: var(--fs-9);
                 margin: 0.1em 0 0 0;
-                color: #333;
-                font-family: 'Poppins', sans-serif;
+                color: var(--fg);
+                font-family: var(--font);
             }
 
             .print-day-highlight {
-                background: #000;
-                color: #fff;
+                background: var(--fg);
+                color: var(--panel);
                 padding: 0.2em 0.4em;
-                border-radius: 3px;
+                border-radius: var(--r-sm);
                 font-weight: bold;
                 display: inline-block;
                 margin: 0.2em 0;
@@ -1066,8 +1061,8 @@
                 flex-direction: column;
                 justify-content: center;
                 padding: 0.3em;
-                border: 1px solid #000;
-                border-radius: 6px;
+                border: 1px solid var(--line);
+                border-radius: var(--r-sm);
                 position: relative;
                 min-height: 620px;
                 margin-bottom: 0.5em;
@@ -1078,24 +1073,24 @@
                 position: absolute;
                 top: 15px;
                 left: -4px;
-                background: linear-gradient(135deg, #46ff90, #2dd665);
-                color: #000;
+                background: linear-gradient(135deg, var(--acc), var(--acc));
+                color: var(--fg);
                 padding: 0.3em 0.6em;
-                border: 1px solid #000;
-                border-radius: 6px;
-                font-size: 16px;
+                border: 1px solid var(--line);
+                border-radius: var(--r-sm);
+                font-size: var(--fs-16);
                 font-weight: 900;
-                font-family: 'Poppins', sans-serif;
-                box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+                font-family: var(--font);
+                box-shadow: var(--shadow);
                 z-index: 10;
             }
 
             .print-chart-title {
-                font-size: 14px;
+                font-size: var(--fs-14);
                 font-weight: bold;
                 margin: 0.3em 0;
                 text-align: center;
-                font-family: 'Poppins', sans-serif;
+                font-family: var(--font);
             }
 
             .print-chart-canvas {
@@ -1103,7 +1098,7 @@
                 height: 570px !important;
                 max-width: 100% !important;
                 max-height: 570px !important;
-                border: 1px solid #ccc;
+                border: 1px solid var(--line);
                 display: block;
                 object-fit: contain;
                 margin: 0 auto;
@@ -1112,10 +1107,10 @@
             .print-chart-metrics {
                 margin-top: 0.3em;
                 padding: 0.4em;
-                background: #f8f9fa;
-                border: 1px solid #000;
-                border-radius: 4px;
-                font-size: 9px;
+                background: var(--panel2);
+                border: 1px solid var(--line);
+                border-radius: var(--r-sm);
+                font-size: var(--fs-9);
                 line-height: 1.2;
                 text-align: center;
             }
@@ -1127,10 +1122,10 @@
             .print-analysis-content {
                 flex-grow: 1;
                 padding: 1em;
-                border: 1px solid #000;
-                border-radius: 6px;
-                background: #f8f9fa;
-                font-size: 11px;
+                border: 1px solid var(--line);
+                border-radius: var(--r-sm);
+                background: var(--panel2);
+                font-size: var(--fs-11);
                 line-height: 1.5;
                 overflow: hidden;
                 text-align: justify;
@@ -1139,15 +1134,16 @@
             .print-page-footer {
                 margin-top: 0.5em;
                 padding: 0.3em;
-                border-top: 1px solid #000;
+                border-top: 1px solid var(--line);
                 text-align: center;
-                font-size: 7px;
-                color: #666;
+                font-size: var(--fs-7);
+                color: var(--mut);
                 page-break-inside: avoid;
                 flex-shrink: 0;
             }
         }
     </style>
+    <link rel="stylesheet" data-foundation href="./foundation.css">
 </head>
 
 <body>
@@ -1250,10 +1246,10 @@
 
     <!-- Print Dialog -->
     <div id="printDialog" class="print-dialog-overlay">
-        <div class="print-dialog">
+        <div class="print-dialog" role="dialog" aria-modal="true" aria-label="Customize Your Report">
             <div class="print-dialog-header">
                 <h3>Customize Your Report</h3>
-                <button class="print-dialog-close" onclick="closePrintDialog()">×</button>
+                <button class="print-dialog-close" id="closePrintDialogButton" aria-label="Close print dialog">×</button>
             </div>
 
             <div class="print-options">
@@ -1268,12 +1264,12 @@
                     <label>Print Options:</label>
                     <div class="print-options-grid">
                         <div class="print-option-card" id="includeAnalysisCard"
-                            onclick="togglePrintOption('includeAnalysis')">
+                            data-print-option="includeAnalysis" role="button" tabindex="0" aria-pressed="true">
                             <div class="print-option-title">Include AI Analysis</div>
                             <div class="print-option-subtitle">AI personality insights and market predictions</div>
                         </div>
                         <div class="print-option-card active" id="includeMetadataCard"
-                            onclick="togglePrintOption('includeMetadata')">
+                            data-print-option="includeMetadata" role="button" tabindex="0" aria-pressed="true">
                             <div class="print-option-title">Include Report Metadata</div>
                             <div class="print-option-subtitle">Analysis period, generation date, price ranges, volume
                                 data, and key metrics</div>
@@ -1283,10 +1279,10 @@
             </div>
 
             <div class="print-actions">
-                <button class="print-btn print-btn-primary" onclick="generateCustomPrint()">
+                <button class="print-btn print-btn-primary" id="generateCustomPrintButton">
                     Generate PDF
                 </button>
-                <button class="print-btn print-btn-secondary" onclick="previewPrint()">
+                <button class="print-btn print-btn-secondary" id="previewPrintButton">
                     Preview PDF
                 </button>
             </div>

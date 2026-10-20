@@ -1,5 +1,6 @@
+import { Lifecycle } from './utils/lifecycle'
 import { sanitizeReportHtml, type SanitizedReportHtml } from './utils/report-html'
-import { createApp } from './runtime/vue-runtime'
+import { createApp, defineComponent } from './runtime/vue-runtime'
 import { createStockCharts } from './charts'
 import { readReportState } from './utils/report-state'
 import type { ReportState } from './utils/report-state'
@@ -37,7 +38,11 @@ function personalityImageUrl(id: string): string {
     return new URL((Object.hasOwn(images, id) ? images[id] : images['dodgy-dave']) ?? '', window.location.href).href
 }
 export function mountReportApp(openPrintDialog: () => void): ReportViewModel {
-    const instance = createApp({
+    const lifecycle = new Lifecycle()
+    const pageLifecycle = new Lifecycle()
+    pageLifecycle.window('pagehide', () => {lifecycle.dispose(); document.querySelector('.carousel-slide')?.classList.remove('slide-left','slide-right')})
+    pageLifecycle.window('pageshow', event => {if(event.persisted) lifecycle.renew()})
+    const instance = createApp(defineComponent({
             data(): ReportData {
                 return {
                     isLoading: true,
@@ -83,6 +88,7 @@ export function mountReportApp(openPrintDialog: () => void): ReportViewModel {
 
                 }
             },
+            beforeUnmount() {lifecycle.dispose(); pageLifecycle.dispose()},
             mounted() {
                 this.loadReportData();
             },
@@ -145,7 +151,7 @@ export function mountReportApp(openPrintDialog: () => void): ReportViewModel {
                         }
 
                         // Remove animation class after animation completes to allow re-animation
-                        setTimeout(() => {
+                        lifecycle.timeout(() => {
                             slide.classList.remove('slide-left', 'slide-right');
                         }, 400);
                     }
@@ -182,7 +188,7 @@ export function mountReportApp(openPrintDialog: () => void): ReportViewModel {
                     image.parentElement?.replaceChildren(placeholder)
                 }
             }
-        }).mount('#reportApp');
+        })).mount('#reportApp');
     if (!isReportViewModel(instance)) throw new Error('Report component did not expose its expected data boundary')
     return instance
 

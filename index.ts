@@ -1,4 +1,4 @@
-import { initializeApp } from './app.js'
+import { initializeApp } from './input-app'
 import { loadAnimationRuntime } from './runtime/load-animation'
 
 async function start(): Promise<void> {
@@ -6,9 +6,6 @@ async function start(): Promise<void> {
         import('./runtime/vue-runtime').catch(() => null),
         loadAnimationRuntime()
     ])
-    // Temporary bridge to the legacy UI, removed as its methods migrate.
-    if (vue) Object.assign(window, { Vue: vue })
-    if (animations) Object.assign(window, animations)
-    initializeApp()
+    initializeApp(vue, animations)
 }
 void start()

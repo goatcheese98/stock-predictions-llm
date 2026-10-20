@@ -1,9 +1,12 @@
-import { printableChartImage, destroyCharts, allStockData, allTickerNames } from './charts'
+import { printableChartImage, destroyCharts, refreshChartTheme, allStockData, allTickerNames } from './charts'
 import { createTextTemplate } from './utils/ticker-dom.ts'
 import { mountReportApp } from './report-app'
 import { renderReportHtml } from './utils/report-html'
 import { printMetrics } from './utils/print-metrics'
 import { openPrintPreview } from './utils/report-popup'
+import { Lifecycle } from './utils/lifecycle'
+const timers = new Lifecycle()
+let printOpener: HTMLElement | null = null
 const reportApp = mountReportApp(openPrintDialog)
 
 function requiredElement(id: string): HTMLElement {
@@ -41,7 +44,9 @@ function requiredElement(id: string): HTMLElement {
                 stockCheckboxes.appendChild(checkboxDiv);
             });
 
+            printOpener = document.activeElement instanceof HTMLElement ? document.activeElement : null
             dialog.style.display = 'block';
+            requiredElement('closePrintDialogButton').focus()
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
 
@@ -49,11 +54,14 @@ function requiredElement(id: string): HTMLElement {
             const dialog = requiredElement('printDialog');
             dialog.style.display = 'none';
             document.body.style.overflow = 'auto';
+            printOpener?.focus()
+            printOpener=null
         }
 
         function togglePrintOption(optionId: string) {
             const card = requiredElement(optionId + 'Card');
             card.classList.toggle('active');
+            card.setAttribute('aria-pressed', String(card.classList.contains('active')))
         }
 
         function generateCustomPrint() {
@@ -76,11 +84,11 @@ function requiredElement(id: string): HTMLElement {
             closePrintDialog();
 
             // Wait a moment for content generation, then print
-            setTimeout(() => {
+            timers.timeout(() => {
                 window.print();
 
                 // Hide print content after printing
-                setTimeout(() => {
+                timers.timeout(() => {
                     requiredElement('printContent').style.display = 'none';
                 }, 1000);
             }, 500);
@@ -216,7 +224,7 @@ function requiredElement(id: string): HTMLElement {
             openPrintPreview(printContent, document)
 
             // Hide print content after preview
-            setTimeout(() => {
+            timers.timeout(() => {
                 requiredElement('printContent').style.display = 'none';
             }, 500);
         }
@@ -246,7 +254,7 @@ function requiredElement(id: string): HTMLElement {
         window.addEventListener('afterprint', function () {
             console.log('🖨️ Print dialog closed');
             // Ensure print content is hidden after printing
-            setTimeout(() => {
+            timers.timeout(() => {
                 const printContent = requiredElement('printContent');
                 if (printContent) {
                     printContent.style.display = 'none';
@@ -254,11 +262,33 @@ function requiredElement(id: string): HTMLElement {
             }, 500);
         });
 
-        // Inline print controls still call these handlers from HTML attributes.
+        // Preserve the existing public print controls for integrations and regression checks.
         Object.assign(window, { closePrintDialog, generateCustomPrint, previewPrint, togglePrintOption });
 
-window.addEventListener('pagehide', destroyCharts)
+window.addEventListener('pagehide', () => {timers.dispose(); destroyCharts(); closePrintDialog(); requiredElement('printContent').style.display='none'})
 
 window.addEventListener('pageshow', event => {
-    if (event.persisted) reportApp.loadReportData()
+    if (event.persisted) {timers.renew(); reportApp.loadReportData()}
+})
+
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change', refreshChartTheme)
+void document.fonts.ready.then(refreshChartTheme)
+for(const [id, handler] of [
+    ['closePrintDialogButton', closePrintDialog],
+    ['generateCustomPrintButton', generateCustomPrint],
+    ['previewPrintButton', previewPrint]
+] as const) requiredElement(id).addEventListener('click', handler)
+for(const card of document.querySelectorAll<HTMLElement>('[data-print-option]')) {
+    card.setAttribute('aria-pressed', String(card.classList.contains('active')))
+    const toggle = () => {if(card.dataset.printOption) togglePrintOption(card.dataset.printOption)}
+    card.addEventListener('click', toggle)
+    card.addEventListener('keydown', event => {if(event.key==='Enter' || event.key===' ') {event.preventDefault(); toggle()}})
+}
+
+requiredElement('printDialog').addEventListener('keydown', event => {
+    if(event.key !== 'Tab') return
+    const controls = [...requiredElement('printDialog').querySelectorAll<HTMLElement>('button, input, [tabindex="0"]')]
+    const first=controls[0], last=controls.at(-1)
+    if(event.shiftKey && document.activeElement===first) {event.preventDefault(); last?.focus()}
+    else if(!event.shiftKey && document.activeElement===last) {event.preventDefault(); first?.focus()}
 })

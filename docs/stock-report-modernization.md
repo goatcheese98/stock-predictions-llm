@@ -1,3 +1,5 @@
+> Follow-up: [complete application TypeScript and retained-layout LUM foundations](final-typescript-foundation.md). This file records its earlier checkpoint.
+
 # Stock report boundary — slice 1
 
 Historical checkpoint at `1f367fe`. For the continued runtime/type migration and

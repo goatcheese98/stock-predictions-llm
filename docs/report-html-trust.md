@@ -1,3 +1,5 @@
+> Follow-up: [complete application TypeScript and retained-layout LUM foundations](final-typescript-foundation.md). This file records its earlier checkpoint.
+
 # Report HTML trust boundary and typed print slice
 
 Based on the published checkpoint `44e149563532a55ea99e0767c5603483996041f2`

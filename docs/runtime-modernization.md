@@ -1,3 +1,5 @@
+> Follow-up: [complete application TypeScript and retained-layout LUM foundations](final-typescript-foundation.md). This file records its earlier checkpoint.
+
 # Runtime modernization — follow-up on draft PR #1
 
 Historical checkpoint at `44e1495`. The continued HTML trust/typed print slice is

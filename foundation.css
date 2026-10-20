@@ -1,0 +1,107 @@
+/* LUM foundations adapted to the retained stock app layouts. Fonts are bundled,
+   OFL-1.1 licensed; no font/CDN request is needed at runtime. */
+@import '@fontsource-variable/geist/index.css';
+@import '@fontsource-variable/geist-mono/index.css';
+:root {
+    color-scheme: light;
+    --font: 'Geist Variable', Geist, system-ui, sans-serif;
+    --mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, monospace;
+    --bg:#fff; --panel:#fff; --panel2:#fafafa; --line:#e4e4e7;
+    --fg:#18181b; --mut:#66666f; --acc:#18181b; --on-acc:#fff;
+    --danger:#b42318; --danger-bg:#fff1f0; --ok:#16845d;
+    --r-xs:6px; --r-sm:8px; --r-md:10px; --r-lg:12px; --r-xl:16px;
+    --shadow:0 1px 2px rgb(24 24 27 / 6%);
+    --fs-7:7px; --fs-8:8px; --fs-9:9px; --fs-10:10px; --fs-11:11px;
+    --fs-12:12px; --fs-13:13px; --fs-14:14px; --fs-15:15px; --fs-16:16px;
+    --fs-18:18px; --fs-20:20px; --fs-22:22px; --fs-24:24px; --fs-28:28px;
+    --fs-30:30px; --fs-32:32px; --fs-36:36px; --fs-40:40px; --fs-48:48px;
+}
+@media (prefers-color-scheme:dark) {
+    :root {
+        color-scheme:dark;
+        --bg:#0a0a0b; --panel:#121214; --panel2:#0e0e10; --line:#242428;
+        --fg:#ececee; --mut:#92929b; --acc:#d6a828; --on-acc:#141210;
+        --danger:#ff9990; --danger-bg:#301815; --ok:#56c79a;
+        --shadow:0 1px 2px rgb(0 0 0 / 20%);
+    }
+}
+html, body {font-family:var(--font); background:var(--bg); color:var(--fg); font-size:var(--fs-16)}
+body {line-height:1.5}
+button, input, select, textarea {font:inherit; accent-color:var(--acc)}
+button, .back-button, input {border-color:var(--line); border-radius:var(--r-sm)}
+button:not(:disabled), a {touch-action:manipulation}
+button {min-height:44px}
+a {color:var(--acc)}
+:focus-visible {outline:3px solid var(--acc); outline-offset:4px}
+button:disabled {opacity:.5; cursor:not-allowed}
+header, .report-header {background:#0a0a0b; border-color:var(--line)}
+header img {max-width:100%; height:auto}
+.action-panel, .output-panel, .loading-panel, .report-content, .chart-container,
+.individual-chart-container, .chart-canvas, .print-dialog, .print-dialog-header,
+.print-dialog-footer, .print-section, .stock-checkbox, .day-range-slider {
+    background:var(--panel); color:var(--fg); border-color:var(--line);
+}
+.generate-report-btn, .add-ticker-btn, .back-button:not(.secondary-btn),
+.chart-day-btn, .carousel-nav, .print-btn-primary, .preview-btn-print {
+    background:var(--acc); color:var(--on-acc); border-color:var(--acc);
+}
+.generate-report-btn:hover:not(:disabled), .add-ticker-btn:hover, .back-button:hover,
+.chart-day-btn:hover:not(:disabled), .carousel-nav:hover:not(:disabled), .print-btn:hover {
+    background:var(--acc); color:var(--on-acc); filter:brightness(.92);
+}
+.secondary-btn, .print-btn-secondary, .preview-btn-close {background:var(--panel2); color:var(--fg)}
+input {background:var(--panel); color:var(--fg)}
+input::placeholder {color:var(--mut); opacity:1}
+.ticker, .chart-ticker-display, .day-display-box, .personality-checkmark,
+.day-counter-display, .day-counter, .print-day-highlight {
+    background:var(--acc); color:var(--on-acc); border-color:var(--line);
+}
+.ticker, .chart-ticker-display, .chart-ticker-title, .day-range-number, .day-number,
+.day-counter, .day-counter-display, .print-chart-metrics, code, pre {font-family:var(--mono)}
+.personality-image {background:var(--panel2)}
+.personality-card {color:var(--fg); border-radius:var(--r-sm)}
+.personality-card.active .personality-image {border-color:var(--acc); box-shadow:0 0 0 2px var(--acc)}
+.personality-card.active .personality-subtitle, .personality-name {color:var(--fg)}
+.personality-subtitle, .disclaimer, .chart-note, .chart-subtitle, .selection-hint {color:var(--mut)}
+.error-message, .chart-error, .input-error {color:var(--danger); border-color:var(--danger); background:var(--danger-bg)}
+.loading-message {color:var(--mut)}
+#ticker-placeholder {color:var(--mut)}
+.report-content {overflow-wrap:anywhere}
+.report-content table {max-width:100%; border-collapse:collapse}
+.report-content th, .report-content td {border:1px solid var(--line); padding:.4em}
+.print-dialog-close {color:var(--fg); background:var(--panel2)}
+.print-option-card {background:var(--panel2); border-color:var(--line); color:var(--fg)}
+.print-option-card.active {background:var(--panel); border-color:var(--acc); color:var(--fg)}
+@media (max-width:600px) {
+    .action-panel {margin-inline:1em; max-width:calc(100vw - 2em)}
+    .personality-name {font-size:var(--fs-14)}
+    .personality-subtitle {font-size:var(--fs-12)}
+    .report-content {font-size:var(--fs-16)}
+    .report-page {padding-inline:1em}
+}
+@media (prefers-reduced-motion:reduce) {
+    *, *::before, *::after {animation:none !important; transition:none !important; scroll-behavior:auto !important}
+    .confetti-cursor {display:none !important}
+}
+@media print {
+    :root {color-scheme:light; --bg:#fff; --panel:#fff; --panel2:#fafafa; --line:#e4e4e7; --fg:#18181b; --mut:#66666f; --acc:#18181b; --on-acc:#fff}
+    body {background:#fff; color:#18181b}
+}
+/* Preserve control geometry while allowing its existing flex row to shrink. */
+form {max-width:100%}
+.form-input-control input {min-width:0; border-color:var(--line)}
+.add-ticker-svg {fill:currentColor}
+.add-ticker-svg path {fill:currentColor}
+.generate-report-btn:disabled {background:var(--panel2); color:var(--mut); border-color:var(--line); opacity:1}
+.loading-tickers {color:var(--on-acc)}
+.print-dialog-close:hover {background:var(--panel2); color:var(--fg)}
+@media (max-width:600px) {
+    .form-input-control {width:90%}
+    .chart-ticker-display {left:0}
+    .day-display-box {left:0}
+}
+
+.individual-day-btn:not(:disabled), .print-option-card.active::after {color:var(--on-acc)}
+.progress-step.active .progress-step-text {color:var(--on-acc)}
+.progress-step.completed {background:var(--ok)}
+.progress-step.completed .progress-step-text {color:var(--on-acc)}

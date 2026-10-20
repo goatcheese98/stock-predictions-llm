@@ -1,0 +1,81 @@
+const {test, expect}=require('@playwright/test')
+const {offline, addTicker, stock}=require('./helpers.cjs')
+
+test('pagehide aborts an in-flight provider request and restoration can generate a real offline report', async ({page})=>{
+    const calls=await offline(page)
+    let release
+    const waiting=new Promise(resolve=>release=resolve)
+    await page.context().route('https://polygon-api-worker.jasani-rohan.workers.dev/**',async route=>{
+        await waiting
+        try {await route.fulfill({json:stock})} catch {}
+    })
+    await page.goto('./')
+    await page.waitForFunction(()=>window.vueApp)
+    await addTicker(page,'AAPL')
+    await page.evaluate(()=>{window.pendingReport=window.vueApp.fetchStockData()})
+    await expect(page.locator('.loading-panel')).toBeVisible()
+    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true})))
+    release()
+    await page.evaluate(()=>window.pendingReport)
+    expect(calls.filter(call=>call.kind==='report')).toHaveLength(0)
+    expect(await page.evaluate(()=>sessionStorage.getItem('stockReport'))).toBeNull()
+    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})))
+    await expect(page.locator('#ticker-input')).toBeVisible()
+    await page.locator('.generate-report-btn').click()
+    await page.waitForURL(/report.html\?id=/)
+    await expect(page.locator('.report-content').first()).toContainText('Offline fixture')
+})
+
+test('animation teardown clears drawing, particles, placeholder and cursor; repeated restores do not duplicate observers',async({page})=>{
+    const errors=[];page.on('pageerror',error=>errors.push(error.message))
+    await offline(page)
+    await page.goto('./')
+    await page.waitForFunction(()=>window.vueApp?.confettiSystem.wiggle)
+    for(let index=0;index<3;index++) {
+        await page.evaluate(()=>{
+            window.vueApp.createExplosion(200,200,500)
+            window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}))
+        })
+        await expect(page.locator('.confetti-piece')).toHaveCount(0)
+        expect(await page.locator('body').evaluate(el=>el.style.cursor)).toBe('')
+        await expect(page.locator('#ticker-placeholder')).toHaveText('Your tickers will appear here...')
+        expect(await page.evaluate(()=>window.vueApp.confettiSystem.animationIsOk)).toBe(false)
+        await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})))
+        await page.waitForFunction(()=>window.vueApp.confettiSystem.wiggle)
+        expect(await page.evaluate(()=>window.vueApp.confettiSystem.explosionKeys.length)).toBe(11)
+    }
+    await page.emulateMedia({reducedMotion:'reduce'})
+    await expect.poll(()=>page.evaluate(()=>window.vueApp.confettiSystem.animationIsOk)).toBe(false)
+    await expect(page.locator('.confetti-piece')).toHaveCount(0)
+    await page.emulateMedia({reducedMotion:'no-preference'})
+    await page.waitForFunction(()=>window.vueApp.confettiSystem.wiggle)
+    expect(errors).toEqual([])
+})
+
+test('pagehide cancels deferred native print and restored print still works',async({page})=>{
+    await offline(page)
+    await page.goto('report.html?tickers=AAPL&report=Offline%20print%20fixture')
+    await page.evaluate(()=>{window.printCount=0;window.print=()=>window.printCount++})
+    await page.getByRole('button',{name:'Custom Print'}).click()
+    await page.evaluate(()=>{window.generateCustomPrint();window.dispatchEvent(new PageTransitionEvent('pagehide',{persisted:true}))})
+    await page.waitForTimeout(650)
+    expect(await page.evaluate(()=>window.printCount)).toBe(0)
+    await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})))
+    await page.getByRole('button',{name:'Custom Print'}).click()
+    await page.evaluate(()=>window.generateCustomPrint())
+    await expect.poll(()=>page.evaluate(()=>window.printCount)).toBe(1)
+})
+
+test('initial reduced motion can enable animation later without reloading input state',async({page})=>{
+    await page.emulateMedia({reducedMotion:'reduce'})
+    await offline(page)
+    await page.goto('./')
+    await page.waitForFunction(()=>window.vueApp)
+    await addTicker(page,'AAPL')
+    expect(await page.evaluate(()=>window.vueApp.confettiSystem.animationIsOk)).toBe(false)
+    await page.emulateMedia({reducedMotion:'no-preference'})
+    await page.waitForFunction(()=>window.vueApp.confettiSystem.wiggle)
+    await expect(page.locator('.ticker')).toHaveText('AAPL')
+    await page.emulateMedia({reducedMotion:'reduce'})
+    await expect.poll(()=>page.evaluate(()=>window.vueApp.confettiSystem.animationIsOk)).toBe(false)
+})

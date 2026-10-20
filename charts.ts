@@ -35,6 +35,22 @@ export function destroyCharts(): void {
 }
 const errorMessage = (error: unknown) => error instanceof Error ? error.message : 'Unknown chart error'
 
+function theme(token: string): string {return getComputedStyle(document.documentElement).getPropertyValue(token).trim()}
+export function refreshChartTheme(): void {
+    for(const chart of charts) {
+        for(const scale of Object.values(chart.options.scales ?? {})) {
+            if(!scale) continue
+            if(scale.ticks) scale.ticks.color=theme('--fg')
+            if(scale.grid) scale.grid.color=theme('--line')
+            if(scale.border) scale.border.color=theme('--line')
+        }
+        const legend=chart.options.plugins?.legend
+        if(legend && legend.labels) legend.labels.color=theme('--fg')
+        const tooltip=chart.options.plugins?.tooltip
+        if(tooltip) {tooltip.backgroundColor=theme('--panel'); tooltip.bodyColor=theme('--fg'); tooltip.titleColor=theme('--acc'); tooltip.borderColor=theme('--acc')}
+        chart.update('none')
+    }
+}
 function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse> {
     if (value && typeof value === 'object' && 'results' in value && Array.isArray(value.results) && value.results.length === 0) {
         return { results: [] }
@@ -150,11 +166,11 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                 </div>
                             </div>
                             <div class="individual-chart-controls">
-                                <button class="individual-day-btn" id="removeDay-${index}">➖</button>
+                                <button class="individual-day-btn" id="removeDay-${index}" aria-label="Remove trading day">−</button>
                                 <span class="individual-day-counter">
                                     <span id="currentDayCount-${index}">${selectedDayRange}</span> days
                                 </span>
-                                <button class="individual-day-btn" id="addDay-${index}">➕</button>
+                                <button class="individual-day-btn" id="addDay-${index}" aria-label="Add trading day">+</button>
                             </div>
                             <div class="chart-canvas-wrapper">
                                 <canvas id="${canvasId}" class="chart-canvas"></canvas>
@@ -278,12 +294,8 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                 responsive: true,
                                 maintainAspectRatio: false,
                                 layout: {
-                                    padding: {
-                                        top: 10,
-                                        right: 30,
-                                        bottom: 60,
-                                        left: 25
-                                    }
+                                    padding: () => matchMedia('(max-width:600px)').matches ?
+                                        {top:10,right:5,bottom:20,left:0} : {top:10,right:30,bottom:60,left:25}
                                 },
                                 scales: {
                                     x: {
@@ -297,13 +309,13 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                             tooltipFormat: 'MMM dd, yyyy'
                                         },
                                         grid: {
-                                            color: '#e0e0e0',
+                                            color: theme('--line'),
                                             lineWidth: 2,
                                         },
                                         ticks: {
-                                            color: '#000',
+                                            color: theme('--fg'),
                                             font: {
-                                                family: 'Poppins',
+                                                family: 'Geist Mono Variable',
                                                 size: 13,
                                                 weight: 'bold'
                                             },
@@ -321,19 +333,19 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                             display: false
                                         },
                                         border: {
-                                            color: '#000',
+                                            color: theme('--fg'),
                                             width: 3
                                         }
                                     },
                                     y: {
                                         grid: {
-                                            color: '#e0e0e0',
+                                            color: theme('--line'),
                                             lineWidth: 2,
                                         },
                                         ticks: {
-                                            color: '#000',
+                                            color: theme('--fg'),
                                             font: {
-                                                family: 'Poppins',
+                                                family: 'Geist Mono Variable',
                                                 size: 13,
                                                 weight: 'bold'
                                             },
@@ -346,7 +358,7 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                             display: false
                                         },
                                         border: {
-                                            color: '#000',
+                                            color: theme('--fg'),
                                             width: 3
                                         }
                                     }
@@ -357,12 +369,8 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                         position: 'bottom',
                                         align: 'center',
                                         labels: {
-                                            color: '#000',
-                                            font: {
-                                                family: 'Poppins',
-                                                size: 16,
-                                                weight: 'bold'
-                                            },
+                                            color: theme('--fg'),
+                                            font: () => ({family:'Geist Mono Variable', size:matchMedia('(max-width:600px)').matches ? 11 : 16, weight:'bold'}),
                                             padding: 20,
                                             usePointStyle: true,
                                             pointStyle: 'circle',
@@ -371,19 +379,19 @@ function parseChartPayload(value: unknown): ReturnType<typeof parseStockResponse
                                         }
                                     },
                                     tooltip: {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                                        titleColor: '#46ff90',
-                                        bodyColor: '#fff',
-                                        borderColor: '#46ff90',
+                                        backgroundColor: theme('--panel'),
+                                        titleColor: theme('--acc'),
+                                        bodyColor: theme('--fg'),
+                                        borderColor: theme('--acc'),
                                         borderWidth: 3,
                                         cornerRadius: 12,
                                         titleFont: {
-                                            family: 'Poppins',
+                                            family: 'Geist Mono Variable',
                                             size: 16,
                                             weight: 'bold'
                                         },
                                         bodyFont: {
-                                            family: 'Poppins',
+                                            family: 'Geist Mono Variable',
                                             size: 14
                                         },
                                         padding: 15,
