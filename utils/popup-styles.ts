@@ -19,6 +19,11 @@ export const PRINT_PREVIEW_STYLES = `
                             text-align: center;
                             font-weight: bold;
                         }
+                        .preview-container .print-chart-canvas {
+                            display: block;
+                            max-width: 100%;
+                            height: auto;
+                        }
                         .preview-actions {
                             position: fixed;
                             bottom: 20px;
@@ -36,7 +41,7 @@ export const PRINT_PREVIEW_STYLES = `
                         }
                         .preview-btn-print {
                             background: var(--acc);
-                            color: var(--fg);
+                            color: var(--on-acc);
                         }
                         .preview-btn-close {
                             background: var(--panel2);
@@ -66,6 +71,7 @@ export const LEGACY_REPORT_STYLES = `
                             }
                             .tickers {
                                 background: var(--acc);
+                                color: var(--on-acc);
                                 padding: 0.5em 1em;
                                 border: 2px solid var(--line);
                                 display: inline-block;

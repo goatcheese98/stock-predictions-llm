@@ -1,3 +1,6 @@
+import foundationStyles from '../foundation.css?inline'
+import geistFont from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?inline'
+import geistMonoFont from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?inline'
 import { renderReportHtml } from './report-html'
 import { LEGACY_REPORT_STYLES, PRINT_PREVIEW_STYLES } from './popup-styles'
 
@@ -13,15 +16,14 @@ function popupWindow(name: string, features: string): Window | null {
 function frame(popup: Window, title: string, css: string): Document {
     const doc = popup.document
     const style = doc.createElement('style')
-    style.textContent = css
+    // Processed by Vite: font URLs point at emitted, build-owned assets.
+    // Inline the shared CSS because blank popup documents can defer link loads.
+    style.textContent = foundationStyles + `
+        @font-face {font-family:'Geist Popup';font-style:normal;font-weight:100 900;font-display:swap;src:url('${geistFont}') format('woff2')}
+        @font-face {font-family:'Geist Mono Popup';font-style:normal;font-weight:100 900;font-display:swap;src:url('${geistMonoFont}') format('woff2')}
+        :root {--font:'Geist Popup',system-ui,sans-serif;--mono:'Geist Mono Popup',ui-monospace,monospace}
+    ` + css
     doc.head.replaceChildren(style)
-    const foundation = document.querySelector<HTMLLinkElement>('link[data-foundation]')
-    if (foundation) {
-        const link = doc.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = foundation.href
-        doc.head.append(link)
-    }
     doc.title = title
     doc.body.replaceChildren()
     return doc

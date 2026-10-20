@@ -13,7 +13,34 @@ export function printableChartImage(canvas: Element | null): string | null {
     if (!(canvas instanceof HTMLCanvasElement)) return null
     const chart = charts.find(chart => chart.canvas === canvas)
     if (!chart) return null
+    const restore: (() => void)[] = []
     try {
+        // Paper needs light chart chrome even when the live page is dark.
+        // Preserve datasets, windows, fonts and the live palette exactly.
+        for (const [id, scale] of Object.entries(chart.options.scales ?? {})) {
+            if (!scale) continue
+            if (scale.ticks) {
+                const ticks = scale.ticks, color = ticks.color
+                restore.push(() => { const current=chart.options.scales?.[id]?.ticks; if(current) current.color=color })
+                ticks.color = '#18181b'
+            }
+            if (scale.grid) {
+                const grid = scale.grid, color = grid.color
+                restore.push(() => { const current=chart.options.scales?.[id]?.grid; if(current) current.color=color })
+                grid.color = '#e4e4e7'
+            }
+            if (scale.border) {
+                const border = scale.border, color = border.color
+                restore.push(() => { const current=chart.options.scales?.[id]?.border; if(current) current.color=color })
+                border.color = '#18181b'
+            }
+        }
+        const labels = chart.options.plugins?.legend?.labels
+        if (labels) {
+            const color = labels.color
+            restore.push(() => { const current=chart.options.plugins?.legend?.labels; if(current) current.color=color })
+            labels.color = '#18181b'
+        }
         chart.stop()
         chart.update('none')
         const target = document.createElement('canvas')
@@ -21,11 +48,19 @@ export function printableChartImage(canvas: Element | null): string | null {
         target.height = 670
         const context = target.getContext('2d')
         if (!context) return null
+        context.fillStyle = '#fff'
+        context.fillRect(0, 0, target.width, target.height)
         context.drawImage(canvas, 0, 0, target.width, target.height)
         return target.toDataURL('image/png', 0.9)
     } catch (error) {
         console.warn('Chart image unavailable for printing', error)
         return null
+    } finally {
+        try {
+            // Chart.js rebuilds option resolvers on update; restore through fresh paths.
+            for (const reset of restore) reset()
+            chart.update('none')
+        } catch (error) { console.warn('Could not redraw the live chart after printing', error) }
     }
 }
 export function destroyCharts(): void {
