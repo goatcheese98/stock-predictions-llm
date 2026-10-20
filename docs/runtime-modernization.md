@@ -1,5 +1,8 @@
 # Runtime modernization — follow-up on draft PR #1
 
+Historical checkpoint at `44e1495`. The continued HTML trust/typed print slice is
+recorded in [report HTML trust](report-html-trust.md).
+
 This slice is based on `1f367fe367aa0ebca9c58811ae167cf8fcfaf4a7` on
 `codex/stock-report-typescript`. A fresh remote inspection confirmed that head,
 the original `main` baseline, and no repository AGENTS.md before editing. No

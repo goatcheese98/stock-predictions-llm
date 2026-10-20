@@ -28,8 +28,10 @@ export function parseStoredReport(value: unknown): StoredReport {
         throw new Error('Malformed day range')
     }
     if ('reports' in value) {
-        if (!object(value.reports) || !Object.values(value.reports).every(item => typeof item === 'string') ||
-            !Array.isArray(value.personalityIds) || !value.personalityIds.every(id => typeof id === 'string')) {
+        if (!object(value.reports)) throw new Error('Malformed personality reports')
+        const reports = value.reports
+        if (!Object.values(reports).every(item => typeof item === 'string') ||
+            !Array.isArray(value.personalityIds) || !value.personalityIds.every(id => typeof id === 'string' && Object.hasOwn(reports, id))) {
             throw new Error('Malformed personality reports')
         }
     } else if (typeof value.content !== 'string' ||

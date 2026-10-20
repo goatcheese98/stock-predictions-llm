@@ -1186,7 +1186,7 @@
                         <img :src="personalityImage" alt="Personality" class="personality-img"
                             @error="handleImageError">
                     </div>
-                    <div class="report-content" v-html="reportData"></div>
+                    <div class="report-content" v-html="formattedReport"></div>
                 </div>
 
                 <!-- Carousel for multiple personalities -->
@@ -1210,7 +1210,7 @@
                                         @error="handleImageError">
                                 </div>
                                 <div class="personality-name-carousel">{{ currentPersonalityName }}</div>
-                                <div class="report-content" v-html="currentPersonalityReport"></div>
+                                <div class="report-content" v-html="formattedPersonalityReport"></div>
                             </div>
                         </div>
 

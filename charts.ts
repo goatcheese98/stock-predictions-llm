@@ -10,8 +10,12 @@ let charts: PriceChart[] = []
 let renderVersion = 0
 export function getCharts(): readonly PriceChart[] { return charts }
 export function printableChartImage(canvas: Element | null): string | null {
-    if (!(canvas instanceof HTMLCanvasElement) || !charts.some(chart => chart.canvas === canvas)) return null
+    if (!(canvas instanceof HTMLCanvasElement)) return null
+    const chart = charts.find(chart => chart.canvas === canvas)
+    if (!chart) return null
     try {
+        chart.stop()
+        chart.update('none')
         const target = document.createElement('canvas')
         target.width = 800
         target.height = 670

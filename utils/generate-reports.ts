@@ -22,7 +22,7 @@ export async function generatePersonalityReports(
 ): Promise<Record<string, string>> {
     const reports: Record<string, string> = {}
     for (const [index, id] of ids.entries()) {
-        const personality = personalities[id]
+        const personality = Object.hasOwn(personalities, id) ? personalities[id] : undefined
         if (!personality) throw new Error('Unknown report personality')
         onProgress(index, ids.length)
         reports[id] = await fetchReportContent(reportMessages(stockData, personality), request)

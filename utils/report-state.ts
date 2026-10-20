@@ -20,7 +20,7 @@ export function stateFromReport(report: StoredReport): ReportState {
     const reports = multi ? report.reports : {}
     return {
         tickers: report.tickers,
-        reportData: multi ? (reports[first] ?? '') : report.content,
+        reportData: multi ? (Object.hasOwn(reports, first) ? reports[first] ?? '' : '') : report.content,
         reports,
         personalityIds: ids,
         currentPersonalityIndex: 0,

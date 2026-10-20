@@ -1,6 +1,6 @@
 async function startReport(): Promise<void> {
     try {
-        await import('./report-view.js')
+        await import('./report-view')
     } catch (error) {
         console.error('Report UI runtime unavailable', error)
         const root = document.getElementById('reportApp')

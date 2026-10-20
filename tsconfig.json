@@ -4,5 +4,5 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"], "strict": true, "allowJs": true, "allowImportingTsExtensions": true,
     "noUncheckedIndexedAccess": true, "noEmit": true, "skipLibCheck": true
   },
-  "include": ["index.ts", "utils/**/*.ts", "charts.ts", "report-app.ts", "personalities.ts", "report-entry.ts", "runtime/**/*.ts"]
+  "include": ["index.ts", "utils/**/*.ts", "charts.ts", "report-app.ts", "report-view.ts", "personalities.ts", "report-entry.ts", "runtime/**/*.ts"]
 }

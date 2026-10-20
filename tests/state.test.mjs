@@ -33,6 +33,7 @@ test('unrecognized personality and a partial provider failure never become a com
     let requests=0
     const request=async()=>{requests++;return requests===1?new Response('{"content":"First only"}'):new Response('{"error":"unavailable"}')}
     await assert.rejects(generatePersonalityReports(stock,['unknown'],PERSONALITIES,()=>{},request,async()=>{}),/Unknown/)
+    for (const id of ['constructor','toString','__proto__']) await assert.rejects(generatePersonalityReports(stock,[id],PERSONALITIES,()=>{},request,async()=>{}),/Unknown/)
     assert.equal(requests,0)
     await assert.rejects(generatePersonalityReports(stock,saved.personalityIds,PERSONALITIES,()=>{},request,async()=>{}),/provider error/)
     assert.equal(requests,2)

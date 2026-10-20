@@ -1,3 +1,4 @@
+import { sanitizeReportHtml, type SanitizedReportHtml } from './utils/report-html'
 import { createApp } from './runtime/vue-runtime'
 import { createStockCharts } from './charts'
 import { readReportState } from './utils/report-state'
@@ -7,6 +8,25 @@ interface ReportData extends ReportState {
     errorMessage: string
     personalityNames: Record<string, string>
 }
+export interface ReportViewModel {
+    readonly tickers: string
+    readonly reportData: string
+    readonly dayRange: number
+    readonly isCarouselMode: boolean
+    readonly currentPersonalityReport: string
+    loadReportData(): void
+}
+// Vue's generic App.mount return loses the Options API component shape. Check
+// the public read/control boundary used by printing instead of casting to any.
+function isReportViewModel(value: unknown): value is ReportViewModel {
+    return typeof value === 'object' && value !== null &&
+        'tickers' in value && typeof value.tickers === 'string' &&
+        'reportData' in value && typeof value.reportData === 'string' &&
+        'dayRange' in value && typeof value.dayRange === 'number' &&
+        'isCarouselMode' in value && typeof value.isCarouselMode === 'boolean' &&
+        'currentPersonalityReport' in value && typeof value.currentPersonalityReport === 'string' &&
+        'loadReportData' in value && typeof value.loadReportData === 'function'
+}
 const images: Record<string, string> = {
     'dodgy-dave': 'images/Dody_Dave.png',
     'stephen-colbert': 'images/Stephen_Colbert.png',
@@ -14,10 +34,10 @@ const images: Record<string, string> = {
     'bernie-sanders': 'images/Bernie_Sanders.png'
 }
 function personalityImageUrl(id: string): string {
-    return new URL(images[id] ?? images['dodgy-dave'] ?? '', window.location.href).href
+    return new URL((Object.hasOwn(images, id) ? images[id] : images['dodgy-dave']) ?? '', window.location.href).href
 }
-export function mountReportApp(openPrintDialog: () => void) {
-    return createApp({
+export function mountReportApp(openPrintDialog: () => void): ReportViewModel {
+    const instance = createApp({
             data(): ReportData {
                 return {
                     isLoading: true,
@@ -41,6 +61,8 @@ export function mountReportApp(openPrintDialog: () => void) {
                 }
             },
             computed: {
+                formattedReport(): SanitizedReportHtml { return sanitizeReportHtml(this.reportData) },
+                formattedPersonalityReport(): SanitizedReportHtml { return sanitizeReportHtml(this.currentPersonalityReport) },
                 isCarouselMode(): boolean {
                     return this.personalityIds && this.personalityIds.length > 1;
                 },
@@ -51,7 +73,7 @@ export function mountReportApp(openPrintDialog: () => void) {
                     return this.reports[this.currentPersonalityId] || '';
                 },
                 currentPersonalityName(): string {
-                    return this.personalityNames[this.currentPersonalityId] || this.currentPersonalityId;
+                    return Object.hasOwn(this.personalityNames, this.currentPersonalityId) ? this.personalityNames[this.currentPersonalityId] ?? this.currentPersonalityId : this.currentPersonalityId;
                 },
                 currentPersonalityImage(): string {
                     return personalityImageUrl(this.currentPersonalityId)
@@ -73,6 +95,8 @@ export function mountReportApp(openPrintDialog: () => void) {
                         this.isLoading = false
                         return
                     }
+                    this.hasError = false
+                    this.errorMessage = ''
                     Object.assign(this, state)
                     if (state.hasChartData) {
                         this.$nextTick(() => {
@@ -159,5 +183,7 @@ export function mountReportApp(openPrintDialog: () => void) {
                 }
             }
         }).mount('#reportApp');
+    if (!isReportViewModel(instance)) throw new Error('Report component did not expose its expected data boundary')
+    return instance
 
 }

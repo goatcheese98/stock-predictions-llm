@@ -1,3 +1,4 @@
+import { openLegacyReportPopup } from './utils/report-popup'
 import { PERSONALITIES } from './personalities'
 import { generatePersonalityReports } from './utils/generate-reports'
 import { fetchStock, fetchReportContent, storeReport } from './utils/report-api.ts'
@@ -262,65 +263,7 @@ export function initializeApp() {
             },
             
             openReportInNewTab() {
-                // Create a new window/tab with the report
-                const reportWindow = window.open('', '_blank', 'width=800,height=600')
-                reportWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Stock Report - Dodgy Dave's Predictions</title>
-                        <style>
-                            body { 
-                                font-family: 'Poppins', sans-serif; 
-                                padding: 2em; 
-                                background-color: #f6f6f6;
-                                line-height: 1.6;
-                            }
-                            .header { 
-                                text-align: center; 
-                                margin-bottom: 2em;
-                                border-bottom: 2px solid #000;
-                                padding-bottom: 1em;
-                            }
-                            .report-content { 
-                                background: white; 
-                                padding: 2em; 
-                                border: 2px solid #000;
-                                border-radius: 8px;
-                                font-size: 16px;
-                            }
-                            .tickers {
-                                background: #46ff90;
-                                padding: 0.5em 1em;
-                                border: 2px solid #000;
-                                display: inline-block;
-                                margin-bottom: 1em;
-                                font-weight: bold;
-                            }
-                            .disclaimer {
-                                text-align: center;
-                                font-size: 12px;
-                                margin-top: 2em;
-                                color: #666;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="header">
-                            <h1>📈 Dodgy Dave's Stock Predictions 📈</h1>
-                            <div class="tickers">Analyzed Tickers: </div>
-                        </div>
-                        <div class="report-content">
-                            ${this.reportContent}
-                        </div>
-                        <div class="disclaimer">
-                            © This is not real financial advice! Always correct 15% of the time!
-                        </div>
-                    </body>
-                    </html>
-                `)
-                reportWindow.document.close()
-                reportWindow.document.querySelector('.tickers').textContent = `Analyzed Tickers: ${this.tickersArr.join(', ')}`
+                openLegacyReportPopup(this.tickersArr, this.reportContent)
             },
             
             openReportPage() {
