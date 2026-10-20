@@ -46,6 +46,10 @@ test('provider HTML preserves real report formatting through page and print with
  await safeReport(page)
  await page.getByText('Unsafe URL',{exact:true}).click()
  await safeReport(page)
+ // Wait for fonts/natural animation completion while the source is foreground.
+ // Print no longer stops it, and background popup tabs may throttle animation.
+ await page.evaluate(()=>document.fonts.ready)
+ await expect.poll(async()=>page.evaluate(()=>{const chart=window.stockCharts[0];return Math.abs(chart.getDatasetMeta(0).data[0].y-chart.scales.y.getPixelForValue(105))})).toBeLessThan(0.000005)
  const popup=await preview(page)
  await expect(popup.locator('.print-analysis-content strong')).toHaveText('AAPL')
  await expect(popup.locator('.print-analysis-content td')).toHaveText('$105.00')
